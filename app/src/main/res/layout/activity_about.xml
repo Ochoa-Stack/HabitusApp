@@ -1,274 +1,79 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Creamos el layout de la pantalla 'Acerca de' -->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
+<?xml version='1.0' encoding='utf-8'?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/background">
 
-    <!-- Creamos el círculo decorativo superior derecho -->
-    <View
-        android:id="@+id/circleTop"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:background="@drawable/circle_accent_top"
-        android:alpha="0.18"
-        android:layout_marginTop="-60dp"
-        android:layout_marginEnd="-60dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+    
+    <View android:id="@+id/circleTop" android:layout_width="220dp" android:layout_height="220dp" android:background="@drawable/circle_accent_top" android:alpha="0.18" android:layout_marginTop="-60dp" android:layout_marginEnd="-60dp" app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Creamos el círculo decorativo inferior izquierdo -->
-    <View
-        android:id="@+id/circleBottom"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:background="@drawable/circle_accent_bottom"
-        android:alpha="0.12"
-        android:layout_marginBottom="-40dp"
-        android:layout_marginStart="-40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+    
+    <View android:id="@+id/circleBottom" android:layout_width="160dp" android:layout_height="160dp" android:background="@drawable/circle_accent_bottom" android:alpha="0.12" android:layout_marginBottom="-40dp" android:layout_marginStart="-40dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Creamos el botón de regreso -->
-    <ImageView
-        android:id="@+id/btnBack"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_arrow_back"
-        android:padding="8dp"
-        app:tint="@color/text_primary"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:contentDescription="Regresar"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="48dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+    
+    <ImageView android:id="@+id/btnBack" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_arrow_back" android:padding="12dp" app:tint="@color/text_primary" android:background="?attr/selectableItemBackgroundBorderless" android:clickable="true" android:focusable="true" android:contentDescription="Regresar" android:layout_marginStart="16dp" android:layout_marginTop="48dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Creamos un scroll para el contenido -->
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:overScrollMode="never"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    
+    <ScrollView android:layout_width="0dp" android:layout_height="0dp" android:overScrollMode="never" android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@id/btnBack" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingBottom="48dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="24dp" android:paddingBottom="48dp">
 
-            <!-- Creamos el componente 'Header' (logo + nombre + versión) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:paddingVertical="32dp">
+            
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:paddingVertical="32dp">
 
-                <ImageView
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:src="@drawable/ic_leaf"
-                    app:tint="@color/accent"
-                    android:contentDescription="@string/app_name"
-                    android:layout_marginBottom="16dp"/>
+                <ImageView android:layout_width="72dp" android:layout_height="72dp" android:src="@drawable/ic_leaf" app:tint="@color/accent" android:contentDescription="@string/app_name" android:layout_marginBottom="16dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:fontFamily="@font/playfair_display_bold"
-                    android:textSize="36sp"
-                    android:letterSpacing="-0.02"
-                    android:textColor="@color/text_primary"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/app_name" android:fontFamily="@font/playfair_display_bold" android:textSize="36sp" android:letterSpacing="-0.02" android:textColor="@color/text_primary" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/about_version"
-                    android:fontFamily="@font/dm_sans"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginTop="4dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/about_version" android:fontFamily="@font/dm_sans" android:textSize="14sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
             </LinearLayout>
 
-            <!-- Creamos la card 'descripción' -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/card_background">
+            
+            <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardCornerRadius="24dp" app:cardElevation="0dp" app:cardBackgroundColor="@color/card_background">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_description"
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="15sp"
-                        android:lineSpacingExtra="6dp"
-                        android:textColor="@color/text_secondary"
-                        android:gravity="center"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/about_description" android:fontFamily="@font/dm_sans" android:textSize="15sp" android:lineSpacingExtra="6dp" android:textColor="@color/text_secondary" android:gravity="center" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Creamos la card 'equipo' -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/card_background">
+            
+            <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardCornerRadius="24dp" app:cardElevation="0dp" app:cardBackgroundColor="@color/card_background">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_team_title"
-                        android:fontFamily="@font/playfair_display_semibold"
-                        android:textSize="18sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="16dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/about_team_title" android:fontFamily="@font/playfair_display_semibold" android:textSize="18sp" android:textColor="@color/text_primary" android:layout_marginBottom="16dp" />
 
-                    <!-- Creamos el TextView con información de Edgar -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Edgar Torres"
-                        android:fontFamily="@font/dm_sans_medium"
-                        android:textSize="15sp"
-                        android:textColor="@color/text_primary"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Desarrollo Backend"
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginBottom="12dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Edgar Torres" android:fontFamily="@font/dm_sans_medium" android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Desarrollo Backend" android:fontFamily="@font/dm_sans" android:textSize="13sp" android:textColor="@color/text_secondary" android:layout_marginBottom="12dp" />
 
-                    <!-- Creamos el TextView con información de Arleth -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Arleth Caballero"
-                        android:fontFamily="@font/dm_sans_medium"
-                        android:textSize="15sp"
-                        android:textColor="@color/text_primary"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Desarrollo Frontend"
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginBottom="12dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Arleth Caballero" android:fontFamily="@font/dm_sans_medium" android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Desarrollo Frontend" android:fontFamily="@font/dm_sans" android:textSize="13sp" android:textColor="@color/text_secondary" android:layout_marginBottom="12dp" />
 
-                    <!-- Creamos el TextView con información de Roberto -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Roberto Perez"
-                        android:fontFamily="@font/dm_sans_medium"
-                        android:textSize="15sp"
-                        android:textColor="@color/text_primary"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Desarrollo Backend"
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginBottom="12dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Roberto Perez" android:fontFamily="@font/dm_sans_medium" android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Desarrollo Backend" android:fontFamily="@font/dm_sans" android:textSize="13sp" android:textColor="@color/text_secondary" android:layout_marginBottom="12dp" />
 
-                    <!-- Creamos el TextView con información de Elías -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Elias Ochoa"
-                        android:fontFamily="@font/dm_sans_medium"
-                        android:textSize="15sp"
-                        android:textColor="@color/text_primary"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Desarrollo Frontend"
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_secondary"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Elias Ochoa" android:fontFamily="@font/dm_sans_medium" android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Desarrollo Frontend" android:fontFamily="@font/dm_sans" android:textSize="13sp" android:textColor="@color/text_secondary" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Creamos la card de 'Tecnologías Implementadas' -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/card_background">
+            
+            <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardCornerRadius="24dp" app:cardElevation="0dp" app:cardBackgroundColor="@color/card_background">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_tech_title"
-                        android:fontFamily="@font/playfair_display_semibold"
-                        android:textSize="18sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="16dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/about_tech_title" android:fontFamily="@font/playfair_display_semibold" android:textSize="18sp" android:textColor="@color/text_primary" android:layout_marginBottom="16dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Kotlin · Android Studio · Firebase Auth · Cloud Firestore · Navigation Component · ViewBinding · Material Design 3"
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="14sp"
-                        android:lineSpacingExtra="6dp"
-                        android:textColor="@color/text_secondary"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Kotlin · Android Studio · Firebase Auth · Cloud Firestore · Navigation Component · ViewBinding · Material Design 3" android:fontFamily="@font/dm_sans" android:textSize="14sp" android:lineSpacingExtra="6dp" android:textColor="@color/text_secondary" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Creamos el TextView que contiene el pie de página (texto final) -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/about_footer"
-                android:fontFamily="@font/dm_sans"
-                android:textSize="13sp"
-                android:lineSpacingExtra="4dp"
-                android:textColor="@color/text_secondary"
-                android:gravity="center"
-                android:layout_marginHorizontal="8dp"/>
+            
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/about_footer" android:fontFamily="@font/dm_sans" android:textSize="13sp" android:lineSpacingExtra="4dp" android:textColor="@color/text_secondary" android:gravity="center" android:layout_marginHorizontal="8dp" />
 
         </LinearLayout>
     </ScrollView>

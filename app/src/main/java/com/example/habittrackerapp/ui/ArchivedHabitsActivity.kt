@@ -70,7 +70,13 @@ class ArchivedHabitsActivity : AppCompatActivity() {
                     ).show()
                     cargarArchivados()
                 },
-                onFailure = { }
+                onFailure = {
+                    android.widget.Toast.makeText(
+                        this@ArchivedHabitsActivity,
+                        getString(R.string.error_cargar_datos),
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
     }
@@ -87,7 +93,13 @@ class ArchivedHabitsActivity : AppCompatActivity() {
                     ).show()
                     cargarArchivados()
                 },
-                onFailure = { }
+                onFailure = {
+                    android.widget.Toast.makeText(
+                        this@ArchivedHabitsActivity,
+                        getString(R.string.error_cargar_datos),
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
     }

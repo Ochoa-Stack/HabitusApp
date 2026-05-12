@@ -22,6 +22,7 @@ class HabitDetailActivity : AppCompatActivity() {
 
     private var habitoId         = ""
     private var completadoHoy    = false
+    private var reflexionHoyTexto: String? = null
     private var rachaActual      = 0
     private var porcentajeActual = 0
     private var esPrimeraCarga   = true
@@ -32,10 +33,11 @@ class HabitDetailActivity : AppCompatActivity() {
     private var mesActual = Calendar.getInstance().get(Calendar.MONTH) + 1
     private var añoActual = Calendar.getInstance().get(Calendar.YEAR)
 
-    private val meses = listOf(
-        "Enero","Febrero","Marzo","Abril","Mayo","Junio",
-        "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
-    )
+    private val meses: List<String>
+        get() = listOf(
+            getString(R.string.month_january), getString(R.string.month_february), getString(R.string.month_march), getString(R.string.month_april), getString(R.string.month_may), getString(R.string.month_june),
+            getString(R.string.month_july), getString(R.string.month_august), getString(R.string.month_september), getString(R.string.month_october), getString(R.string.month_november), getString(R.string.month_december)
+        )
 
     companion object {
         const val EXTRA_HABIT_ID          = "habit_id"
@@ -55,7 +57,7 @@ class HabitDetailActivity : AppCompatActivity() {
 
         habitoId = intent.getStringExtra(EXTRA_HABIT_ID) ?: ""
 
-        val nombreInicial     = intent.getStringExtra(EXTRA_HABIT_NAME)      ?: "Hábito"
+        val nombreInicial     = intent.getStringExtra(EXTRA_HABIT_NAME)      ?: getString(R.string.habit_default_name)
         val frecuenciaInicial = intent.getStringExtra(EXTRA_HABIT_FREQUENCY) ?: ""
         rachaActual      = intent.getIntExtra(EXTRA_HABIT_STREAK, 0)
         porcentajeActual = intent.getIntExtra(EXTRA_HABIT_PERCENT, 0)
@@ -97,7 +99,37 @@ class HabitDetailActivity : AppCompatActivity() {
 
         binding.btnComplete.setOnClickListener { toggleCompletado() }
 
+        binding.btnDelete.setOnClickListener {
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.delete_habit_confirm_title))
+                .setMessage(getString(R.string.delete_habit_confirm_message))
+                .setPositiveButton(getString(R.string.delete_confirm)) { _, _ ->
+                    eliminarHabitoYCerrar()
+                }
+                .setNegativeButton(getString(R.string.delete_cancel), null)
+                .show()
+        }
+
         cargarEstadoReal()
+    }
+
+    private fun eliminarHabitoYCerrar() {
+        lifecycleScope.launch {
+            val resultado = habitRepository.eliminarHabito(habitoId)
+            resultado.fold(
+                onSuccess = {
+                    setResult(android.app.Activity.RESULT_OK)
+                    finish()
+                },
+                onFailure = {
+                    android.widget.Toast.makeText(
+                        this@HabitDetailActivity,
+                        getString(R.string.error_cargar_datos),
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
+            )
+        }
     }
 
     override fun onResume() {
@@ -140,7 +172,13 @@ class HabitDetailActivity : AppCompatActivity() {
                 actualizarUIEstadisticas()
                 ajustarBarraProgreso(porcentajeActual)
             },
-            onFailure = { }
+            onFailure = {
+                android.widget.Toast.makeText(
+                    this@HabitDetailActivity,
+                    getString(R.string.error_cargar_datos),
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
         )
     }
 
@@ -284,17 +322,44 @@ class HabitDetailActivity : AppCompatActivity() {
                     getColor(R.color.accent)
                 )
         }
+        configurarEstadoReflexion()
+    }
+
+    private fun configurarEstadoReflexion() {
+        when {
+            // Estado 3: reflexión ya enviada hoy
+            reflexionHoyTexto != null -> {
+                binding.etReflexion.setText(reflexionHoyTexto)
+                binding.etReflexion.isEnabled = false
+                binding.etReflexion.alpha = 0.85f
+                binding.btnGuardarReflexion.isEnabled = false
+                binding.btnGuardarReflexion.alpha = 0.5f
+            }
+            // Estado 2: completado hoy, sin reflexión aún
+            completadoHoy -> {
+                binding.etReflexion.isEnabled = true
+                binding.etReflexion.alpha = 1.0f
+                binding.etReflexion.hint = getString(
+                    R.string.reflexion_hint_activo
+                )
+                binding.btnGuardarReflexion.isEnabled = true
+                binding.btnGuardarReflexion.alpha = 1.0f
+            }
+            // Estado 1: no completado hoy
+            else -> {
+                binding.etReflexion.isEnabled = false
+                binding.etReflexion.alpha = 0.4f
+                binding.etReflexion.hint = getString(
+                    R.string.reflexion_hint_bloqueado
+                )
+                binding.btnGuardarReflexion.isEnabled = false
+                binding.btnGuardarReflexion.alpha = 0.4f
+            }
+        }
     }
 
     private fun cargarReflexionHoy() {
         // Intenta precargar la reflexión del día si ya existe
-        lifecycleScope.launch {
-            val hoy = java.text.SimpleDateFormat(
-                "yyyy-MM-dd", java.util.Locale.getDefault()
-            ).format(java.util.Date())
-            // No hay método dedicado de lectura de un solo día;
-            // la reflexión de hoy aparecerá al cargar el historial
-        }
 
         // Contador de caracteres en tiempo real
         binding.etReflexion.addTextChangedListener(object : android.text.TextWatcher {
@@ -327,7 +392,7 @@ class HabitDetailActivity : AppCompatActivity() {
                         imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
                         android.widget.Toast.makeText(
                             this@HabitDetailActivity,
-                            "Reflexión guardada",
+                            getString(R.string.reflexion_guardada),
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
                         cargarReflexiones()
@@ -369,9 +434,9 @@ class HabitDetailActivity : AppCompatActivity() {
                         "yyyy-MM-dd", java.util.Locale.getDefault()
                     ).format(java.util.Date())
                     val reflexionHoy = reflexiones.firstOrNull { it.fecha == hoy }
-                    if (reflexionHoy != null && binding.etReflexion.text.isEmpty()) {
-                        binding.etReflexion.setText(reflexionHoy.texto)
-                    }
+                    reflexionHoyTexto = reflexionHoy?.texto
+                    
+                    configurarEstadoReflexion()
                 },
                 onFailure = { }
             )

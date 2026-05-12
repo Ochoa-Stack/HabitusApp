@@ -52,7 +52,8 @@ class HabitsFragment : Fragment() {    // Declaramos el fragmento de hábitos
     private fun cargarHabitos() {    // Cargamos los hábitos
         mostrarCarga(true)
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (_binding == null) return@launch
             val resultado = habitRepository.obtenerHabitos()    // Obtenemos los hábitos
 
             resultado.fold(
@@ -70,7 +71,7 @@ class HabitsFragment : Fragment() {    // Declaramos el fragmento de hábitos
                             habit.copy(weekDays = construirDiasParaLista(habit.estaCompletadoHoy))
                         }
 
-                        val adapter = HabitAdapter(habitsConDias) { habit ->
+                        val adapter = HabitAdapter { habit ->
                             val intent = Intent(requireContext(), HabitDetailActivity::class.java).apply {
                                 putExtra(HabitDetailActivity.EXTRA_HABIT_ID,          habit.id)
                                 putExtra(HabitDetailActivity.EXTRA_HABIT_NAME,        habit.nombre)
@@ -83,7 +84,8 @@ class HabitsFragment : Fragment() {    // Declaramos el fragmento de hábitos
                         }
                         // Configuramos el swipe para archivar
                         binding.rvHabits.adapter = adapter
-                        configurarSwipe(adapter, habitsConDias)
+                        adapter.submitList(habitsConDias)
+                        configurarSwipe(adapter)
                     }
                 },
                 onFailure = {
@@ -119,7 +121,7 @@ class HabitsFragment : Fragment() {    // Declaramos el fragmento de hábitos
         return dias
     }
     // Configuramos el swipe para archivar (en lugar de eliminar permanentemente)
-    private fun configurarSwipe(adapter: HabitAdapter, habitos: List<Habit>) {
+    private fun configurarSwipe(adapter: HabitAdapter) {
         val itemTouchHelper = ItemTouchHelper(
             object : ItemTouchHelper.SimpleCallback(
                 0,
@@ -136,9 +138,10 @@ class HabitsFragment : Fragment() {    // Declaramos el fragmento de hábitos
                     direction: Int
                 ) {
                     val posicion = viewHolder.adapterPosition
-                    val habito   = habitos[posicion]
+                    val habito   = adapter.currentList[posicion]
 
-                    lifecycleScope.launch {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        if (_binding == null) return@launch
                         val resultado = habitRepository.archivarHabito(habito.id)
                         resultado.fold(
                             onSuccess = {
@@ -149,7 +152,8 @@ class HabitsFragment : Fragment() {    // Declaramos el fragmento de hábitos
                                     Snackbar.LENGTH_LONG
                                 ).setAction(getString(R.string.habit_undo)) {
                                     // Deshacer: restaurar el hábito inmediatamente
-                                    lifecycleScope.launch {
+                                    viewLifecycleOwner.lifecycleScope.launch {
+                                        if (_binding == null) return@launch
                                         habitRepository.restaurarHabito(habito.id)
                                         cargarHabitos()
                                     }

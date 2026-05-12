@@ -3,6 +3,9 @@ package com.example.habittrackerapp.data
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -210,7 +213,23 @@ class HabitRepository {    // Declaramos el repositorio para los hábitos
                 )
             }
 
-            val habitosOrdenados = habitos.sortedByDescending { habit ->
+            val hoy = obtenerFechaHoy()
+            val habitosCompletos = coroutineScope {
+                habitos.map { habit ->
+                    async {
+                        val completadoHoy = coleccionHabitos()
+                            .document(habit.id)
+                            .collection("completaciones")
+                            .document(hoy)
+                            .get()
+                            .await()
+                            .exists()
+                        habit.copy(estaCompletadoHoy = completadoHoy)
+                    }
+                }.awaitAll()
+            }
+
+            val habitosOrdenados = habitosCompletos.sortedByDescending { habit ->
                 habitosActualizados
                     .find { it.id == habit.id }
                     ?.getTimestamp("fechaCreacion")
@@ -244,45 +263,102 @@ class HabitRepository {    // Declaramos el repositorio para los hábitos
     // Registramos la completación de hoy, incrementa racha, totalCompletaciones y recalcula el porcentaje real
     suspend fun completarHabito(habitoId: String): Result<Boolean> {
         return try {
-            val hoy             = obtenerFechaHoy()
-            val refCompletacion = coleccionHabitos()
-                .document(habitoId)
+            val uid = obtenerUid()
+            val fecha = obtenerFechaHoy()
+            val docRef = coleccionHabitos().document(habitoId)
+            val completacionRef = docRef
                 .collection("completaciones")
-                .document(hoy)
+                .document(fecha)
 
-            val yaExiste = refCompletacion.get().await()
+            // Guard anti-doble-completación FUERA de la transacción
+            val yaExiste = completacionRef.get().await()
             if (yaExiste.exists()) return Result.success(false)
 
-            refCompletacion.set(
-                mapOf(
-                    "fecha"     to hoy,
-                    "timestamp" to com.google.firebase.Timestamp.now()
+            // Variables para capturar datos de la transacción
+            var nuevaRacha = 0
+            var nuevoTotal = 0
+            var diasSemanaCapturados = emptyList<String>()
+
+            // Transacción atómica: solo operaciones síncronas
+            firestore.runTransaction { transaction ->
+                val snapshot = transaction.get(docRef)
+
+                val rachaActual =
+                    (snapshot.getLong("racha") ?: 0L).toInt()
+                nuevoTotal =
+                    (snapshot.getLong("totalCompletaciones") ?: 0L).toInt() + 1
+                diasSemanaCapturados = (snapshot.get("diasSemana") as? List<*>)
+                    ?.filterIsInstance<String>() ?: emptyList()
+                val ultimaCompletacion =
+                    snapshot.getTimestamp("ultimaCompletacion")
+                val diasGracia =
+                    (snapshot.getLong("diasGracia") ?: 0L).toInt()
+
+                nuevaRacha = if (!debeResetearRacha(
+                        diasSemanaCapturados,
+                        ultimaCompletacion,
+                        diasGracia
+                    )) rachaActual + 1 else 1
+
+                // Registrar completación (síncrono dentro de la tx)
+                transaction.set(
+                    completacionRef,
+                    mapOf(
+                        "fecha" to fecha,
+                        "timestamp" to com.google.firebase.Timestamp.now()
+                    )
                 )
-            ).await()
 
-            val refHabito = coleccionHabitos().document(habitoId)
-            val snapshot  = refHabito.get().await()
-
-            val rachaActual      = (snapshot.getLong("racha")               ?: 0L).toInt()
-            val totalActual      = (snapshot.getLong("totalCompletaciones") ?: 0L).toInt()
-            val diasSemana       = (snapshot.get("diasSemana") as? List<*>)
-                ?.filterIsInstance<String>() ?: emptyList()
-
-            val nuevoPorcentaje = calcularPorcentaje30Dias(habitoId, diasSemana)
-
-            refHabito.update(
-                mapOf(
-                    "racha"               to rachaActual + 1,
-                    "porcentaje"          to nuevoPorcentaje,
-                    "totalCompletaciones" to totalActual + 1,
-                    "ultimaCompletacion"  to com.google.firebase.Timestamp.now()
+                // Actualizar hábito (síncrono dentro de la tx)
+                transaction.update(
+                    docRef,
+                    mapOf(
+                        "racha" to nuevaRacha,
+                        "totalCompletaciones" to nuevoTotal,
+                        "ultimaCompletacion" to com.google.firebase.Timestamp.now()
+                    )
                 )
-            ).await()
+            }.await()
+
+            // Actualizar porcentaje FUERA de la transacción
+            // usando los datos capturados arriba
+            val porcentaje = calcularPorcentajeReal(
+                habitoId, diasSemanaCapturados, nuevoTotal
+            )
+            docRef.update("porcentaje", porcentaje).await()
 
             Result.success(true)
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    private suspend fun calcularPorcentajeReal(
+        habitoId: String,
+        diasSemana: List<String>,
+        totalCompletaciones: Int
+    ): Int {
+        val completacionesDocs = coleccionHabitos()
+            .document(habitoId)
+            .collection("completaciones")
+            .get()
+            .await()
+            
+        val fechasCompletadas = completacionesDocs.documents.map { it.id }.toSet()
+        val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val fechasEsperadas = mutableListOf<String>()
+        for (i in 0..29) {
+            val cal = Calendar.getInstance()
+            cal.add(Calendar.DAY_OF_YEAR, -i)
+            val etiqueta = mapaCalendario[cal.get(Calendar.DAY_OF_WEEK)]
+            if (diasSemana.contains(etiqueta)) {
+                fechasEsperadas.add(formato.format(cal.time))
+            }
+        }
+        return if (fechasEsperadas.isNotEmpty()) {
+            val cumplidas = fechasEsperadas.count { fechasCompletadas.contains(it) }
+            ((cumplidas.toFloat() / fechasEsperadas.size.toFloat()) * 100).toInt()
+        } else 0
     }
     // Eliminamos la completación de hoy, decrementa racha, totalCompletaciones y recalcula el porcentaje real
     suspend fun descompletarHabito(habitoId: String): Result<Unit> {
@@ -605,7 +681,20 @@ class HabitRepository {    // Declaramos el repositorio para los hábitos
             var totalProgramadas = 0
             var totalCompletadas = 0
 
-            for (doc in snapshot.documents) {
+            val resultados = coroutineScope {
+                snapshot.documents.map { doc ->
+                    async {
+                        val completaciones = coleccionHabitos()
+                            .document(doc.id)
+                            .collection("completaciones")
+                            .get()
+                            .await()
+                        Pair(doc, completaciones)
+                    }
+                }.awaitAll()
+            }
+
+            for ((doc, completaciones) in resultados) {
                 val diasSemana = (doc.get("diasSemana") as? List<*>)
                     ?.filterIsInstance<String>() ?: emptyList()
 
@@ -617,12 +706,6 @@ class HabitRepository {    // Declaramos el repositorio para los hábitos
                     }
                     calTemp.add(Calendar.DAY_OF_YEAR, 1)
                 }
-
-                val completaciones = coleccionHabitos()
-                    .document(doc.id)
-                    .collection("completaciones")
-                    .get()
-                    .await()
 
                 totalCompletadas += completaciones.documents.count { d ->
                     val fecha = d.getString("fecha") ?: d.id
@@ -665,7 +748,20 @@ class HabitRepository {    // Declaramos el repositorio para los hábitos
             var peorPorcentaje      = 101
             var habitoMasDescuidado : String? = null
 
-            for (doc in snapshot.documents) {
+            val resultados = coroutineScope {
+                snapshot.documents.map { doc ->
+                    async {
+                        val completaciones = coleccionHabitos()
+                            .document(doc.id)
+                            .collection("completaciones")
+                            .get()
+                            .await()
+                        Pair(doc, completaciones)
+                    }
+                }.awaitAll()
+            }
+
+            for ((doc, completaciones) in resultados) {
                 val nombre     = doc.getString("nombre") ?: ""
                 val diasSemana = (doc.get("diasSemana") as? List<*>)
                     ?.filterIsInstance<String>() ?: emptyList()
@@ -688,12 +784,6 @@ class HabitRepository {    // Declaramos el repositorio para los hábitos
 
                 if (programadasEsteHabito > 0) {
                     totalProgramadas += programadasEsteHabito
-
-                    val completaciones = coleccionHabitos()
-                        .document(doc.id)
-                        .collection("completaciones")
-                        .get()
-                        .await()
 
                     val completadasEsteHabito = completaciones.documents.count { d ->
                         val fecha = d.getString("fecha") ?: d.id

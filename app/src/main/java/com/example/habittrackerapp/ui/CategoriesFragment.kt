@@ -42,7 +42,8 @@ class CategoriesFragment : Fragment() {
     }
     // Cargamos y separamos las categorías por tipo
     private fun cargarCategorias() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (_binding == null) return@launch
             val resultado = categoryRepository.obtenerCategorias()
 
             resultado.fold(

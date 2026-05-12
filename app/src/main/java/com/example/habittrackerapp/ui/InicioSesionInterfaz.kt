@@ -101,12 +101,24 @@ class InicioSesionInterfaz : AppCompatActivity() {
                     // En caso de login existoso, navegamos a 'Home'
                     navegarAlHome()
                 },
-                onFailure = {
+                onFailure = { error ->
                     // En caso de login fallido, mostramos error y restauramos el botón
-                    binding.tilEmail.error    = getString(R.string.error_invalid_credentials)
-                    binding.tilPassword.error = getString(R.string.error_invalid_credentials)
+                    val mensajeError = when {
+                        error.message?.contains("invalid-credential", ignoreCase = true) == true || 
+                        error.message?.contains("wrong-password", ignoreCase = true) == true ||
+                        error.message?.contains("no user", ignoreCase = true) == true -> 
+                            getString(R.string.error_invalid_credentials)
+                        error.message?.contains("network error", ignoreCase = true) == true ->
+                            "Error de red. Revisa tu conexión"
+                        else -> error.message ?: getString(R.string.error_invalid_credentials)
+                    }
+
+                    binding.tilEmail.error    = mensajeError
+                    binding.tilPassword.error = mensajeError
                     binding.btnLogin.isEnabled = true
                     binding.btnLogin.text      = getString(R.string.btn_login)
+                    
+                    android.widget.Toast.makeText(this@InicioSesionInterfaz, mensajeError, android.widget.Toast.LENGTH_LONG).show()
                 }
             )
         }

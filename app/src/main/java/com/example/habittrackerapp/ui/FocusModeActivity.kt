@@ -136,7 +136,7 @@ class FocusHabitAdapter(
             // Punto de color según tipo cognitivo
             viewTipoColor.background = android.graphics.drawable.GradientDrawable().apply {
                 shape = android.graphics.drawable.GradientDrawable.OVAL
-                setColor(Color.parseColor(TipoCognitivo.color(habito.tipoCognitivo)))
+                setColor(root.context.getColor(TipoCognitivo.colorRes(habito.tipoCognitivo)))
             }
 
             if (yaCompletado) {

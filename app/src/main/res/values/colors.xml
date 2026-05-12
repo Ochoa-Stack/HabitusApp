@@ -12,8 +12,6 @@
     <color name="on_accent">#FFFFFF</color>
 
     <!-- Creamos los colores para los círculos decorativos -->
-    <color name="decor_top">#C8614A</color>
-    <color name="decor_bottom">#7DAF8F</color>
 
     <!-- Creamos los colores para los texto -->
     <color name="text_primary">#1E1A17</color>
@@ -27,10 +25,15 @@
     <color name="ripple_neutral">#1A1E1A17</color>
 
     <!-- Creamos los colores para los colores semánticos -->
-    <color name="terracota">#C8614A</color>
-    <color name="terracota_light">#EDD5CE</color>
     <color name="verde_salvia">#7DAF8F</color>
 
     <!-- Color semántico para mensajes de error en formularios -->
     <color name="error_text">#B00020</color>
+
+    <!-- Tipos cognitivos - modo claro -->
+    <color name="tipo_fisico">#E07B5A</color>
+    <color name="tipo_mental">#7B9FD4</color>
+    <color name="tipo_social">#F0B86E</color>
+    <color name="tipo_creativo">#A78BCA</color>
+    <color name="tipo_descanso">#78B89A</color>
 </resources>
