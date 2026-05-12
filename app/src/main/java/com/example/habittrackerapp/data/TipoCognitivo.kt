@@ -1,5 +1,7 @@
 package com.example.habittrackerapp.data
 
+import com.example.habittrackerapp.R
+
 object TipoCognitivo {
     const val FISICO    = "Físico"
     const val MENTAL    = "Mental"
@@ -17,6 +19,15 @@ object TipoCognitivo {
         CREATIVO -> "#A78BCA"   // violeta creativo
         DESCANSO -> "#78B89A"   // verde salvia
         else     -> "#C8614A"
+    }
+
+    fun colorRes(tipo: String): Int = when (tipo) {
+        FISICO   -> R.color.tipo_fisico
+        MENTAL   -> R.color.tipo_mental
+        SOCIAL   -> R.color.tipo_social
+        CREATIVO -> R.color.tipo_creativo
+        DESCANSO -> R.color.tipo_descanso
+        else     -> R.color.accent
     }
 
     // Emoji para cada tipo

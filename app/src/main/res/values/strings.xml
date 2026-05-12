@@ -20,7 +20,6 @@
     <string name="home_greeting_morning">Buenos días ✦</string>
     <string name="home_greeting_afternoon">Buenas tardes ✦</string>
     <string name="home_greeting_evening">Buenas noches ✦</string>
-    <string name="home_subtitle">Construye quien quieres ser, un día a la vez.</string>
     <string name="home_card_title">Tu día de hoy</string>
     <string name="home_label_active">Hábitos activos</string>
     <string name="home_label_completed">Completados hoy</string>
@@ -81,10 +80,8 @@
     <string name="profile_option_about">Acerca de Habitus</string>
     <string name="profile_btn_logout">Cerrar sesión</string>
     <!-- Creamos strings para detalle de hábito -->
-    <string name="detail_label_frequency">Frecuencia</string>
     <string name="detail_label_streak">Racha actual</string>
     <string name="detail_label_completion">Cumplimiento</string>
-    <string name="detail_label_week">Últimos 7 días</string>
     <string name="detail_days_unit">días</string>
     <string name="detail_btn_complete">Marcar como completado hoy</string>
     <string name="detail_btn_completed">Completado hoy ✓</string>
@@ -108,7 +105,6 @@
     <string name="notif_enable">Activar recordatorios</string>
     <string name="notif_enable_desc">Recibe un recordatorio diario para registrar tus hábitos.</string>
     <string name="notif_time">Hora del recordatorio</string>
-    <string name="notif_time_desc">Se te notificará a esta hora todos los días.</string>
     <string name="notif_morning">Mañana (8:00 AM)</string>
     <string name="notif_afternoon">Tarde (2:00 PM)</string>
     <string name="notif_evening">Noche (8:00 PM)</string>
@@ -124,7 +120,6 @@
     <string name="privacy_title">Privacidad</string>
     <string name="privacy_last_update">Última actualización: abril 2026</string>
     <!-- Creamos los strings para la sección 'Acerca de' (perfil) -->
-    <string name="about_title">Acerca de Habitus</string>
     <string name="about_version">Versión 1.0</string>
     <string name="about_description">Habitus es una aplicación de seguimiento de hábitos diseñada para ayudarte a construir una rutina sólida y alcanzar tus objetivos personales.</string>
     <string name="about_team_title">Equipo de desarrollo</string>
@@ -137,7 +132,6 @@
     <string name="label_category_color">Color</string>
     <string name="btn_save_category">Guardar categoría</string>
     <string name="error_category_name_empty">El nombre de la categoría es obligatorio</string>
-    <string name="category_habits_count">%d hábitos</string>
     <string name="categories_empty">Aún no tienes categorías.\nSe crearán al registrarte.</string>
     <!-- Creamos los strings para el selector de categoría en 'Crear hábito' -->
     <string name="label_category">Categoría</string>
@@ -196,5 +190,47 @@
     <string name="home_msg_streak">Racha de %1$d días. ¡No la rompas!</string>
     <string name="home_msg_start">Un buen día para comenzar. ¡Adelante!</string>
     <string name="home_btn_weekly">Ver resumen semanal >>></string>
+    <string name="error_cargar_datos">No se pudieron cargar los datos. Intenta de nuevo.</string>
+
+    <!-- W3-A: Strings extraídas -->
+    <string name="focus_title">Modo enfoque</string>
+    <string name="focus_today">Hoy</string>
+    <string name="focus_empty_title">No tienes hábitos para hoy</string>
+    <string name="focus_empty_subtitle">Disfruta tu descanso</string>
+
+    <string name="privacy_term_1_title">1. Información que recopilamos</string>
+    <string name="privacy_term_1_body">Habitus recopila únicamente la información necesaria para el funcionamiento de la aplicación: correo electrónico, nombre de usuario y los hábitos que registres. No recopilamos datos de ubicación, contactos ni información sensible adicional.</string>
+    <string name="privacy_term_2_title">2. Cómo usamos tu información</string>
+    <string name="privacy_term_2_body">Tu información se utiliza exclusivamente para brindarte el servicio de seguimiento de hábitos. Nunca compartimos, vendemos ni cedemos tus datos personales a terceros con fines comerciales.</string>
+    <string name="privacy_term_3_title">3. Almacenamiento y seguridad</string>
+    <string name="privacy_term_3_body">Tus datos se almacenan de forma segura en Firebase (Google Cloud). Utilizamos autenticación con cifrado y reglas de seguridad que garantizan que solo tú puedas acceder a tu información.</string>
+    <string name="privacy_term_4_title">4. Tus derechos</string>
+    <string name="privacy_term_4_body">Puedes solicitar la eliminación de tu cuenta y todos tus datos en cualquier momento. Tienes derecho a acceder, corregir y eliminar la información que hemos recopilado sobre ti.</string>
+    <string name="privacy_term_5_title">5. Contacto</string>
+    <string name="privacy_term_5_body">Si tienes preguntas sobre esta política de privacidad o el manejo de tus datos, puedes contactar al equipo de desarrollo a través de los canales oficiales de la aplicación.</string>
+
+    <string name="habits_empty_state">Aún no tienes hábitos.\nToca el botón + para crear el primero.</string>
+    <string name="habit_default_name">Hábito</string>
+    <string name="reflexion_guardada">Reflexión guardada</string>
+    <string name="reflexion_hint_activo">¿Cómo te fue hoy con este hábito?</string>
+    <string name="reflexion_hint_bloqueado">Completa el hábito de hoy para escribir tu reflexión.</string>
+    <string name="delete_habit">Eliminar hábito</string>
+    <string name="delete_habit_confirm_title">¿Eliminar hábito?</string>
+    <string name="delete_habit_confirm_message">Se eliminarán el hábito y todo su historial. Esta acción no se puede deshacer.</string>
+    <string name="delete_confirm">Eliminar</string>
+    <string name="delete_cancel">Cancelar</string>
+
+    <string name="month_january">Enero</string>
+    <string name="month_february">Febrero</string>
+    <string name="month_march">Marzo</string>
+    <string name="month_april">Abril</string>
+    <string name="month_may">Mayo</string>
+    <string name="month_june">Junio</string>
+    <string name="month_july">Julio</string>
+    <string name="month_august">Agosto</string>
+    <string name="month_september">Septiembre</string>
+    <string name="month_october">Octubre</string>
+    <string name="month_november">Noviembre</string>
+    <string name="month_december">Diciembre</string>
 
 </resources>

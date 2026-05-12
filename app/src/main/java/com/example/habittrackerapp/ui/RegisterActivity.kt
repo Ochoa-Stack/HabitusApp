@@ -118,11 +118,21 @@ class RegisterActivity : AppCompatActivity() {
                             Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                 },
-                onFailure = {
+                onFailure = { error ->
                     // Si se produce un error, restauramos el botón y mostramos el mensaje
                     binding.btnRegister.isEnabled = true
                     binding.btnRegister.text      = getString(R.string.btn_register)
-                    binding.tilEmail.error        = it.message
+                    
+                    val mensajeError = when {
+                        error.message?.contains("email address is already in use", ignoreCase = true) == true -> 
+                            "Este correo ya está registrado"
+                        error.message?.contains("network error", ignoreCase = true) == true ->
+                            "Error de red. Revisa tu conexión"
+                        else -> error.message ?: "Error al crear la cuenta"
+                    }
+                    
+                    android.widget.Toast.makeText(this@RegisterActivity, mensajeError, android.widget.Toast.LENGTH_LONG).show()
+                    binding.tilEmail.error = mensajeError
                 }
             )
         }

@@ -8,21 +8,21 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.habittrackerapp.ui.HomeFragment"
-        android:label="Inicio" />
+        android:label="@string/nav_home" />
     <!-- Creamos la pantalla de hábitos (destino) -->
     <fragment
         android:id="@+id/nav_habits"
         android:name="com.example.habittrackerapp.ui.HabitsFragment"
-        android:label="Hábitos" />
+        android:label="@string/nav_habits" />
     <!-- Creamos la pantalla de categorías (destino) -->
     <fragment
         android:id="@+id/nav_categories"
         android:name="com.example.habittrackerapp.ui.CategoriesFragment"
-        android:label="Categorías" />
+        android:label="@string/nav_categories" />
     <!-- Creamos la pantalla de perfil (destino) -->
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.example.habittrackerapp.ui.ProfileFragment"
-        android:label="Perfil" />
+        android:label="@string/nav_profile" />
 
 </navigation>

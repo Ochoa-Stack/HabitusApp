@@ -1,251 +1,76 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Creamos el layout de la pantalla de notificaciones -->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
+<?xml version='1.0' encoding='utf-8'?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/background">
 
-    <!-- Creamos el círculo decorativo superior derecho -->
-    <View
-        android:id="@+id/circleTop"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:background="@drawable/circle_accent_top"
-        android:alpha="0.18"
-        android:layout_marginTop="-60dp"
-        android:layout_marginEnd="-60dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+    
+    <View android:id="@+id/circleTop" android:layout_width="220dp" android:layout_height="220dp" android:background="@drawable/circle_accent_top" android:alpha="0.18" android:layout_marginTop="-60dp" android:layout_marginEnd="-60dp" app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Creamos el círculo decorativo inferior izquierdo -->
-    <View
-        android:id="@+id/circleBottom"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:background="@drawable/circle_accent_bottom"
-        android:alpha="0.12"
-        android:layout_marginBottom="-40dp"
-        android:layout_marginStart="-40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+    
+    <View android:id="@+id/circleBottom" android:layout_width="160dp" android:layout_height="160dp" android:background="@drawable/circle_accent_bottom" android:alpha="0.12" android:layout_marginBottom="-40dp" android:layout_marginStart="-40dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Creamos el botón de regreso -->
-    <ImageView
-        android:id="@+id/btnBack"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_arrow_back"
-        android:padding="8dp"
-        app:tint="@color/text_primary"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:contentDescription="Regresar"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="48dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+    
+    <ImageView android:id="@+id/btnBack" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_arrow_back" android:padding="12dp" app:tint="@color/text_primary" android:background="?attr/selectableItemBackgroundBorderless" android:clickable="true" android:focusable="true" android:contentDescription="Regresar" android:layout_marginStart="16dp" android:layout_marginTop="48dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Creamos el título -->
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/notif_title"
-        android:fontFamily="@font/playfair_display_bold"
-        android:textSize="28sp"
-        android:letterSpacing="-0.02"
-        android:textColor="@color/text_primary"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"/>
+    
+    <TextView android:id="@+id/tvTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/notif_title" android:fontFamily="@font/playfair_display_bold" android:textSize="28sp" android:letterSpacing="-0.02" android:textColor="@color/text_primary" android:layout_marginStart="24dp" android:layout_marginTop="16dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/btnBack" />
 
-    <!-- Creamos un scroll del contenido -->
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:overScrollMode="never"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    
+    <ScrollView android:layout_width="0dp" android:layout_height="0dp" android:overScrollMode="never" android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@id/tvTitle" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingBottom="48dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="24dp" android:paddingBottom="48dp">
 
-            <!-- Creamos un componente para activar recordatorios (card) -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/card_background">
+            
+            <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:layout_marginBottom="16dp" app:cardCornerRadius="24dp" app:cardElevation="0dp" app:cardBackgroundColor="@color/card_background">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
 
-                    <!-- Creamos el toggle principal -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                    
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/notif_enable"
-                                android:fontFamily="@font/playfair_display_semibold"
-                                android:textSize="18sp"
-                                android:textColor="@color/text_primary"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/notif_enable" android:fontFamily="@font/playfair_display_semibold" android:textSize="18sp" android:textColor="@color/text_primary" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/notif_enable_desc"
-                                android:fontFamily="@font/dm_sans"
-                                android:textSize="13sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="4dp"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/notif_enable_desc" android:fontFamily="@font/dm_sans" android:textSize="13sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
                         </LinearLayout>
 
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchNotifications"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"/>
+                        <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchNotifications" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" />
                     </LinearLayout>
 
-                    <!-- Creamos un divisor -->
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/divider_color"
-                        android:layout_marginVertical="20dp"/>
+                    
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color" android:layout_marginVertical="20dp" />
 
-                    <!-- Creamos un componente selector de hora -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/notif_time"
-                        android:fontFamily="@font/playfair_display_semibold"
-                        android:textSize="18sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="16dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/notif_time" android:fontFamily="@font/playfair_display_semibold" android:textSize="18sp" android:textColor="@color/text_primary" android:layout_marginBottom="16dp" />
 
-                    <!-- Creamos el elemento 'mañana' (opción) -->
-                    <LinearLayout
-                        android:id="@+id/optionMorning"
-                        android:layout_width="match_parent"
-                        android:layout_height="52dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:clickable="true"
-                        android:focusable="true">
+                    
+                    <LinearLayout android:id="@+id/optionMorning" android:layout_width="match_parent" android:layout_height="52dp" android:orientation="horizontal" android:gravity="center_vertical" android:clickable="true" android:focusable="true">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/notif_morning"
-                            android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="15sp"
-                            android:textColor="@color/text_primary"/>
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/notif_morning" android:fontFamily="@font/dm_sans_medium" android:textSize="15sp" android:textColor="@color/text_primary" />
 
-                        <ImageView
-                            android:id="@+id/checkMorning"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/bg_day_completed"
-                            android:visibility="gone"/>
+                        <ImageView android:id="@+id/checkMorning" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/bg_day_completed" android:visibility="gone" />
                     </LinearLayout>
 
-                    <!-- Creamos el elemento 'tarde' (opción) -->
-                    <LinearLayout
-                        android:id="@+id/optionAfternoon"
-                        android:layout_width="match_parent"
-                        android:layout_height="52dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:clickable="true"
-                        android:focusable="true">
+                    
+                    <LinearLayout android:id="@+id/optionAfternoon" android:layout_width="match_parent" android:layout_height="52dp" android:orientation="horizontal" android:gravity="center_vertical" android:clickable="true" android:focusable="true">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/notif_afternoon"
-                            android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="15sp"
-                            android:textColor="@color/text_primary"/>
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/notif_afternoon" android:fontFamily="@font/dm_sans_medium" android:textSize="15sp" android:textColor="@color/text_primary" />
 
-                        <ImageView
-                            android:id="@+id/checkAfternoon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/bg_day_completed"
-                            android:visibility="gone"/>
+                        <ImageView android:id="@+id/checkAfternoon" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/bg_day_completed" android:visibility="gone" />
                     </LinearLayout>
 
-                    <!-- Creamos el elemento 'noche' (opción) -->
-                    <LinearLayout
-                        android:id="@+id/optionEvening"
-                        android:layout_width="match_parent"
-                        android:layout_height="52dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:clickable="true"
-                        android:focusable="true">
+                    
+                    <LinearLayout android:id="@+id/optionEvening" android:layout_width="match_parent" android:layout_height="52dp" android:orientation="horizontal" android:gravity="center_vertical" android:clickable="true" android:focusable="true">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/notif_evening"
-                            android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="15sp"
-                            android:textColor="@color/text_primary"/>
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/notif_evening" android:fontFamily="@font/dm_sans_medium" android:textSize="15sp" android:textColor="@color/text_primary" />
 
-                        <ImageView
-                            android:id="@+id/checkEvening"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/bg_day_completed"
-                            android:visibility="gone"/>
+                        <ImageView android:id="@+id/checkEvening" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/bg_day_completed" android:visibility="gone" />
                     </LinearLayout>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Creamos la sección de texto informativo al pie -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/notif_footer"
-                android:fontFamily="@font/dm_sans"
-                android:textSize="13sp"
-                android:lineSpacingExtra="4dp"
-                android:textColor="@color/text_secondary"
-                android:layout_marginHorizontal="8dp"/>
+            
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/notif_footer" android:fontFamily="@font/dm_sans" android:textSize="13sp" android:lineSpacingExtra="4dp" android:textColor="@color/text_secondary" android:layout_marginHorizontal="8dp" />
 
         </LinearLayout>
     </ScrollView>

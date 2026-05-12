@@ -17,6 +17,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val habitRepository = HabitRepository()
+    private var statsYaCargadas = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +45,11 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        cargarEstadisticas()
+        if (!statsYaCargadas) cargarEstadisticas()
+    }
+
+    fun invalidarStats() {
+        statsYaCargadas = false
     }
 
     private fun configurarSaludo() {
@@ -71,7 +76,8 @@ class HomeFragment : Fragment() {
     private fun cargarEstadisticas() {
         binding.tvMensajeMotivacional.text = getString(R.string.home_msg_loading)
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (_binding == null) return@launch
             // Carga estadísticas del resumen principal
             val resultStats = habitRepository.obtenerEstadisticas()
             resultStats.fold(
@@ -79,6 +85,7 @@ class HomeFragment : Fragment() {
                     binding.tvStatActivos.text     = stats.totalHabitos.toString()
                     binding.tvStatCompletados.text = stats.completadosHoy.toString()
                     binding.tvStatRacha.text       = stats.rachaMaxima.toString()
+                    statsYaCargadas = true
                 },
                 onFailure = {
                     binding.tvStatActivos.text     = "0"
@@ -110,7 +117,14 @@ class HomeFragment : Fragment() {
             val balanceResult = habitRepository.obtenerBalanceCognitivo()
             balanceResult.fold(
                 onSuccess = { balance -> mostrarBalanceCognitivo(balance) },
-                onFailure = { }
+                onFailure = {
+                    if (_binding == null) return@fold
+                    android.widget.Toast.makeText(
+                        requireContext(),
+                        getString(R.string.error_cargar_datos),
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
     }
@@ -131,7 +145,7 @@ class HomeFragment : Fragment() {
             if (cantidad == 0) return@forEach
 
             val porcentaje = (cantidad * 100f / total).toInt()
-            val colorHex   = com.example.habittrackerapp.data.TipoCognitivo.color(tipo)
+            val colorRes   = com.example.habittrackerapp.data.TipoCognitivo.colorRes(tipo)
             val emoji      = com.example.habittrackerapp.data.TipoCognitivo.emoji(tipo)
 
             val fila = android.widget.LinearLayout(requireContext()).apply {
@@ -158,10 +172,10 @@ class HomeFragment : Fragment() {
 
             val barraRelleno = android.view.View(requireContext()).apply {
                 layoutParams = android.widget.FrameLayout.LayoutParams(0, 8)
-                setBackgroundColor(android.graphics.Color.parseColor(colorHex))
+                setBackgroundColor(requireContext().getColor(colorRes))
                 background = android.graphics.drawable.GradientDrawable().apply {
                     shape = android.graphics.drawable.GradientDrawable.RECTANGLE
-                    setColor(android.graphics.Color.parseColor(colorHex))
+                    setColor(requireContext().getColor(colorRes))
                     cornerRadius = 8f
                 }
                 viewTreeObserver.addOnGlobalLayoutListener(

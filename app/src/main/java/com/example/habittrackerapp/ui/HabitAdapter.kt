@@ -4,13 +4,24 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import com.example.habittrackerapp.data.Habit
 import com.example.habittrackerapp.databinding.ItemHabitBinding
 
 class HabitAdapter(
-    private val habits: List<Habit>,
     private val onMoreClick: (Habit) -> Unit
-) : RecyclerView.Adapter<HabitAdapter.HabitVH>() {
+) : ListAdapter<Habit, HabitAdapter.HabitVH>(DIFF_CALLBACK) {
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Habit>() {
+            override fun areItemsTheSame(old: Habit, new: Habit) =
+                old.id == new.id
+
+            override fun areContentsTheSame(old: Habit, new: Habit) =
+                old == new
+        }
+    }
 
     inner class HabitVH(val binding: ItemHabitBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -18,10 +29,8 @@ class HabitAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         HabitVH(ItemHabitBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun getItemCount() = habits.size
-
     override fun onBindViewHolder(holder: HabitVH, position: Int) {
-        val habit = habits[position]
+        val habit = getItem(position)
         with(holder.binding) {
             tvHabitName.text = habit.nombre
             tvFrequency.text = habit.frecuencia
@@ -44,6 +53,14 @@ class HabitAdapter(
                 }
             } else {
                 tvCategoryChip.visibility = android.view.View.GONE
+            }
+
+            if (habit.estaCompletadoHoy) {
+                ivHabitIcon.background = root.context.getDrawable(com.example.habittrackerapp.R.drawable.bg_circle_completed)
+                ivHabitIcon.imageTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE)
+            } else {
+                ivHabitIcon.background = root.context.getDrawable(com.example.habittrackerapp.R.drawable.bg_circle_empty)
+                ivHabitIcon.imageTintList = android.content.res.ColorStateList.valueOf(root.context.getColor(com.example.habittrackerapp.R.color.accent))
             }
 
             rvWeekDays.layoutManager =

@@ -12,13 +12,12 @@ import com.example.habittrackerapp.data.HabitRepository
 import com.example.habittrackerapp.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
 
-class ProfileFragment : Fragment() {    // Declaramos el fragmento ProfileFragment
-    // Declaramos las variables de enlace de vista
+class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-    // Declaramos los repositorios de autenticación y de hábitos
     private val authRepository  = FirebaseAuthRepository()
     private val habitRepository = HabitRepository()
+    private var statsYaCargadas = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,7 +27,7 @@ class ProfileFragment : Fragment() {    // Declaramos el fragmento ProfileFragme
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
-    // Configuramos el comportamiento de la interfaz de usuario
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -37,7 +36,8 @@ class ProfileFragment : Fragment() {    // Declaramos el fragmento ProfileFragme
         if (usuario != null) {
             binding.tvUserEmail.text = usuario.email ?: ""
 
-            lifecycleScope.launch {
+            viewLifecycleOwner.lifecycleScope.launch {
+                if (_binding == null) return@launch
                 val resultado = authRepository.obtenerNombreUsuario()
                 resultado.fold(
                     onSuccess = { nombre ->
@@ -51,15 +51,26 @@ class ProfileFragment : Fragment() {    // Declaramos el fragmento ProfileFragme
                 )
             }
         }
-        // Cargamos las estadísticas del usuario
-        lifecycleScope.launch {
+        configurarListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!statsYaCargadas) {
+            cargarEstadisticas()
+        }
+    }
+
+    private fun cargarEstadisticas() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (_binding == null) return@launch
             val resultado = habitRepository.obtenerEstadisticas()
             resultado.fold(
                 onSuccess = { stats ->
                     binding.tvStatHabits.text    = stats.totalHabitos.toString()
                     binding.tvStatStreak.text    = stats.rachaMaxima.toString()
-                    // Ahora sí muestra el total histórico de completaciones
                     binding.tvStatCompleted.text = stats.totalCompletaciones.toString()
+                    statsYaCargadas = true
                 },
                 onFailure = {
                     binding.tvStatHabits.text    = "0"
@@ -68,7 +79,9 @@ class ProfileFragment : Fragment() {    // Declaramos el fragmento ProfileFragme
                 }
             )
         }
-        // Configuramos los listeners de los botones
+    }
+
+    private fun configurarListeners() {
         binding.optionNotifications.setOnClickListener {
             startActivity(Intent(requireContext(), NotificationsActivity::class.java))
         }
@@ -81,7 +94,6 @@ class ProfileFragment : Fragment() {    // Declaramos el fragmento ProfileFragme
         binding.optionAbout.setOnClickListener {
             startActivity(Intent(requireContext(), AboutActivity::class.java))
         }
-        // Cerramos la sesión (Usuario)
         binding.btnLogout.setOnClickListener {
             authRepository.cerrarSesion()
             val intent = Intent(requireContext(), InicioSesionInterfaz::class.java)
@@ -89,7 +101,7 @@ class ProfileFragment : Fragment() {    // Declaramos el fragmento ProfileFragme
             startActivity(intent)
         }
     }
-    // Limpiamos el enlace de vista
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

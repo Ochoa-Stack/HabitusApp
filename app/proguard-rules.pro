@@ -1,21 +1,41 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# === Firebase Auth ===
+-keepattributes Signature
+-keepattributes *Annotation*
+-keepattributes EnclosingMethod
+-keepattributes InnerClasses
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# === Firebase Firestore ===
+-keep class com.google.firebase.** { *; }
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.firebase.**
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# === Modelos de datos — Firestore necesita leer campos por nombre ===
+-keep class com.example.habittrackerapp.data.Habit { *; }
+-keep class com.example.habittrackerapp.data.Reflexion { *; }
+-keep class com.example.habittrackerapp.data.ResumenSemanal { *; }
+-keep class com.example.habittrackerapp.data.EstadisticasUsuario { *; }
+-keep class com.example.habittrackerapp.data.HabitCategory { *; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# === Kotlin Coroutines ===
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-dontwarn kotlinx.coroutines.**
+
+# === Navigation Component ===
+-keepnames class androidx.navigation.fragment.NavHostFragment
+-keepnames class * extends androidx.fragment.app.Fragment
+
+# === WorkManager ===
+-keep class * extends androidx.work.Worker
+-keep class * extends androidx.work.CoroutineWorker
+-keepclassmembers class * extends androidx.work.Worker {
+    public <init>(android.content.Context, androidx.work.WorkerParameters);
+}
+
+# === Mantener nombres de clases de excepciones ===
+-keepnames class * extends java.lang.Exception
+
+# === Evitar warnings de librerías internas ===
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**

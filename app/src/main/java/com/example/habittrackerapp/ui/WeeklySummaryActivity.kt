@@ -24,11 +24,25 @@ class WeeklySummaryActivity : AppCompatActivity() {
     }
     // Cargamos el resumen semanal
     private fun cargarResumen() {
+        binding.progressBarSemanal.visibility = android.view.View.VISIBLE
+        binding.scrollViewContenido.visibility = android.view.View.GONE
+
         lifecycleScope.launch {
             val resultado = habitRepository.obtenerResumenSemanal()
+            binding.progressBarSemanal.visibility = android.view.View.GONE
             resultado.fold(
-                onSuccess = { resumen -> mostrarResumen(resumen) },
-                onFailure = { }
+                onSuccess = { resumen -> 
+                    binding.scrollViewContenido.visibility = android.view.View.VISIBLE
+                    mostrarResumen(resumen) 
+                },
+                onFailure = {
+                    android.widget.Toast.makeText(
+                        this@WeeklySummaryActivity,
+                        getString(R.string.error_cargar_datos),
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                    finish()
+                }
             )
         }
     }
