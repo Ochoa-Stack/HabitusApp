@@ -1,135 +1,106 @@
 package com.ochoastack.habitus.ui
 
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.ochoastack.habitus.R
 import com.ochoastack.habitus.databinding.ActivityNotificationsBinding
 import com.ochoastack.habitus.utils.NotificationHelper
 
-class NotificationsActivity : AppCompatActivity() {    // Declaramos el fragmento de notificaciones
-    // Declaramos las variables de estado
+class NotificationsActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityNotificationsBinding
-    // Declaramos las constantes de Intent
-    companion object {
-        const val PREFS_NAME        = "habitus_prefs"
-        const val KEY_NOTIF_ENABLED = "notif_enabled"
-        const val KEY_NOTIF_TIME    = "notif_time"
-        const val TIME_MORNING      = "morning"
-        const val TIME_AFTERNOON    = "afternoon"
-        const val TIME_EVENING      = "evening"
-    }
-    // Ignoramos el listener del switch cuando lo movemos programáticamente
-    private var ignorarCambioSwitch = false
-    /* Si el usuario concede el permiso, programamos el recordatorio;
-    si lo deniega, revertimos el switch al estado apagado */
-    private val solicitarPermiso = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { concedido ->
-        if (concedido) {
-            guardarYProgramar(activado = true)
-        } else {
-            ignorarCambioSwitch = true
-            binding.switchNotifications.isChecked = false
-            ignorarCambioSwitch = false
-            guardarYProgramar(activado = false)
-        }
-    }
-    // Configuramos el layout
+
+    private var horaSeleccionada = 8
+    private var minutoSeleccionado = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNotificationsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        // Recuperamos el estado de las preferencias
-        val prefs          = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val notifActivadas = prefs.getBoolean(KEY_NOTIF_ENABLED, false)
-        val horaGuardada   = prefs.getString(KEY_NOTIF_TIME, TIME_MORNING) ?: TIME_MORNING
-        // Configuramos el switch de notificaciones
-        binding.switchNotifications.isChecked = notifActivadas
-        actualizarSeleccionHora(horaGuardada)
-        actualizarEstadoOpciones(notifActivadas)
-        // Configuramos el listener del switch
-        binding.switchNotifications.setOnCheckedChangeListener { _, activado ->
-            if (ignorarCambioSwitch) return@setOnCheckedChangeListener
 
-            if (activado && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                val permiso = android.Manifest.permission.POST_NOTIFICATIONS
-                if (checkSelfPermission(permiso) != PackageManager.PERMISSION_GRANTED) {
-                    solicitarPermiso.launch(permiso)
-                    return@setOnCheckedChangeListener
-                }
-            }
-            guardarYProgramar(activado)
-        }
-        // Configuramos los botones de hora
-        binding.optionMorning.setOnClickListener {
-            guardarHora(TIME_MORNING)
-            actualizarSeleccionHora(TIME_MORNING)
-            reprogramarSiActivo()
-        }
-        binding.optionAfternoon.setOnClickListener {
-            guardarHora(TIME_AFTERNOON)
-            actualizarSeleccionHora(TIME_AFTERNOON)
-            reprogramarSiActivo()
-        }
-        binding.optionEvening.setOnClickListener {
-            guardarHora(TIME_EVENING)
-            actualizarSeleccionHora(TIME_EVENING)
-            reprogramarSiActivo()
-        }
-        // Configuramos el botón de retroceso
         binding.btnBack.setOnClickListener { finish() }
+
+        cargarPreferencias()
+        configurarSwitch()
+        configurarSelectorHora()
+        configurarBotonGuardar()
     }
-    // Guardamos el estado del toggle y programa o cancela el recordatorio según corresponda
-    private fun guardarYProgramar(activado: Boolean) {
-        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit().putBoolean(KEY_NOTIF_ENABLED, activado).apply()
 
-        actualizarEstadoOpciones(activado)
+    private fun cargarPreferencias() {
+        val (hora, minuto, habilitado) =
+            NotificationHelper.leerPreferenciaRecordatorio(this)
+        horaSeleccionada = hora
+        minutoSeleccionado = minuto
 
-        if (activado) {
-            val hora = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .getString(KEY_NOTIF_TIME, TIME_MORNING) ?: TIME_MORNING
-            NotificationHelper.programarRecordatorio(this, hora)
-        } else {
-            NotificationHelper.cancelarRecordatorio(this)
+        binding.switchRecordatorio.isChecked = habilitado
+        actualizarTextoHora(hora, minuto)
+        actualizarVisibilidadSelector(habilitado)
+    }
+
+    private fun configurarSwitch() {
+        binding.switchRecordatorio.setOnCheckedChangeListener { _, isChecked ->
+            actualizarVisibilidadSelector(isChecked)
         }
     }
-    // Reprogramamos el recordatorio con la nueva hora si las notificaciones están activas
-    private fun reprogramarSiActivo() {
-        val activo = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getBoolean(KEY_NOTIF_ENABLED, false)
-        if (!activo) return
 
-        val hora = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getString(KEY_NOTIF_TIME, TIME_MORNING) ?: TIME_MORNING
-        NotificationHelper.programarRecordatorio(this, hora)
+    private fun configurarSelectorHora() {
+        binding.btnSeleccionarHora.setOnClickListener {
+            val timePicker = android.app.TimePickerDialog(
+                this,
+                { _, hora, minuto ->
+                    horaSeleccionada = hora
+                    minutoSeleccionado = minuto
+                    actualizarTextoHora(hora, minuto)
+                },
+                horaSeleccionada,
+                minutoSeleccionado,
+                true // formato 24h
+            )
+            timePicker.show()
+        }
     }
-    // Guardamos la hora seleccionada
-    private fun guardarHora(hora: String) {
-        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit().putString(KEY_NOTIF_TIME, hora).apply()
+
+    private fun configurarBotonGuardar() {
+        binding.btnGuardarRecordatorio.setOnClickListener {
+            val habilitado = binding.switchRecordatorio.isChecked
+
+            NotificationHelper.guardarPreferenciaRecordatorio(
+                this, horaSeleccionada, minutoSeleccionado, habilitado
+            )
+
+            if (habilitado) {
+                NotificationHelper.programarRecordatorioDiario(
+                    this, horaSeleccionada, minutoSeleccionado
+                )
+            } else {
+                NotificationHelper.cancelarRecordatorioDiario(this)
+            }
+
+            android.widget.Toast.makeText(
+                this,
+                getString(R.string.notif_guardado_ok),
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        }
     }
-    // Actualizamos la selección de hora
-    private fun actualizarSeleccionHora(horaSeleccionada: String) {
-        binding.checkMorning.visibility   =
-            if (horaSeleccionada == TIME_MORNING)   View.VISIBLE else View.GONE
-        binding.checkAfternoon.visibility =
-            if (horaSeleccionada == TIME_AFTERNOON) View.VISIBLE else View.GONE
-        binding.checkEvening.visibility   =
-            if (horaSeleccionada == TIME_EVENING)   View.VISIBLE else View.GONE
+
+    private fun actualizarTextoHora(hora: Int, minuto: Int) {
+        val horaFormateada = String.format("%02d:%02d", hora, minuto)
+        binding.btnSeleccionarHora.text = horaFormateada
     }
-    // Actualizamos el estado de las opciones de hora
-    private fun actualizarEstadoOpciones(activado: Boolean) {
-        val alpha = if (activado) 1.0f else 0.4f
-        binding.optionMorning.alpha   = alpha
-        binding.optionAfternoon.alpha = alpha
-        binding.optionEvening.alpha   = alpha
-        binding.optionMorning.isEnabled   = activado
-        binding.optionAfternoon.isEnabled = activado
-        binding.optionEvening.isEnabled   = activado
+
+    private fun actualizarVisibilidadSelector(visible: Boolean) {
+        binding.llSelectorHora.visibility =
+            if (visible) View.VISIBLE else View.GONE
+        binding.btnGuardarRecordatorio.visibility =
+            if (visible) View.VISIBLE else View.GONE
+
+        if (!visible) {
+            NotificationHelper.cancelarRecordatorioDiario(this)
+            NotificationHelper.guardarPreferenciaRecordatorio(
+                this, horaSeleccionada, minutoSeleccionado, false
+            )
+        }
     }
 }

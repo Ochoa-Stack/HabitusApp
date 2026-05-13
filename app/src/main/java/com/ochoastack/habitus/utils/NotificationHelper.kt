@@ -18,6 +18,12 @@ object NotificationHelper {    // Declaramos el objeto de helper de notificacion
     const val WORK_TAG_WEEKLY  = "habitus_weekly_summary"
     const val NOTIF_ID_WEEKLY  = 1003
 
+    const val WORK_TAG_DAILY_REMINDER = "habitus_daily_reminder"
+    const val PREF_NAME = "habitus_prefs"
+    const val PREF_REMINDER_HOUR = "reminder_hour"
+    const val PREF_REMINDER_MINUTE = "reminder_minute"
+    const val PREF_REMINDER_ENABLED = "reminder_enabled"
+
     // Creamos el canal de notificaciones requerido en Android 8.0 (API 26) en adelante
     fun crearCanal(context: Context) {
         val canal = NotificationChannel(
@@ -101,5 +107,72 @@ object NotificationHelper {    // Declaramos el objeto de helper de notificacion
 
     fun cancelarResumenSemanal(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag(WORK_TAG_WEEKLY)
+    }
+
+    // Programa o reprograma el recordatorio diario a la hora indicada.
+    // Cancela cualquier trabajo anterior con el mismo tag antes de crear
+    // uno nuevo para evitar duplicados.
+    fun programarRecordatorioDiario(
+        context: Context,
+        hora: Int,
+        minuto: Int
+    ) {
+        val workManager = WorkManager.getInstance(context)
+        workManager.cancelAllWorkByTag(WORK_TAG_DAILY_REMINDER)
+
+        val ahora = java.util.Calendar.getInstance()
+        val objetivo = java.util.Calendar.getInstance().apply {
+            set(java.util.Calendar.HOUR_OF_DAY, hora)
+            set(java.util.Calendar.MINUTE, minuto)
+            set(java.util.Calendar.SECOND, 0)
+            set(java.util.Calendar.MILLISECOND, 0)
+            // Si la hora ya pasó hoy, programar para mañana
+            if (timeInMillis <= ahora.timeInMillis) {
+                add(java.util.Calendar.DAY_OF_YEAR, 1)
+            }
+        }
+
+        val retrasoMs = objetivo.timeInMillis - ahora.timeInMillis
+
+        val solicitud = PeriodicWorkRequestBuilder<com.ochoastack.habitus.worker.DailyReminderWorker>(
+            1, TimeUnit.DAYS
+        )
+            .setInitialDelay(retrasoMs, TimeUnit.MILLISECONDS)
+            .addTag(WORK_TAG_DAILY_REMINDER)
+            .build()
+
+        workManager.enqueueUniquePeriodicWork(
+            WORK_TAG_DAILY_REMINDER,
+            ExistingPeriodicWorkPolicy.REPLACE,
+            solicitud
+        )
+    }
+
+    fun cancelarRecordatorioDiario(context: Context) {
+        WorkManager.getInstance(context)
+            .cancelAllWorkByTag(WORK_TAG_DAILY_REMINDER)
+    }
+
+    fun guardarPreferenciaRecordatorio(
+        context: Context,
+        hora: Int,
+        minuto: Int,
+        habilitado: Boolean
+    ) {
+        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putInt(PREF_REMINDER_HOUR, hora)
+            .putInt(PREF_REMINDER_MINUTE, minuto)
+            .putBoolean(PREF_REMINDER_ENABLED, habilitado)
+            .apply()
+    }
+
+    fun leerPreferenciaRecordatorio(context: Context): Triple<Int, Int, Boolean> {
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        return Triple(
+            prefs.getInt(PREF_REMINDER_HOUR, 8),
+            prefs.getInt(PREF_REMINDER_MINUTE, 0),
+            prefs.getBoolean(PREF_REMINDER_ENABLED, false)
+        )
     }
 }
