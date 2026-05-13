@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.habittrackerapp"
+    namespace = "com.ochoastack.habitus"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.habittrackerapp"
+        applicationId = "com.ochoastack.habitus"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
