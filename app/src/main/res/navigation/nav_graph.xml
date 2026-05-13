@@ -7,22 +7,22 @@
     <!-- Creamos la pantalla de inicio (destino) -->
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.habittrackerapp.ui.HomeFragment"
+        android:name="com.ochoastack.habitus.ui.HomeFragment"
         android:label="@string/nav_home" />
     <!-- Creamos la pantalla de hábitos (destino) -->
     <fragment
         android:id="@+id/nav_habits"
-        android:name="com.example.habittrackerapp.ui.HabitsFragment"
+        android:name="com.ochoastack.habitus.ui.HabitsFragment"
         android:label="@string/nav_habits" />
     <!-- Creamos la pantalla de categorías (destino) -->
     <fragment
         android:id="@+id/nav_categories"
-        android:name="com.example.habittrackerapp.ui.CategoriesFragment"
+        android:name="com.ochoastack.habitus.ui.CategoriesFragment"
         android:label="@string/nav_categories" />
     <!-- Creamos la pantalla de perfil (destino) -->
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.example.habittrackerapp.ui.ProfileFragment"
+        android:name="com.ochoastack.habitus.ui.ProfileFragment"
         android:label="@string/nav_profile" />
 
 </navigation>

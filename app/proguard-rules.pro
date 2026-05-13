@@ -10,11 +10,11 @@
 -dontwarn com.google.firebase.**
 
 # === Modelos de datos — Firestore necesita leer campos por nombre ===
--keep class com.example.habittrackerapp.data.Habit { *; }
--keep class com.example.habittrackerapp.data.Reflexion { *; }
--keep class com.example.habittrackerapp.data.ResumenSemanal { *; }
--keep class com.example.habittrackerapp.data.EstadisticasUsuario { *; }
--keep class com.example.habittrackerapp.data.HabitCategory { *; }
+-keep class com.ochoastack.habitus.data.Habit { *; }
+-keep class com.ochoastack.habitus.data.Reflexion { *; }
+-keep class com.ochoastack.habitus.data.ResumenSemanal { *; }
+-keep class com.ochoastack.habitus.data.EstadisticasUsuario { *; }
+-keep class com.ochoastack.habitus.data.HabitCategory { *; }
 
 # === Kotlin Coroutines ===
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
