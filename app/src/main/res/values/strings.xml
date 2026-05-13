@@ -101,14 +101,14 @@
     <string name="habit_deleted">Hábito eliminado</string>
     <string name="habit_undo">Deshacer</string>
     <!-- Creamos los strings de la sección de 'Notificaciones' (perfil) -->
-    <string name="notif_title">Notificaciones</string>
-    <string name="notif_enable">Activar recordatorios</string>
-    <string name="notif_enable_desc">Recibe un recordatorio diario para registrar tus hábitos.</string>
-    <string name="notif_time">Hora del recordatorio</string>
-    <string name="notif_morning">Mañana (8:00 AM)</string>
-    <string name="notif_afternoon">Tarde (2:00 PM)</string>
-    <string name="notif_evening">Noche (8:00 PM)</string>
-    <string name="notif_footer">Las notificaciones te ayudan a mantener la consistencia. Puedes cambiar esta configuración en cualquier momento.</string>
+    
+    
+    
+    
+    
+    
+    
+    
     <!-- Creamos los strings para sección de 'Apariencia' (perfil) -->
     <string name="appearance_title">Apariencia</string>
     <string name="appearance_theme">Tema de la aplicación</string>
@@ -120,11 +120,11 @@
     <string name="privacy_title">Privacidad</string>
     <string name="privacy_last_update">Última actualización: abril 2026</string>
     <!-- Creamos los strings para la sección 'Acerca de' (perfil) -->
-    <string name="about_version">Versión 1.0</string>
-    <string name="about_description">Habitus es una aplicación de seguimiento de hábitos diseñada para ayudarte a construir una rutina sólida y alcanzar tus objetivos personales.</string>
-    <string name="about_team_title">Equipo de desarrollo</string>
-    <string name="about_tech_title">Tecnologías</string>
-    <string name="about_footer">Desarrollado como proyecto universitario en la UTCJ — Licenciatura en Ingeniería en Tecnologías de la Información e Innovación Digital.</string>
+    
+    
+    
+    
+    
     <!-- Creamos los strings para la sección de 'Categorías -->
     <string name="nueva_categoria_title">Nueva categoría ✦</string>
     <string name="label_category_name">Nombre de la categoría</string>
@@ -198,16 +198,16 @@
     <string name="focus_empty_title">No tienes hábitos para hoy</string>
     <string name="focus_empty_subtitle">Disfruta tu descanso</string>
 
-    <string name="privacy_term_1_title">1. Información que recopilamos</string>
-    <string name="privacy_term_1_body">Habitus recopila únicamente la información necesaria para el funcionamiento de la aplicación: correo electrónico, nombre de usuario y los hábitos que registres. No recopilamos datos de ubicación, contactos ni información sensible adicional.</string>
-    <string name="privacy_term_2_title">2. Cómo usamos tu información</string>
-    <string name="privacy_term_2_body">Tu información se utiliza exclusivamente para brindarte el servicio de seguimiento de hábitos. Nunca compartimos, vendemos ni cedemos tus datos personales a terceros con fines comerciales.</string>
-    <string name="privacy_term_3_title">3. Almacenamiento y seguridad</string>
-    <string name="privacy_term_3_body">Tus datos se almacenan de forma segura en Firebase (Google Cloud). Utilizamos autenticación con cifrado y reglas de seguridad que garantizan que solo tú puedas acceder a tu información.</string>
-    <string name="privacy_term_4_title">4. Tus derechos</string>
-    <string name="privacy_term_4_body">Puedes solicitar la eliminación de tu cuenta y todos tus datos en cualquier momento. Tienes derecho a acceder, corregir y eliminar la información que hemos recopilado sobre ti.</string>
-    <string name="privacy_term_5_title">5. Contacto</string>
-    <string name="privacy_term_5_body">Si tienes preguntas sobre esta política de privacidad o el manejo de tus datos, puedes contactar al equipo de desarrollo a través de los canales oficiales de la aplicación.</string>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     <string name="habits_empty_state">Aún no tienes hábitos.\nToca el botón + para crear el primero.</string>
     <string name="habit_default_name">Hábito</string>
@@ -233,4 +233,71 @@
     <string name="month_november">Noviembre</string>
     <string name="month_december">Diciembre</string>
 
+
+    <!-- Notificaciones -->
+    <string name="notifications_title">Notificaciones</string>
+    <string name="notif_daily_reminder_label">Recordatorio diario</string>
+    <string name="notif_daily_reminder_desc">Recibe un recordatorio a la hora que elijas.</string>
+    <string name="notif_hora_label">Hora del recordatorio</string>
+    <string name="notif_hora_default">08:00</string>
+    <string name="notif_guardar">Guardar recordatorio</string>
+    <string name="notif_guardado_ok">Recordatorio guardado.</string>
+    <string name="notif_weekly_label">Resumen semanal</string>
+    <string name="notif_weekly_desc">Cada domingo a las 8pm recibirás un resumen automático de tu semana con tus estadísticas reales.</string>
+    <string name="notif_reminder_title">¡Hora de tus hábitos!</string>
+    <string name="notif_reminder_body">Revisa tus hábitos de hoy y mantén tu racha activa.</string>
+    
+    <string name="privacy_term_1_title">1. Información que recopilamos</string>
+    <string name="privacy_term_1_body">Habitus recopila únicamente la información necesaria para el funcionamiento de la app: nombre y correo electrónico al registrarte, los hábitos que creas (nombre, frecuencia, tipo y configuración), tus completaciones diarias, reflexiones escritas y categorías personalizadas.</string>
+    <string name="privacy_term_2_title">2. Cómo usamos tu información</string>
+    <string name="privacy_term_2_body">Tu información se usa exclusivamente para mostrarte tu progreso, calcular tus rachas y estadísticas, y enviarte los recordatorios que tú configuras. No usamos tus datos para publicidad ni los compartimos con terceros.</string>
+    <string name="privacy_term_3_title">3. Almacenamiento y seguridad</string>
+    <string name="privacy_term_3_body">Tus datos se almacenan en Google Cloud Firestore, protegidos por reglas de seguridad que garantizan que solo tú puedes acceder a tu información. La autenticación usa Firebase Authentication con cifrado de extremo a extremo. No realizamos backups locales de tus datos.</string>
+    <string name="privacy_term_4_title">4. Tus derechos</string>
+    <string name="privacy_term_4_body">Puedes eliminar tu cuenta y todos tus datos en cualquier momento desde la sección de Perfil. Al eliminar tu cuenta se borran permanentemente todos tus hábitos, completaciones y reflexiones de nuestros servidores.</string>
+    <string name="privacy_term_5_title">5. Contacto</string>
+    <string name="privacy_term_5_body">Si tienes preguntas sobre cómo manejamos tu información, puedes contactarnos a través del repositorio oficial del proyecto en GitHub: github.com/Ochoa-Stack/HabitusApp</string>
+    
+    <string name="about_app_name">Habitus</string>
+    <string name="about_version">Versión 1.0.0</string>
+    <string name="about_description">Habitus es una aplicación de seguimiento de hábitos diseñada para ayudarte a construir rutinas consistentes y reflexionar sobre tu progreso diario.</string>
+    <string name="about_features_title">¿Qué puedes hacer?</string>
+    <string name="about_features_body">
+        • Crear hábitos con frecuencia personalizada
+
+        • Tipos cognitivos: Físico, Mental, Social, Creativo y Descanso
+
+        • Días de gracia para proteger tu racha
+
+        • Calendario mensual de progreso
+
+        • Diario de reflexión por hábito
+
+        • Modo enfoque para concentrarte en el día
+
+        • Resumen semanal automático
+
+        • Recordatorio diario personalizable
+
+        • Balance cognitivo visual
+
+        • Modo oscuro completo
+    </string>
+    <string name="about_tech_title">Tecnología</string>
+    <string name="about_tech_body">Construida con Kotlin para Android, Firebase Authentication y Cloud Firestore para sincronización en tiempo real, y WorkManager para notificaciones en segundo plano.</string>
+    <string name="about_team_title">Proyecto</string>
+    <string name="about_team_body">
+        Desarrollado como proyecto universitario de Ingeniería de Software y evolucionado como producto personal de portafolio.
+
+
+        Dirección del proyecto: Arleth Caballero
+
+        Desarrollo: Edgar Torres, Roberto Perez, Elias Ochoa, Arleth Caballero
+
+
+        Repositorio: github.com/Ochoa-Stack/HabitusApp
+    </string>
+    <string name="about_copyright">© 2026 Ochoa-Stack. Proyecto de portafolio.</string>
+    <string name="back">Regresar</string>
 </resources>
+
