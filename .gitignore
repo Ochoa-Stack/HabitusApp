@@ -35,7 +35,7 @@ GoogleService-Info.plist
 ehthumbs.db
 Thumbs.db
 
-# Gradle wrapper jar (incluido intencionalmente)
+# Gradle wrapper jar
 # gradle-wrapper.jar se versiona para builds reproducibles
 
 # Herramientas externas al proyecto
