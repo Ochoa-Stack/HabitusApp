@@ -1,500 +1,117 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Creamos el layout para editar un hábito existente -->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
+<?xml version='1.0' encoding='utf-8'?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/background">
 
-    <!-- Creamos el círculo decorativo superior derecho -->
-    <View
-        android:id="@+id/circleTop"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:background="@drawable/circle_accent_top"
-        android:alpha="0.18"
-        android:layout_marginTop="-60dp"
-        android:layout_marginEnd="-60dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+    
+    <View android:id="@+id/circleTop" android:layout_width="220dp" android:layout_height="220dp" android:background="@drawable/circle_accent_top" android:alpha="0.18" android:layout_marginTop="-60dp" android:layout_marginEnd="-60dp" app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Creamos el círculo decorativo inferior izquierdo -->
-    <View
-        android:id="@+id/circleBottom"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:background="@drawable/circle_accent_bottom"
-        android:alpha="0.12"
-        android:layout_marginBottom="-40dp"
-        android:layout_marginStart="-40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+    
+    <View android:id="@+id/circleBottom" android:layout_width="160dp" android:layout_height="160dp" android:background="@drawable/circle_accent_bottom" android:alpha="0.12" android:layout_marginBottom="-40dp" android:layout_marginStart="-40dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Creamos el botón de regreso -->
-    <ImageView
-        android:id="@+id/btnBack"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_arrow_back"
-        android:padding="8dp"
-        app:tint="@color/text_primary"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:contentDescription="Regresar"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="48dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+    
+    <ImageView android:id="@+id/btnBack" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_arrow_back" android:padding="12dp" app:tint="@color/text_primary" android:background="?attr/selectableItemBackgroundBorderless" android:clickable="true" android:focusable="true" android:contentDescription="Regresar" android:layout_marginStart="16dp" android:layout_marginTop="48dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Creamos el elemento 'Título' -->
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/edit_habit_title"
-        android:fontFamily="@font/playfair_display_bold"
-        android:textSize="28sp"
-        android:letterSpacing="-0.02"
-        android:textColor="@color/text_primary"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"/>
+    
+    <TextView android:id="@+id/tvTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@string/edit_habit_title" android:fontFamily="@font/playfair_display_bold" android:textSize="28sp" android:letterSpacing="-0.02" android:textColor="@color/text_primary" android:layout_marginStart="24dp" android:layout_marginEnd="24dp" android:layout_marginTop="16dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toBottomOf="@id/btnBack" />
 
-    <!-- Creamos un scroll para el formulario -->
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:overScrollMode="never"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
-        app:layout_constraintBottom_toTopOf="@id/btnSave"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    
+    <ScrollView android:id="@+id/scrollView" android:layout_width="0dp" android:layout_height="0dp" android:layout_marginTop="16dp" android:overScrollMode="never" app:layout_constraintTop_toBottomOf="@id/tvTitle" app:layout_constraintBottom_toTopOf="@id/btnSave" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingBottom="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="24dp" android:paddingBottom="16dp">
 
-            <!-- Creamos un card para el formulario -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/card_background">
+            
+            <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:cardCornerRadius="24dp" app:cardElevation="0dp" app:cardBackgroundColor="@color/card_background">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="28dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="28dp">
 
-                    <!-- Creamos el elemento label para 'nombre' -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_habit_name"
-                        android:fontFamily="@font/dm_sans_medium"
-                        android:textSize="12sp"
-                        android:letterSpacing="0.08"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginBottom="8dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_habit_name" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:letterSpacing="0.08" android:textAllCaps="true" android:textColor="@color/text_secondary" android:layout_marginBottom="8dp" />
 
-                    <!-- Creamos el elemento campo para 'nombre' -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilHabitName"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxStrokeColor="@color/input_stroke_selector"
-                        app:boxStrokeWidth="1.5dp"
-                        app:boxBackgroundColor="@color/input_background"
-                        app:hintEnabled="false"
-                        android:layout_marginBottom="24dp">
+                    
+                    <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilHabitName" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp" app:boxStrokeColor="@color/input_stroke_selector" app:boxStrokeWidth="1.5dp" app:boxBackgroundColor="@color/input_background" app:hintEnabled="false" android:layout_marginBottom="24dp">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/edtHabitName"
-                            android:layout_width="match_parent"
-                            android:layout_height="52dp"
-                            android:inputType="textCapSentences"
-                            android:hint="@string/hint_habit_name"
-                            android:fontFamily="@font/dm_sans"
-                            android:textSize="15sp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_hint"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
-                            android:background="@android:color/transparent"/>
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtHabitName" android:layout_width="match_parent" android:layout_height="52dp" android:inputType="textCapSentences" android:hint="@string/hint_habit_name" android:fontFamily="@font/dm_sans" android:textSize="15sp" android:textColor="@color/text_primary" android:textColorHint="@color/text_hint" android:paddingStart="16dp" android:paddingEnd="16dp" android:background="@android:color/transparent" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Creamos el elemento label para 'frecuencia' -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_frequency"
-                        android:fontFamily="@font/dm_sans_medium"
-                        android:textSize="12sp"
-                        android:letterSpacing="0.08"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginBottom="12dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_frequency" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:letterSpacing="0.08" android:textAllCaps="true" android:textColor="@color/text_secondary" android:layout_marginBottom="12dp" />
 
-                    <!-- Creamos los botones de frecuencia -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        android:layout_marginBottom="24dp">
+                    
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="2" android:layout_marginBottom="24dp">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnFreqDaily"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="56dp"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            android:text="@string/frequency_daily"
-                            android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="13sp"
-                            android:textColor="@color/on_accent"
-                            app:backgroundTint="@color/accent"
-                            app:strokeColor="@color/accent"
-                            app:strokeWidth="1.5dp"
-                            app:cornerRadius="12dp"/>
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnFreqDaily" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:layout_marginEnd="8dp" android:text="@string/frequency_daily" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" android:textColor="@color/on_accent" app:backgroundTint="@color/accent" app:strokeColor="@color/accent" app:strokeWidth="1.5dp" app:cornerRadius="12dp" />
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnFreqCustom"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="56dp"
-                            android:layout_weight="1"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/frequency_custom"
-                            android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="13sp"
-                            android:textColor="@color/text_secondary"
-                            app:backgroundTint="@android:color/transparent"
-                            app:strokeColor="@color/divider_color"
-                            app:strokeWidth="1.5dp"
-                            app:cornerRadius="12dp"/>
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnFreqCustom" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:layout_marginStart="8dp" android:text="@string/frequency_custom" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" android:textColor="@color/text_secondary" app:backgroundTint="@android:color/transparent" app:strokeColor="@color/divider_color" app:strokeWidth="1.5dp" app:cornerRadius="12dp" />
                     </LinearLayout>
 
-                    <!-- Creamos un selector de días, visible solo en modo personalizado -->
-                    <LinearLayout
-                        android:id="@+id/layoutDays"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                    
+                    <LinearLayout android:id="@+id/layoutDays" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/label_days"
-                            android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="12sp"
-                            android:letterSpacing="0.08"
-                            android:textAllCaps="true"
-                            android:textColor="@color/text_secondary"
-                            android:layout_marginBottom="12dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_days" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:letterSpacing="0.08" android:textAllCaps="true" android:textColor="@color/text_secondary" android:layout_marginBottom="12dp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="7"
-                            android:layout_marginBottom="8dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="7" android:layout_marginBottom="8dp">
 
-                            <TextView android:id="@+id/chipLun"
-                                android:layout_width="0dp" android:layout_height="40dp"
-                                android:layout_weight="1" android:gravity="center"
-                                android:text="L" android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="13sp" android:textColor="@color/text_secondary"
-                                android:background="@drawable/bg_chip_day_unselected"
-                                android:layout_marginHorizontal="3dp"
-                                android:clickable="true" android:focusable="true"/>
+                            <TextView android:id="@+id/chipLun" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:gravity="center" android:text="L" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" android:textColor="@color/text_secondary" android:background="@drawable/bg_chip_day_unselected" android:layout_marginHorizontal="3dp" android:clickable="true" android:focusable="true" />
 
-                            <TextView android:id="@+id/chipMar"
-                                android:layout_width="0dp" android:layout_height="40dp"
-                                android:layout_weight="1" android:gravity="center"
-                                android:text="M" android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="13sp" android:textColor="@color/text_secondary"
-                                android:background="@drawable/bg_chip_day_unselected"
-                                android:layout_marginHorizontal="3dp"
-                                android:clickable="true" android:focusable="true"/>
+                            <TextView android:id="@+id/chipMar" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:gravity="center" android:text="M" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" android:textColor="@color/text_secondary" android:background="@drawable/bg_chip_day_unselected" android:layout_marginHorizontal="3dp" android:clickable="true" android:focusable="true" />
 
-                            <TextView android:id="@+id/chipMie"
-                                android:layout_width="0dp" android:layout_height="40dp"
-                                android:layout_weight="1" android:gravity="center"
-                                android:text="X" android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="13sp" android:textColor="@color/text_secondary"
-                                android:background="@drawable/bg_chip_day_unselected"
-                                android:layout_marginHorizontal="3dp"
-                                android:clickable="true" android:focusable="true"/>
+                            <TextView android:id="@+id/chipMie" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:gravity="center" android:text="X" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" android:textColor="@color/text_secondary" android:background="@drawable/bg_chip_day_unselected" android:layout_marginHorizontal="3dp" android:clickable="true" android:focusable="true" />
 
-                            <TextView android:id="@+id/chipJue"
-                                android:layout_width="0dp" android:layout_height="40dp"
-                                android:layout_weight="1" android:gravity="center"
-                                android:text="J" android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="13sp" android:textColor="@color/text_secondary"
-                                android:background="@drawable/bg_chip_day_unselected"
-                                android:layout_marginHorizontal="3dp"
-                                android:clickable="true" android:focusable="true"/>
+                            <TextView android:id="@+id/chipJue" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:gravity="center" android:text="J" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" android:textColor="@color/text_secondary" android:background="@drawable/bg_chip_day_unselected" android:layout_marginHorizontal="3dp" android:clickable="true" android:focusable="true" />
 
-                            <TextView android:id="@+id/chipVie"
-                                android:layout_width="0dp" android:layout_height="40dp"
-                                android:layout_weight="1" android:gravity="center"
-                                android:text="V" android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="13sp" android:textColor="@color/text_secondary"
-                                android:background="@drawable/bg_chip_day_unselected"
-                                android:layout_marginHorizontal="3dp"
-                                android:clickable="true" android:focusable="true"/>
+                            <TextView android:id="@+id/chipVie" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:gravity="center" android:text="V" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" android:textColor="@color/text_secondary" android:background="@drawable/bg_chip_day_unselected" android:layout_marginHorizontal="3dp" android:clickable="true" android:focusable="true" />
 
-                            <TextView android:id="@+id/chipSab"
-                                android:layout_width="0dp" android:layout_height="40dp"
-                                android:layout_weight="1" android:gravity="center"
-                                android:text="S" android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="13sp" android:textColor="@color/text_secondary"
-                                android:background="@drawable/bg_chip_day_unselected"
-                                android:layout_marginHorizontal="3dp"
-                                android:clickable="true" android:focusable="true"/>
+                            <TextView android:id="@+id/chipSab" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:gravity="center" android:text="S" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" android:textColor="@color/text_secondary" android:background="@drawable/bg_chip_day_unselected" android:layout_marginHorizontal="3dp" android:clickable="true" android:focusable="true" />
 
-                            <TextView android:id="@+id/chipDom"
-                                android:layout_width="0dp" android:layout_height="40dp"
-                                android:layout_weight="1" android:gravity="center"
-                                android:text="D" android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="13sp" android:textColor="@color/text_secondary"
-                                android:background="@drawable/bg_chip_day_unselected"
-                                android:layout_marginHorizontal="3dp"
-                                android:clickable="true" android:focusable="true"/>
+                            <TextView android:id="@+id/chipDom" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:gravity="center" android:text="D" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" android:textColor="@color/text_secondary" android:background="@drawable/bg_chip_day_unselected" android:layout_marginHorizontal="3dp" android:clickable="true" android:focusable="true" />
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/tvDaysError"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/error_no_days_selected"
-                            android:fontFamily="@font/dm_sans"
-                            android:textSize="12sp"
-                            android:textColor="@color/error_text"
-                            android:layout_marginTop="6dp"
-                            android:layout_marginBottom="8dp"
-                            android:visibility="gone"/>
+                        <TextView android:id="@+id/tvDaysError" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/error_no_days_selected" android:fontFamily="@font/dm_sans" android:textSize="12sp" android:textColor="@color/error_text" android:layout_marginTop="6dp" android:layout_marginBottom="8dp" android:visibility="gone" />
                     </LinearLayout>
 
-                    <!-- Sección: días de gracia -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_grace_days"
-                        android:fontFamily="@font/dm_sans_medium"
-                        android:textSize="12sp"
-                        android:letterSpacing="0.08"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="4dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_grace_days" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:letterSpacing="0.08" android:textAllCaps="true" android:textColor="@color/text_secondary" android:layout_marginTop="20dp" android:layout_marginBottom="4dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/hint_grace_days"
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_hint"
-                        android:layout_marginBottom="10dp"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hint_grace_days" android:fontFamily="@font/dm_sans" android:textSize="12sp" android:textColor="@color/text_hint" android:layout_marginBottom="10dp" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="3"
-                        android:layout_marginBottom="20dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="3" android:layout_marginBottom="20dp">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnGrace0"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="4dp"
-                            android:text="@string/grace_0"
-                            android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="12sp"
-                            android:textColor="@color/on_accent"
-                            app:backgroundTint="@color/accent"
-                            app:strokeColor="@color/accent"
-                            app:strokeWidth="1.5dp"
-                            app:cornerRadius="12dp"/>
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnGrace0" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:layout_marginEnd="4dp" android:text="@string/grace_0" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:textColor="@color/on_accent" app:backgroundTint="@color/accent" app:strokeColor="@color/accent" app:strokeWidth="1.5dp" app:cornerRadius="12dp" />
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnGrace1"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:layout_marginHorizontal="4dp"
-                            android:text="@string/grace_1"
-                            android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_secondary"
-                            app:backgroundTint="@android:color/transparent"
-                            app:strokeColor="@color/divider_color"
-                            app:strokeWidth="1.5dp"
-                            app:cornerRadius="12dp"/>
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnGrace1" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:layout_marginHorizontal="4dp" android:text="@string/grace_1" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:textColor="@color/text_secondary" app:backgroundTint="@android:color/transparent" app:strokeColor="@color/divider_color" app:strokeWidth="1.5dp" app:cornerRadius="12dp" />
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnGrace2"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/grace_2"
-                            android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_secondary"
-                            app:backgroundTint="@android:color/transparent"
-                            app:strokeColor="@color/divider_color"
-                            app:strokeWidth="1.5dp"
-                            app:cornerRadius="12dp"/>
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnGrace2" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:layout_marginStart="4dp" android:text="@string/grace_2" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:textColor="@color/text_secondary" app:backgroundTint="@android:color/transparent" app:strokeColor="@color/divider_color" app:strokeWidth="1.5dp" app:cornerRadius="12dp" />
                     </LinearLayout>
 
-                    <!-- Creamos un divisor -->
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/divider_color"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="24dp"/>
+                    
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color" android:layout_marginTop="8dp" android:layout_marginBottom="24dp" />
 
-                    <!-- Tipo cognitivo -->
-                    <TextView
-                        android:id="@+id/tvLabelTipo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tipo"
-                        android:fontFamily="@font/dm_sans_medium"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginBottom="8dp"/>
+                    
+                    <TextView android:id="@+id/tvLabelTipo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tipo" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" android:textColor="@color/text_secondary" android:layout_marginTop="16dp" android:layout_marginStart="4dp" android:layout_marginBottom="8dp" />
 
-                    <HorizontalScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:scrollbars="none">
+                    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" android:scrollbars="none">
 
-                        <com.google.android.material.chip.ChipGroup
-                            android:id="@+id/chipGroupTipo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:singleSelection="true"
-                            app:selectionRequired="true">
+                        <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupTipo" android:layout_width="wrap_content" android:layout_height="wrap_content" app:singleSelection="true" app:selectionRequired="true">
 
-                            <com.google.android.material.chip.Chip
-                                style="@style/Widget.MaterialComponents.Chip.Choice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Físico"
-                                android:checked="true"
-                                android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="13sp"/>
+                            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Choice" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Físico" android:checked="true" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" />
 
-                            <com.google.android.material.chip.Chip
-                                style="@style/Widget.MaterialComponents.Chip.Choice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Mental"
-                                android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="13sp"/>
+                            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Choice" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Mental" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" />
 
-                            <com.google.android.material.chip.Chip
-                                style="@style/Widget.MaterialComponents.Chip.Choice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Social"
-                                android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="13sp"/>
+                            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Choice" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Social" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" />
 
-                            <com.google.android.material.chip.Chip
-                                style="@style/Widget.MaterialComponents.Chip.Choice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Creativo"
-                                android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="13sp"/>
+                            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Choice" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Creativo" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" />
 
-                            <com.google.android.material.chip.Chip
-                                style="@style/Widget.MaterialComponents.Chip.Choice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Descanso"
-                                android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="13sp"/>
+                            <com.google.android.material.chip.Chip style="@style/Widget.MaterialComponents.Chip.Choice" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Descanso" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" />
 
                         </com.google.android.material.chip.ChipGroup>
                     </HorizontalScrollView>
 
-                    <!-- Creamos el elemento label para 'categoría' -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_category"
-                        android:fontFamily="@font/dm_sans_medium"
-                        android:textSize="12sp"
-                        android:letterSpacing="0.08"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginBottom="8dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_category" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:letterSpacing="0.08" android:textAllCaps="true" android:textColor="@color/text_secondary" android:layout_marginBottom="8dp" />
 
-                    <!-- Creamos un selector de categoría -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilCategory"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxStrokeColor="@color/input_stroke_selector"
-                        app:boxStrokeWidth="1.5dp"
-                        app:boxBackgroundColor="@color/input_background"
-                        app:hintEnabled="false">
+                    
+                    <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilCategory" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_width="match_parent" android:layout_height="wrap_content" app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp" app:boxStrokeColor="@color/input_stroke_selector" app:boxStrokeWidth="1.5dp" app:boxBackgroundColor="@color/input_background" app:hintEnabled="false">
 
-                        <AutoCompleteTextView
-                            android:id="@+id/actvCategory"
-                            android:layout_width="match_parent"
-                            android:layout_height="52dp"
-                            android:hint="@string/hint_category_select"
-                            android:fontFamily="@font/dm_sans"
-                            android:textSize="15sp"
-                            android:textColor="@color/text_primary"
-                            android:textColorHint="@color/text_hint"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
-                            android:background="@android:color/transparent"
-                            android:inputType="none"
-                            android:focusable="false"/>
+                        <AutoCompleteTextView android:id="@+id/actvCategory" android:layout_width="match_parent" android:layout_height="52dp" android:hint="@string/hint_category_select" android:fontFamily="@font/dm_sans" android:textSize="15sp" android:textColor="@color/text_primary" android:textColorHint="@color/text_hint" android:paddingStart="16dp" android:paddingEnd="16dp" android:background="@android:color/transparent" android:inputType="none" android:focusable="false" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
@@ -502,24 +119,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Creamos un botón para guardar cambios -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSave"
-        android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="36dp"
-        android:text="@string/btn_update_habit"
-        android:fontFamily="@font/dm_sans_semibold"
-        android:textSize="15sp"
-        android:letterSpacing="0.04"
-        android:textColor="@color/on_accent"
-        app:backgroundTint="@color/accent"
-        app:cornerRadius="14dp"
-        app:elevation="0dp"
-        app:rippleColor="@color/accent_ripple"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+    
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnSave" android:layout_width="0dp" android:layout_height="52dp" android:layout_marginHorizontal="24dp" android:layout_marginBottom="36dp" android:text="@string/btn_update_habit" android:fontFamily="@font/dm_sans_semibold" android:textSize="15sp" android:letterSpacing="0.04" android:textColor="@color/on_accent" app:backgroundTint="@color/accent" app:cornerRadius="14dp" app:elevation="0dp" app:rippleColor="@color/accent_ripple" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

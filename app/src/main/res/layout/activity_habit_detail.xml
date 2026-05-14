@@ -1,433 +1,127 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Creamos el layout del detalle de un hábito -->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".ui.HabitDetailActivity">
+<?xml version='1.0' encoding='utf-8'?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:ns1="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/background" ns1:context=".ui.HabitDetailActivity">
 
-    <!-- Creamos el círculo decorativo superior derecho -->
-    <View
-        android:id="@+id/circleTop"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:background="@drawable/circle_accent_top"
-        android:alpha="0.18"
-        android:layout_marginTop="-60dp"
-        android:layout_marginEnd="-60dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+    
+    <View android:id="@+id/circleTop" android:layout_width="220dp" android:layout_height="220dp" android:background="@drawable/circle_accent_top" android:alpha="0.18" android:layout_marginTop="-60dp" android:layout_marginEnd="-60dp" app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Creamos el círculo decorativo inferior izquierdo -->
-    <View
-        android:id="@+id/circleBottom"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:background="@drawable/circle_accent_bottom"
-        android:alpha="0.12"
-        android:layout_marginBottom="-40dp"
-        android:layout_marginStart="-40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+    
+    <View android:id="@+id/circleBottom" android:layout_width="160dp" android:layout_height="160dp" android:background="@drawable/circle_accent_bottom" android:alpha="0.12" android:layout_marginBottom="-40dp" android:layout_marginStart="-40dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Creamos el botón de regreso -->
-    <ImageView
-        android:id="@+id/btnBack"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_arrow_back"
-        android:padding="8dp"
-        app:tint="@color/text_primary"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:contentDescription="Regresar"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="48dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+    
+    <ImageView android:id="@+id/btnBack" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_arrow_back" android:padding="12dp" app:tint="@color/text_primary" android:background="?attr/selectableItemBackgroundBorderless" android:clickable="true" android:focusable="true" android:contentDescription="Regresar" android:layout_marginStart="16dp" android:layout_marginTop="48dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Creamos un scroll del contenido -->
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:overScrollMode="never"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"
-        app:layout_constraintBottom_toTopOf="@id/btnComplete"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    
+    <ScrollView android:layout_width="0dp" android:layout_height="0dp" android:overScrollMode="never" app:layout_constraintTop_toBottomOf="@id/btnBack" app:layout_constraintBottom_toTopOf="@id/btnComplete" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingBottom="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="24dp" android:paddingBottom="16dp">
 
-            <!-- Creamos el nombre del hábito -->
-            <TextView
-                android:id="@+id/tvHabitName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/playfair_display_bold"
-                android:textSize="32sp"
-                android:letterSpacing="-0.02"
-                android:textColor="@color/text_primary"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                tools:text="Leer las escrituras"/>
+            
+            <TextView android:id="@+id/tvHabitName" android:layout_width="match_parent" android:layout_height="wrap_content" android:fontFamily="@font/playfair_display_bold" android:textSize="32sp" android:letterSpacing="-0.02" android:textColor="@color/text_primary" android:layout_marginTop="16dp" android:layout_marginBottom="8dp" ns1:text="Leer las escrituras" />
 
-            <!-- Creamos el chip de frecuencia -->
-            <TextView
-                android:id="@+id/tvFrequency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="4dp"
-                android:background="@drawable/bg_frequency_chip"
-                android:fontFamily="@font/dm_sans_medium"
-                android:textSize="12sp"
-                android:textColor="@color/accent"
-                tools:text="Todos los días"/>
+            
+            <TextView android:id="@+id/tvFrequency" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingHorizontal="12dp" android:paddingVertical="4dp" android:background="@drawable/bg_frequency_chip" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:textColor="@color/accent" ns1:text="Todos los días" />
 
-            <TextView
-                android:id="@+id/tvTipoCognitivo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="24dp"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="4dp"
-                android:background="@drawable/bg_chip_tipo"
-                android:fontFamily="@font/dm_sans_medium"
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary"/>
+            <TextView android:id="@+id/tvTipoCognitivo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:layout_marginBottom="24dp" android:paddingHorizontal="12dp" android:paddingVertical="4dp" android:background="@drawable/bg_chip_tipo" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:textColor="@color/text_secondary" />
 
-            <!-- Creamos la racha y cumplimiento (card) -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/card_background">
+            
+            <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardCornerRadius="24dp" app:cardElevation="0dp" app:cardBackgroundColor="@color/card_background">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
 
-                    <!-- Creamos la fila de racha -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="20dp">
+                    
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="20dp">
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/detail_label_streak"
-                                android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="12sp"
-                                android:textAllCaps="true"
-                                android:letterSpacing="0.08"
-                                android:textColor="@color/text_secondary"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/detail_label_streak" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:textAllCaps="true" android:letterSpacing="0.08" android:textColor="@color/text_secondary" />
 
-                            <!-- Creamos el valor de racha -->
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:layout_marginTop="4dp">
+                            
+                            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="4dp">
 
-                                <TextView
-                                    android:id="@+id/tvStreakValue"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/playfair_display_bold"
-                                    android:textSize="40sp"
-                                    android:textColor="@color/accent"
-                                    tools:text="1"/>
+                                <TextView android:id="@+id/tvStreakValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="@font/playfair_display_bold" android:textSize="40sp" android:textColor="@color/accent" ns1:text="1" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/detail_days_unit"
-                                    android:fontFamily="@font/dm_sans"
-                                    android:textSize="14sp"
-                                    android:textColor="@color/text_secondary"
-                                    android:layout_marginStart="6dp"
-                                    android:layout_marginBottom="6dp"/>
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/detail_days_unit" android:fontFamily="@font/dm_sans" android:textSize="14sp" android:textColor="@color/text_secondary" android:layout_marginStart="6dp" android:layout_marginBottom="6dp" />
                             </LinearLayout>
                         </LinearLayout>
 
-                        <!-- Creamos un divisor vertical -->
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="60dp"
-                            android:background="@color/divider_color"
-                            android:layout_marginHorizontal="16dp"/>
+                        
+                        <View android:layout_width="1dp" android:layout_height="60dp" android:background="@color/divider_color" android:layout_marginHorizontal="16dp" />
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/detail_label_completion"
-                                android:fontFamily="@font/dm_sans_medium"
-                                android:textSize="12sp"
-                                android:textAllCaps="true"
-                                android:letterSpacing="0.08"
-                                android:textColor="@color/text_secondary"/>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/detail_label_completion" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:textAllCaps="true" android:letterSpacing="0.08" android:textColor="@color/text_secondary" />
 
-                            <TextView
-                                android:id="@+id/tvCompletionPercent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/playfair_display_bold"
-                                android:textSize="40sp"
-                                android:textColor="@color/accent"
-                                android:layout_marginTop="4dp"
-                                tools:text="18%"/>
+                            <TextView android:id="@+id/tvCompletionPercent" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="@font/playfair_display_bold" android:textSize="40sp" android:textColor="@color/accent" android:layout_marginTop="4dp" ns1:text="18%" />
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Creamos la barra de progreso de cumplimiento -->
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="10dp">
+                    
+                    <FrameLayout android:layout_width="match_parent" android:layout_height="10dp">
 
-                        <!-- Creamos el fondo de la barra -->
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/bg_progress_track"/>
+                        
+                        <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/bg_progress_track" />
 
-                        <!-- Creamos el relleno de la barra — el ancho se ajusta por código -->
-                        <View
-                            android:id="@+id/progressFill"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/bg_progress_fill"/>
+                        
+                        <View android:id="@+id/progressFill" android:layout_width="0dp" android:layout_height="match_parent" android:background="@drawable/bg_progress_fill" />
                     </FrameLayout>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Calendario mensual de progreso -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/card_background">
+            
+            <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardCornerRadius="24dp" app:cardElevation="0dp" app:cardBackgroundColor="@color/card_background">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
 
-                    <!-- Navegación de mes -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="16dp">
+                    
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="16dp">
 
-                        <ImageView
-                            android:id="@+id/btnMesAnterior"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:src="@drawable/ic_arrow_back"
-                            android:padding="6dp"
-                            app:tint="@color/text_secondary"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:contentDescription="Mes anterior"/>
+                        <ImageView android:id="@+id/btnMesAnterior" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_arrow_back" android:padding="12dp" app:tint="@color/text_secondary" android:background="?attr/selectableItemBackgroundBorderless" android:clickable="true" android:focusable="true" android:contentDescription="Mes anterior" />
 
-                        <TextView
-                            android:id="@+id/tvMesAnio"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:fontFamily="@font/playfair_display_semibold"
-                            android:textSize="16sp"
-                            android:textColor="@color/text_primary"/>
+                        <TextView android:id="@+id/tvMesAnio" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:fontFamily="@font/playfair_display_semibold" android:textSize="16sp" android:textColor="@color/text_primary" />
 
-                        <ImageView
-                            android:id="@+id/btnMesSiguiente"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:src="@drawable/ic_arrow_back"
-                            android:rotation="180"
-                            android:padding="6dp"
-                            app:tint="@color/text_secondary"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:contentDescription="Mes siguiente"/>
+                        <ImageView android:id="@+id/btnMesSiguiente" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_arrow_back" android:rotation="180" android:padding="12dp" app:tint="@color/text_secondary" android:background="?attr/selectableItemBackgroundBorderless" android:clickable="true" android:focusable="true" android:contentDescription="Mes siguiente" />
                     </LinearLayout>
 
-                    <!-- Encabezados días de la semana -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="7"
-                        android:layout_marginBottom="4dp">
+                    
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="7" android:layout_marginBottom="4dp">
 
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                            android:layout_weight="1" android:gravity="center"
-                            android:text="L" android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="11sp" android:textColor="@color/text_secondary"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                            android:layout_weight="1" android:gravity="center"
-                            android:text="M" android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="11sp" android:textColor="@color/text_secondary"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                            android:layout_weight="1" android:gravity="center"
-                            android:text="X" android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="11sp" android:textColor="@color/text_secondary"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                            android:layout_weight="1" android:gravity="center"
-                            android:text="J" android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="11sp" android:textColor="@color/text_secondary"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                            android:layout_weight="1" android:gravity="center"
-                            android:text="V" android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="11sp" android:textColor="@color/text_secondary"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                            android:layout_weight="1" android:gravity="center"
-                            android:text="S" android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="11sp" android:textColor="@color/text_secondary"/>
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                            android:layout_weight="1" android:gravity="center"
-                            android:text="D" android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="11sp" android:textColor="@color/text_secondary"/>
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="L" android:fontFamily="@font/dm_sans_medium" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="M" android:fontFamily="@font/dm_sans_medium" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="X" android:fontFamily="@font/dm_sans_medium" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="J" android:fontFamily="@font/dm_sans_medium" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="V" android:fontFamily="@font/dm_sans_medium" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="S" android:fontFamily="@font/dm_sans_medium" android:textSize="11sp" android:textColor="@color/text_secondary" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="D" android:fontFamily="@font/dm_sans_medium" android:textSize="11sp" android:textColor="@color/text_secondary" />
                     </LinearLayout>
 
-                    <!-- Grid del calendario -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvCalendario"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:overScrollMode="never"
-                        android:nestedScrollingEnabled="false"/>
+                    
+                    <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvCalendario" android:layout_width="match_parent" android:layout_height="wrap_content" android:overScrollMode="never" android:nestedScrollingEnabled="false" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Diario de reflexión -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardDiario"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/card_background">
+            
+            <androidx.cardview.widget.CardView android:id="@+id/cardDiario" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:cardCornerRadius="24dp" app:cardElevation="0dp" app:cardBackgroundColor="@color/card_background">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Reflexión de hoy"
-                        android:fontFamily="@font/playfair_display_semibold"
-                        android:textSize="15sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="12dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Reflexión de hoy" android:fontFamily="@font/playfair_display_semibold" android:textSize="15sp" android:textColor="@color/text_primary" android:layout_marginBottom="12dp" />
 
-                    <EditText
-                        android:id="@+id/etReflexion"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="80dp"
-                        android:gravity="top"
-                        android:hint="¿Cómo te fue hoy con este hábito?"
-                        android:inputType="textMultiLine|textCapSentences"
-                        android:maxLength="280"
-                        android:background="@drawable/bg_input_reflexion"
-                        android:padding="12dp"
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_hint"/>
+                    <EditText android:id="@+id/etReflexion" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="80dp" android:gravity="top" android:hint="¿Cómo te fue hoy con este hábito?" android:inputType="textMultiLine|textCapSentences" android:maxLength="280" android:background="@drawable/bg_input_reflexion" android:padding="12dp" android:fontFamily="@font/dm_sans" android:textSize="14sp" android:textColor="@color/text_primary" android:textColorHint="@color/text_hint" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
 
-                        <TextView
-                            android:id="@+id/tvContadorChars"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="0 / 280"
-                            android:fontFamily="@font/dm_sans"
-                            android:textSize="11sp"
-                            android:textColor="@color/text_hint"/>
+                        <TextView android:id="@+id/tvContadorChars" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="0 / 280" android:fontFamily="@font/dm_sans" android:textSize="11sp" android:textColor="@color/text_hint" />
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnGuardarReflexion"
-                            android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:text="Guardar"
-                            android:fontFamily="@font/dm_sans_medium"
-                            android:textSize="13sp"
-                            android:textColor="@color/on_accent"
-                            app:backgroundTint="@color/accent"
-                            app:cornerRadius="10dp"
-                            app:elevation="0dp"/>
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnGuardarReflexion" android:layout_width="wrap_content" android:layout_height="36dp" android:text="Guardar" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" android:textColor="@color/on_accent" app:backgroundTint="@color/accent" app:cornerRadius="10dp" app:elevation="0dp" />
 
                     </LinearLayout>
 
-                    <!-- Historial de reflexiones -->
-                    <TextView
-                        android:id="@+id/tvHistorialLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Últimas reflexiones"
-                        android:fontFamily="@font/dm_sans_medium"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="8dp"
-                        android:visibility="gone"/>
+                    
+                    <TextView android:id="@+id/tvHistorialLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Últimas reflexiones" android:fontFamily="@font/dm_sans_medium" android:textSize="13sp" android:textColor="@color/text_secondary" android:layout_marginTop="20dp" android:layout_marginBottom="8dp" android:visibility="gone" />
 
-                    <LinearLayout
-                        android:id="@+id/llHistorialReflexiones"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                    <LinearLayout android:id="@+id/llHistorialReflexiones" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -435,42 +129,11 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Creamos el botón de acción principal anclado al fondo -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnComplete"
-        android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="36dp"
-        android:text="@string/detail_btn_complete"
-        android:fontFamily="@font/dm_sans_semibold"
-        android:textSize="15sp"
-        android:letterSpacing="0.04"
-        android:textColor="@color/on_accent"
-        app:backgroundTint="@color/accent"
-        app:cornerRadius="14dp"
-        app:elevation="0dp"
-        app:rippleColor="@color/accent_ripple"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+    
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnComplete" android:layout_width="0dp" android:layout_height="52dp" android:layout_marginHorizontal="24dp" android:layout_marginBottom="36dp" android:text="@string/detail_btn_complete" android:fontFamily="@font/dm_sans_semibold" android:textSize="15sp" android:letterSpacing="0.04" android:textColor="@color/on_accent" app:backgroundTint="@color/accent" app:cornerRadius="14dp" app:elevation="0dp" app:rippleColor="@color/accent_ripple" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Creamos el boton de editar en la esquina superior derecha -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnEdit"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:text="@string/btn_edit_habit"
-        android:fontFamily="@font/dm_sans_medium"
-        android:textSize="12sp"
-        android:textColor="@color/accent"
-        app:strokeColor="@color/accent"
-        app:strokeWidth="1.5dp"
-        app:cornerRadius="10dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="52dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnEdit" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="wrap_content" android:layout_height="36dp" android:text="@string/btn_edit_habit" android:fontFamily="@font/dm_sans_medium" android:textSize="12sp" android:textColor="@color/accent" app:strokeColor="@color/accent" app:strokeWidth="1.5dp" app:cornerRadius="10dp" android:layout_marginEnd="12dp" android:layout_marginTop="52dp" app:layout_constraintEnd_toStartOf="@id/btnDelete" app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView android:id="@+id/btnDelete" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_delete" android:padding="12dp" app:tint="@color/text_secondary" android:background="?attr/selectableItemBackgroundBorderless" android:clickable="true" android:focusable="true" android:contentDescription="@string/delete_habit" android:layout_marginEnd="24dp" android:layout_marginTop="46dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

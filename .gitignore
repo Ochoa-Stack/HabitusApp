@@ -1,20 +1,45 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
+# Build outputs
 /build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
-# Firebase
-app/google-services.json
-# Ocultar carpetas de configuración del IDE
+app/build
+**/build/
+
+# Android Studio / IntelliJ
+*.iml
+.gradle/
 .idea/
-**/.idea/
+!.idea/runConfigurations/
+captures/
+.externalNativeBuild/
+.cxx/
+*.hprof
+
+# Local configuration
+local.properties
+secrets.properties
+keystore.properties
+
+# Seguridad; NUNCA en el repo
+*.jks
+*.keystore
+google-services.json
+GoogleService-Info.plist
+.env
+.env.local
+
+# Sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Gradle wrapper jar
+# gradle-wrapper.jar se versiona para builds reproducibles
+
+# Herramientas externas al proyecto
+.vscode/
+
+# Cache de sesiones del compilador de Kotlin (local, no versionable)
+.kotlin/

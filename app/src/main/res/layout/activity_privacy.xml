@@ -1,200 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Creamos el layout de la pantalla de privacidad -->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
+<?xml version='1.0' encoding='utf-8'?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/background">
 
-    <!-- Creamos el círculo decorativo superior derecho -->
-    <View
-        android:id="@+id/circleTop"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:background="@drawable/circle_accent_top"
-        android:alpha="0.18"
-        android:layout_marginTop="-60dp"
-        android:layout_marginEnd="-60dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+    
+    <View android:id="@+id/circleTop" android:layout_width="220dp" android:layout_height="220dp" android:background="@drawable/circle_accent_top" android:alpha="0.18" android:layout_marginTop="-60dp" android:layout_marginEnd="-60dp" app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Creamos el botón de regreso -->
-    <ImageView
-        android:id="@+id/btnBack"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_arrow_back"
-        android:padding="8dp"
-        app:tint="@color/text_primary"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:contentDescription="Regresar"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="48dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+    
+    <ImageView android:id="@+id/btnBack" android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/ic_arrow_back" android:padding="12dp" app:tint="@color/text_primary" android:background="?attr/selectableItemBackgroundBorderless" android:clickable="true" android:focusable="true" android:contentDescription="Regresar" android:layout_marginStart="16dp" android:layout_marginTop="48dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Creamos el elemento de sección 'Título' -->
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/privacy_title"
-        android:fontFamily="@font/playfair_display_bold"
-        android:textSize="28sp"
-        android:letterSpacing="-0.02"
-        android:textColor="@color/text_primary"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"/>
+    
+    <TextView android:id="@+id/tvTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/privacy_title" android:fontFamily="@font/playfair_display_bold" android:textSize="28sp" android:letterSpacing="-0.02" android:textColor="@color/text_primary" android:layout_marginStart="24dp" android:layout_marginTop="16dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/btnBack" />
 
-    <!-- Creamos el elemento de sección 'Fecha de actualización' -->
-    <TextView
-        android:id="@+id/tvLastUpdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/privacy_last_update"
-        android:fontFamily="@font/dm_sans"
-        android:textSize="13sp"
-        android:textColor="@color/text_secondary"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"/>
+    
+    <TextView android:id="@+id/tvLastUpdate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/privacy_last_update" android:fontFamily="@font/dm_sans" android:textSize="13sp" android:textColor="@color/text_secondary" android:layout_marginStart="24dp" android:layout_marginTop="4dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-    <!-- Creamos un scroll con la política completa -->
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:overScrollMode="never"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tvLastUpdate"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    
+    <ScrollView android:layout_width="0dp" android:layout_height="0dp" android:overScrollMode="never" android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@id/tvLastUpdate" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingBottom="48dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="24dp" android:paddingBottom="48dp">
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/card_background">
+            <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:cardCornerRadius="24dp" app:cardElevation="0dp" app:cardBackgroundColor="@color/card_background">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="28dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="28dp">
 
-                    <!-- Creamos la 'Sección 1' de la política de privacidad -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1. Información que recopilamos"
-                        android:fontFamily="@font/playfair_display_semibold"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="8dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/privacy_term_1_title" android:fontFamily="@font/playfair_display_semibold" android:textSize="16sp" android:textColor="@color/text_primary" android:layout_marginBottom="8dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Habitus recopila únicamente la información necesaria para el funcionamiento de la aplicación: correo electrónico, nombre de usuario y los hábitos que registres. No recopilamos datos de ubicación, contactos ni información sensible adicional."
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="14sp"
-                        android:lineSpacingExtra="4dp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginBottom="20dp"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/privacy_term_1_body" android:fontFamily="@font/dm_sans" android:textSize="14sp" android:lineSpacingExtra="4dp" android:textColor="@color/text_secondary" android:layout_marginBottom="20dp" />
 
-                    <!-- Creamos la 'Sección 2' de la política de privacidad -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2. Cómo usamos tu información"
-                        android:fontFamily="@font/playfair_display_semibold"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="8dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/privacy_term_2_title" android:fontFamily="@font/playfair_display_semibold" android:textSize="16sp" android:textColor="@color/text_primary" android:layout_marginBottom="8dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Tu información se utiliza exclusivamente para brindarte el servicio de seguimiento de hábitos. Nunca compartimos, vendemos ni cedemos tus datos personales a terceros con fines comerciales."
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="14sp"
-                        android:lineSpacingExtra="4dp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginBottom="20dp"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/privacy_term_2_body" android:fontFamily="@font/dm_sans" android:textSize="14sp" android:lineSpacingExtra="4dp" android:textColor="@color/text_secondary" android:layout_marginBottom="20dp" />
 
-                    <!-- Creamos la 'Sección 3' de la política de privacidad -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="3. Almacenamiento y seguridad"
-                        android:fontFamily="@font/playfair_display_semibold"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="8dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/privacy_term_3_title" android:fontFamily="@font/playfair_display_semibold" android:textSize="16sp" android:textColor="@color/text_primary" android:layout_marginBottom="8dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Tus datos se almacenan de forma segura en Firebase (Google Cloud). Utilizamos autenticación con cifrado y reglas de seguridad que garantizan que solo tú puedas acceder a tu información."
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="14sp"
-                        android:lineSpacingExtra="4dp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginBottom="20dp"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/privacy_term_3_body" android:fontFamily="@font/dm_sans" android:textSize="14sp" android:lineSpacingExtra="4dp" android:textColor="@color/text_secondary" android:layout_marginBottom="20dp" />
 
-                    <!-- Creamos la 'Sección 4' de la política de privacidad -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="4. Tus derechos"
-                        android:fontFamily="@font/playfair_display_semibold"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="8dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/privacy_term_4_title" android:fontFamily="@font/playfair_display_semibold" android:textSize="16sp" android:textColor="@color/text_primary" android:layout_marginBottom="8dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Puedes solicitar la eliminación de tu cuenta y todos tus datos en cualquier momento. Tienes derecho a acceder, corregir y eliminar la información que hemos recopilado sobre ti."
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="14sp"
-                        android:lineSpacingExtra="4dp"
-                        android:textColor="@color/text_secondary"
-                        android:layout_marginBottom="20dp"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/privacy_term_4_body" android:fontFamily="@font/dm_sans" android:textSize="14sp" android:lineSpacingExtra="4dp" android:textColor="@color/text_secondary" android:layout_marginBottom="20dp" />
 
-                    <!-- Creamos la 'Sección 5' de política y privacidad -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="5. Contacto"
-                        android:fontFamily="@font/playfair_display_semibold"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="8dp"/>
+                    
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/privacy_term_5_title" android:fontFamily="@font/playfair_display_semibold" android:textSize="16sp" android:textColor="@color/text_primary" android:layout_marginBottom="8dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Si tienes preguntas sobre esta política de privacidad o el manejo de tus datos, puedes contactar al equipo de desarrollo a través de los canales oficiales de la aplicación."
-                        android:fontFamily="@font/dm_sans"
-                        android:textSize="14sp"
-                        android:lineSpacingExtra="4dp"
-                        android:textColor="@color/text_secondary"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/privacy_term_5_body" android:fontFamily="@font/dm_sans" android:textSize="14sp" android:lineSpacingExtra="4dp" android:textColor="@color/text_secondary" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
