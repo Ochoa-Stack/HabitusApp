@@ -13,16 +13,23 @@ import com.ochoastack.habitus.ui.WeeklySummaryActivity
 import com.ochoastack.habitus.utils.NotificationHelper
 import com.google.firebase.auth.FirebaseAuth
 
-class WeeklySummaryWorker(    // Declaramos el worker de resumen semanal
-    private val ctx: Context,
-    params: WorkerParameters
+import androidx.hilt.work.HiltWorker
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+
+// Configuramos el worker para recibir el repositorio de forma segura
+@HiltWorker
+class WeeklySummaryWorker @AssistedInject constructor(
+    @Assisted private val ctx: Context,
+    @Assisted params: WorkerParameters,
+    private val habitRepository: HabitRepository
 ) : CoroutineWorker(ctx, params) {
 
     override suspend fun doWork(): Result {
         // No ejecutar si no hay sesión activa
         if (FirebaseAuth.getInstance().currentUser == null) return Result.success()
 
-        val resultado = HabitRepository().obtenerResumenSemanal()
+        val resultado = habitRepository.obtenerResumenSemanal()
 
         resultado.fold(
             onSuccess = { resumen ->
@@ -33,6 +40,7 @@ class WeeklySummaryWorker(    // Declaramos el worker de resumen semanal
 
         return Result.success()
     }
+
     // Mostramos la notificación
     private fun mostrarNotificacion(porcentajeSemana: Int, rachaMaxima: Int) {
         val intent = Intent(ctx, WeeklySummaryActivity::class.java).apply {

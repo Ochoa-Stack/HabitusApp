@@ -9,10 +9,17 @@ import com.ochoastack.habitus.data.ResumenSemanal
 import com.ochoastack.habitus.databinding.ActivityWeeklySummaryBinding
 import kotlinx.coroutines.launch
 
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
+@AndroidEntryPoint
 class WeeklySummaryActivity : AppCompatActivity() {
     // Declaramos las variables necesarias
     private lateinit var binding: ActivityWeeklySummaryBinding
-    private val habitRepository = HabitRepository()
+
+    // Configuramos la inyección para recibir el repositorio sin crearlo manualmente
+    @Inject
+    lateinit var habitRepository: HabitRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

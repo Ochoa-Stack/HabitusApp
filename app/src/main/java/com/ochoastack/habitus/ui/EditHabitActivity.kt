@@ -14,12 +14,18 @@ import com.ochoastack.habitus.databinding.ActivityEditHabitBinding
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
+@AndroidEntryPoint
 class EditHabitActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditHabitBinding
     private lateinit var formManager: HabitFormManager
 
-    private val habitRepository    = HabitRepository()
+    // Configuramos la inyección para recibir el repositorio sin crearlo manualmente
+    @Inject
+    lateinit var habitRepository: HabitRepository
     private val categoryRepository = CategoryRepository()
 
     private var habitoId                = ""

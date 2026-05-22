@@ -16,13 +16,13 @@ import com.google.firebase.auth.GoogleAuthProvider
 class FirebaseAuthRepository {    // Declaramos el repositorio de autenticación de Firebase
     private val auth      = FirebaseAuth.getInstance()         // Instanciamos la autentificación de Firebase
     private val firestore = FirebaseFirestore.getInstance()    // Instanciamos Firestore
-    
+
     companion object {
         private const val TAG = "FirebaseAuthRepository"
     }
 
     fun obtenerUsuarioActual(): FirebaseUser? = auth.currentUser    // Obtenemos el usuario actual
-    
+
     // Obtenemos el nombre del usuario desde Firestore usando el repositorio, sin acceso directo desde la UI
     suspend fun obtenerNombreUsuario(): Result<String> {
         return try {
@@ -35,27 +35,27 @@ class FirebaseAuthRepository {    // Declaramos el repositorio de autenticación
             Result.failure(e)
         }
     }
-    
+
     // Iniciamos sesión con correo y contraseña (Usuario)
     suspend fun iniciarSesion(correo: String, contraseña: String): Result<FirebaseUser> {
         return try {
             val resultado = auth.signInWithEmailAndPassword(correo, contraseña).await()
             val usuario   = resultado.user ?: throw Exception("Usuario no encontrado")
-            
+
             // Aseguramos que las categorías por defecto existan
             try {
                 CategoryRepository().inicializarCategoriasPorDefecto()
             } catch (e: Exception) {
                 Log.e(TAG, "Error al inicializar categorías en login", e)
             }
-            
+
             Result.success(usuario)
         } catch (e: Exception) {
             Log.e(TAG, "Error en iniciarSesion", e)
             Result.failure(e)
         }
     }
-    
+
     // Registramos un nuevo usuario con correo y contraseña
     suspend fun registrarUsuario(
         nombre: String,
@@ -66,29 +66,29 @@ class FirebaseAuthRepository {    // Declaramos el repositorio de autenticación
             Log.d(TAG, "Registrando usuario: $correo")
             val resultado = auth.createUserWithEmailAndPassword(correo, contraseña).await()
             val usuario   = resultado.user ?: throw Exception("Error al crear usuario en Firebase Auth")
-            
+
             val datosUsuario = mapOf(
                 "nombre"        to nombre,
                 "correo"        to correo,
                 "fechaRegistro" to com.google.firebase.Timestamp.now()
             )
-            
+
             Log.d(TAG, "Guardando datos de usuario en Firestore para UID: ${usuario.uid}")
             firestore.collection("usuarios")
                 .document(usuario.uid)
                 .set(datosUsuario)
                 .await()
-            
+
             Log.d(TAG, "Inicializando categorías por defecto")
             CategoryRepository().inicializarCategoriasPorDefecto()
-            
+
             Result.success(usuario)
         } catch (e: Exception) {
             Log.e(TAG, "Error en registrarUsuario", e)
             Result.failure(e)
         }
     }
-    
+
     // Recuperamos contraseña (Usuario)
     suspend fun enviarCorreoRestablecimiento(correo: String): Result<Unit> {
         return try {
@@ -99,9 +99,9 @@ class FirebaseAuthRepository {    // Declaramos el repositorio de autenticación
             Result.failure(e)
         }
     }
-    
+
     fun cerrarSesion() = auth.signOut()    // Cerramos sesión
-    
+
     // Iniciamos sesión con Google (Usuario)
     suspend fun iniciarSesionConGoogle(
         context: Context,
@@ -118,7 +118,12 @@ class FirebaseAuthRepository {    // Declaramos el repositorio de autenticación
                 .addCredentialOption(opcion)
                 .build()
 
-            val credentialManager = CredentialManager.create(context)
+            val credentialManager = try {
+                CredentialManager.create(context)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error al inicializar CredentialManager", e)
+                return Result.failure(Exception("El servicio de credenciales no está disponible en este dispositivo"))
+            }
             val resultado = credentialManager.getCredential(context, solicitud)
             val credencial = resultado.credential
 
@@ -130,17 +135,17 @@ class FirebaseAuthRepository {    // Declaramos el repositorio de autenticación
             val resultadoFirebase  = auth.signInWithCredential(credencialFirebase).await()
             val usuario = resultadoFirebase.user
                 ?: throw Exception("No se pudo autenticar con Google en Firebase")
-            
+
             // Si es un usuario nuevo (o no tiene documento), creamos su perfil
             asegurarPerfilUsuario(usuario)
-            
+
             // Inicializamos categorías por defecto
             try {
                 CategoryRepository().inicializarCategoriasPorDefecto()
             } catch (e: Exception) {
                 Log.e(TAG, "Error al inicializar categorías en login Google", e)
             }
-            
+
             Result.success(usuario)
         } catch (e: GetCredentialException) {
             Log.e(TAG, "Error de CredentialManager", e)

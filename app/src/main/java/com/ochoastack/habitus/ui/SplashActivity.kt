@@ -1,11 +1,13 @@
 package com.ochoastack.habitus.ui
 
+import dagger.hilt.android.AndroidEntryPoint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.ochoastack.habitus.databinding.ActivitySplashBinding
 
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
 
     // Creamos el binding para el layout

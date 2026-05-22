@@ -1,18 +1,17 @@
 # Habitus
 
-Aplicación Android para el seguimiento de hábitos — completación diaria, gestión de rachas, balance cognitivo, resúmenes semanales y diario de reflexión construida con Kotlin y Firebase.
+Aplicación Android para el seguimiento de hábitos con completación diaria, gestión de rachas, balance cognitivo, resúmenes semanales y diario de reflexión construida con Kotlin y Firebase.
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat&logo=kotlin&logoColor=white)](https://kotlinlang.org)
 [![API](https://img.shields.io/badge/API-24%2B-brightgreen)](https://android-arsenal.com/api?level=24)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-> **Estado:** Proyecto de portafolio; no publicado en Google Play Store.
-> Fork de un proyecto grupal universitario. Diseñe y construi un ~80% del proyecto (incluyendo orginal y post-fork), cubriendo tanto las capas de frontend como de backend.
-> Repositorio: [github.com/Ochoa-Stack/HabitusApp](https://github.com/Ochoa-Stack/HabitusApp)
+> **Estado:** No publicado en Google Play Store.
+
 
 ---
 
-## Resumen (Overview)
+## Resumen
 
 Habitus es una aplicación nativa de Android para el seguimiento de hábitos. Los usuarios se autentican con correo/contraseña o Google Sign In, crean hábitos con frecuencia personalizada, tipo cognitivo y configuración de días de gracia, los completan diariamente mediante una transacción atómica de Firestore y siguen su progreso a través de un calendario mensual construido con datos reales de Firestore. La aplicación incluye un diario de reflexión por hábito, un modo de enfoque para la ejecución diaria sin distracciones y un resumen semanal automático entregado a través de WorkManager.
 
@@ -167,7 +166,7 @@ La consulta `whereEqualTo("uid").whereEqualTo("archivado", false)` requiere un �
 
 - No publicado en Google Play Store.
 - Sin ViewModels: repositorios instanciados directamente en la UI (heredado de la arquitectura académica original).
-- Sin suite de pruebas automatizadas (unitarias o instrumentadas).
+- Suite de pruebas automatizadas en desarrollo (unitarias o instrumentadas).
 - Patrón N+1 de Firestore mitigado con lecturas asíncronas paralelas, no eliminado — Firestore no admite joins.
 - Sin soporte offline: todas las operaciones de datos requieren una conexión activa.
 
@@ -175,9 +174,9 @@ La consulta `whereEqualTo("uid").whereEqualTo("archivado", false)` requiere un �
 
 ## Origen
 
-Desarrollado originalmente como un proyecto integrador universitario de Ingeniería de Software. El desarrollo post-fork, auditoría de arquitectura, refuerzo de seguridad y todas las funcionalidades principales; fue realizado por [Elias Ochoa](https://github.com/Ochoa-Stack).
+Desarrollado originalmente como un proyecto integrador universitario de TSU Desarrollo de Software Multiplataforma. El desarrollo post-fork, auditoría de arquitectura, refuerzo de seguridad y todas las funcionalidades principales; fue realizado por [Elias Ochoa](https://github.com/Ochoa-Stack).
 
-Repositorio original del equipo: [github.com/DjRober/HabitTrackerApp](https://github.com/DjRober/HabitTrackerApp)
+Repositorio Original: [github.com/DjRober/HabitTrackerApp](https://github.com/DjRober/HabitTrackerApp)
 
 ---
 

@@ -20,10 +20,17 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
+@AndroidEntryPoint
 class FocusModeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFocusModeBinding
-    private val habitRepository = HabitRepository()
+
+    // Configuramos la inyección para recibir el repositorio sin crearlo manualmente
+    @Inject
+    lateinit var habitRepository: HabitRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

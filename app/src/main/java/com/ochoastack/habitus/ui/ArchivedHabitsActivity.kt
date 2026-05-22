@@ -16,10 +16,17 @@ import com.ochoastack.habitus.databinding.ItemArchivedHabitBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
+@AndroidEntryPoint
 class ArchivedHabitsActivity : AppCompatActivity() {
     // Declaramos las variables necesarias
     private lateinit var binding: ActivityArchivedHabitsBinding
-    private val habitRepository = HabitRepository()
+
+    // Configuramos la inyección para recibir el repositorio sin crearlo manualmente
+    @Inject
+    lateinit var habitRepository: HabitRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,7 +133,7 @@ class ArchivedHabitAdapter(
         with(holder.binding) {
             tvNombreArchivado.text    = habito.nombre
             tvFrecuenciaArchivado.text = habito.frecuencia
-            tvRachaArchivado.text     = "🔗 ${habito.racha}"
+            tvRachaArchivado.text     = "${habito.racha}"
             btnRestaurar.setOnClickListener { onRestore(habito) }
             btnEliminar.setOnClickListener  { onDelete(habito)  }
         }
