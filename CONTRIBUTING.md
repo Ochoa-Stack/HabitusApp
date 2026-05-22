@@ -1,181 +1,69 @@
-# Contributing to Habitus
+# Guía de Contribución
 
-¡Gracias por querer contribuir a Habitus! Este documento explica cómo hacerlo de forma completa y ordenada.
+¡Gracias por tu interés en contribuir a Habitus! Para mantener la calidad, seguridad y consistencia del proyecto, seguimos una serie de lineamientos estrictos inspirados en las mejores prácticas de la industria Open Source.
 
----
+Por favor, lee este documento antes de abrir un *Pull Request* o un *Issue*.
 
-## Código de conducta
+## Flujo de Trabajo en Git
 
-Este proyecto sigue el [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).  
-Se espera un trato respetuoso, inclusivo y constructivo en todas las interacciones.
+Adoptamos un modelo estructurado para las ramas de desarrollo:
 
----
+- **`main`**: Rama de producción. Todo código aquí es estable, seguro y ha sido lanzado mediante GitHub Releases.
+- **`develop`**: Rama de integración. Aquí confluyen todas las nuevas características antes de estabilizarse.
+- **Ramas de trabajo**: Deben desprenderse siempre de `develop` y usar los siguientes prefijos semánticos:
+  - `feat/`: Nuevas características (ej: `feat/dark-mode`).
+  - `fix/`: Resolución de errores (ej: `fix/notification-crash`).
+  - `docs/`: Actualizaciones a la documentación (ej: `docs/project-documentation`).
+  - `refactor/`: Refactorizaciones que no alteran la funcionalidad observable.
+  - `chore/`: Mantenimiento, dependencias o tooling (ej: `chore/update-gradle`).
 
-## ¿Cómo puedo contribuir?
+El ciclo estándar de contribución es:
+`develop` → rama de trabajo (`feat/xyz`) → Pull Request a `develop` → (al estabilizar) Merge a `main`.
 
-### Reportar un bug
+## Convención de Commits
 
-Usa la plantilla **Bug Report** al crear un Issue. Incluye:
-- Versión de Android y modelo del dispositivo
-- Pasos exactos para reproducirlo
-- Comportamiento esperado vs actual
-- Capturas de pantalla si aplica
+Utilizamos el estándar [Conventional Commits](https://www.conventionalcommits.org/). El formato del mensaje debe ser:
+```text
+<tipo>: <descripción corta en inglés y minúsculas>
 
-### Proponer una mejora
-
-Usa la plantilla **Feature Request**. Explica:
-- El problema que resuelve
-- La solución propuesta
-- Alternativas consideradas
-
-### Contribuir código
-
-1. Busca un issue abierto o abre uno nuevo
-2. Comenta que lo vas a trabajar para evitar trabajo duplicado
-3. Sigue el [flujo de trabajo Git](#flujo-de-trabajo-git)
-
----
-
-## Flujo de trabajo Git
-
+[Opcional: Descripción detallada de por qué se hizo el cambio y cómo funciona]
 ```
-main (producción estable)
-  └── develop (integración)
-        ├── feature/nombre-descriptivo
-        ├── fix/descripcion-del-bug
-        ├── refactor/componente-afectado
-        ├── chore/tarea-de-mantenimiento
-        └── docs/sección-documentada
+Tipos permitidos: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`.
+
+**Ejemplo correcto:**
+```text
+feat: add local notifications via WorkManager
+
+Implemented WeeklySummaryWorker to trigger local notifications every Sunday assessing the user's progress.
 ```
 
-### Pasos
+## Estándares de Código y Arquitectura
 
-```bash
-# Crear rama desde develop (nunca desde main)
-git checkout develop
-git pull origin develop
-git checkout -b feature/mi-nueva-funcionalidad
+1. **Linting y Análisis Estático**: El código debe pasar limpio por **ktlint** y **detekt**. Verifica esto localmente corriendo `./gradlew ktlintCheck detekt` antes de hacer push.
+2. **Convención de Comentarios**: Se exige el uso de la **primera persona del plural**, con descripciones directas, claras y pragmáticas en español.
+   - Correcto: `// Sincronizamos las completaciones con Firebase para evitar desfaces en la racha`
+   - Incorrecto: `// TODO: sync fb` o `// Firebase syncer method`
+3. **Estructura de Paquetes**: Se mantiene división estricta por responsabilidades: `di` (Hilt), `ui` (Activities/Fragments/ViewModels), `data` (Repositories/Models) y `worker`.
 
-# Trabajar, hacer commits atómicos
-git add .
-git commit -m "feat: agregar pantalla de estadísticas mensuales"
+## 🚀 Proceso de Pull Request (PR)
 
-# Push y abrir PR hacia develop
-git push origin feature/mi-nueva-funcionalidad
-```
+Para fusionar código en `develop`, tu PR debe cumplir el siguiente checklist de calidad:
 
-> Nota: **Nunca hagas push directo a `main` o `develop`.**
+- [ ] Has rellenado nuestra [Plantilla de Pull Request](.github/PULL_REQUEST_TEMPLATE.md) al abrir el PR.
+- [ ] Código compilable sin advertencias (`./gradlew assembleDebug` termina con `BUILD SUCCESSFUL`).
+- [ ] Pasa las comprobaciones de CI automatizadas (GitHub Actions).
+- [ ] Cumple con las convenciones de commit y la nomenclatura de ramas.
+- [ ] **NO INCLUYE** secretos como `google-services.json` ni archivos `.jks`.
 
----
+**Merge Strategy**: Se utilizará `Merge pull request` normal sin `Fast-Forward` (`--no-ff`) para mantener el registro visual de la integración de la funcionalidad en el árbol de commits.
 
-## Conventional Commits
+## 🐞 Reporte de Bugs y Sugerencias (Issues)
 
-Todos los commits deben seguir el estándar [Conventional Commits](https://www.conventionalcommits.org/):
+Si encuentras un bug o tienes una idea para mejorar la app, te invitamos a usar el sistema de Issues de GitHub usando nuestras plantillas predefinidas:
 
-```
-<tipo>[alcance opcional]: <descripción corta>
+- **Para reportar un error**: Utiliza nuestra [Plantilla de Bug Report](.github/ISSUE_TEMPLATE/bug_report.md).
+- **Para sugerir una mejora**: Utiliza nuestra [Plantilla de Feature Request](.github/ISSUE_TEMPLATE/feature_request.md).
 
-[cuerpo opcional]
+Al crear tu issue, asegúrate de proporcionar todos los detalles solicitados en la plantilla (pasos para reproducir, entorno, comportamiento esperado, etc.).
 
-[pie opcional: BREAKING CHANGE, Closes #xxx]
-```
-
-### Tipos permitidos
-
-| Tipo | Cuándo usarlo |
-|------|---------------|
-| `feat` | Nueva funcionalidad |
-| `fix` | Corrección de bug |
-| `refactor` | Cambio de código sin cambio de comportamiento |
-| `chore` | Tareas de build, dependencias, configuración |
-| `docs` | Solo documentación |
-| `test` | Agregar o corregir tests |
-| `style` | Formato (no lógica) |
-| `perf` | Mejora de rendimiento |
-| `ci` | Cambios en GitHub Actions |
-
-### Ejemplos válidos
-
-```bash
-git commit -m "feat: agregar autenticación con Google Sign-In"
-git commit -m "fix: corregir Locale en SimpleDateFormat para fechas ISO"
-git commit -m "refactor: migrar HomeFragment a ViewModel + StateFlow"
-git commit -m "chore: actualizar Firebase BOM a 34.11.0"
-git commit -m "docs: agregar sección de instalación en README"
-git commit -m "test: agregar tests unitarios para debeResetearRacha()"
-```
-
----
-
-## Estándares de código
-
-### Antes de hacer commit
-
-```bash
-# Verificar formato
-./gradlew ktlintCheck
-
-# Corregir formato automáticamente
-./gradlew ktlintFormat
-
-# Análisis estático
-./gradlew detekt
-```
-
-### Reglas generales
-
-- **Kotlin**: Sigue el [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)
-- **ViewBinding**: Siempre sobre `findViewById`
-- **Corrutinas**: Preferir `viewModelScope` o `viewLifecycleOwner.lifecycleScope` con `repeatOnLifecycle`
-- **Firebase**: Toda operación de datos debe pasar por un `Repository`. Los Fragments y ViewModels no llaman a Firebase directamente.
-- **Fechas ISO**: Usa siempre `Locale.ROOT` en `SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)` para fechas que van a Firestore como IDs.
-- **Result<T>**: Todas las funciones de repositorio retornan `Result<T>` con `.fold(onSuccess, onFailure)`
-
----
-
-## Tests
-
-Antes de abrir un PR, asegúrate de que los tests pasan:
-
-```bash
-./gradlew test               # Tests unitarios
-./gradlew connectedAndroidTest  # Tests de instrumentación (requiere dispositivo/emulador)
-```
-
-Para nuevas funcionalidades, incluye al menos un test unitario de la función de repositorio o ViewModel asociado.
-
----
-
-## Pull Requests
-
-1. Abre el PR **hacia `develop`**, nunca hacia `main`
-2. Usa la plantilla de PR (se carga automáticamente)
-3. Enlaza el issue que resuelve: `Closes #42`
-4. Asegúrate de que el CI pase (`audit.yml`)
-5. Espera revisión antes de hacer merge
-
-### Checklist antes de pedir revisión
-
-- [ ] El código compila sin errores
-- [ ] `ktlintCheck` pasa sin errores
-- [ ] `detekt` pasa sin errores
-- [ ] Los tests unitarios pasan
-- [ ] La funcionalidad fue probada manualmente en un dispositivo/emulador
-- [ ] Los commits siguen Conventional Commits
-- [ ] La documentación se actualizó si aplica
-
----
-
-## Estructura del proyecto
-
-```
-app/src/main/java/com/ochoastack/habitus/
-├── data/           # Repositorios y modelos de dominio
-├── ui/             # Activities, Fragments, Adapters, ViewModels
-├── utils/          # Helpers de notificaciones
-└── worker/         # WorkManager workers
-```
-
----
-
-*¿Tienes alguna duda? Abre un Issue con la etiqueta `question`.*
+*(Por favor, no incluyas capturas de pantalla de código, en su lugar usa bloques de código Markdown).*
