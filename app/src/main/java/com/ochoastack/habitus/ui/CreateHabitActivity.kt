@@ -14,12 +14,18 @@ import com.ochoastack.habitus.R
 import com.ochoastack.habitus.databinding.ActivityCreateHabitBinding
 import com.google.android.material.button.MaterialButton
 
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
+@AndroidEntryPoint
 class CreateHabitActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCreateHabitBinding
     private lateinit var formManager: HabitFormManager
 
-    private val habitRepository    = HabitRepository()
+    // Configuramos la inyección para recibir el repositorio sin crearlo manualmente
+    @Inject
+    lateinit var habitRepository: HabitRepository
     private val categoryRepository = CategoryRepository()
     private var categorias         = listOf<HabitCategory>()
     private var categoriaSeleccionada: HabitCategory? = null

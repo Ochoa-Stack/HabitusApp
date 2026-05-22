@@ -2,12 +2,6 @@ package com.ochoastack.habitus.data
 
 import com.ochoastack.habitus.R
 
-/* Catálogo de tipos cognitivos disponibles para los hábitos.
-Los colores se definen en res/values/colors.xml (modo claro) y
-res/values-night/colors.xml (modo oscuro). Usar [colorRes] para
-obtener el resource ID tema-aware en lugar de [color] con
-Color.parseColor(), que no responde al tema del sistema. */
-
 object TipoCognitivo {
     const val FISICO = "Físico"
     const val MENTAL = "Mental"

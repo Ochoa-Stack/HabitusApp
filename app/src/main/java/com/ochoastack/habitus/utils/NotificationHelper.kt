@@ -11,18 +11,7 @@ import com.ochoastack.habitus.worker.WeeklySummaryWorker
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
-/* Gestiona la configuración y programación de notificaciones.
-
-## Canal
-    - El canal [CANAL_ID] se crea en [HabitusApp.onCreate].
-    - Desde API 26 es obligatorio; sin canal las notificaciones se ignoran silenciosamente.
-
-## Workers
-    - [programarResumenSemanal]: política KEEP; si ya existe un worker con [WORK_TAG_WEEKLY], no lo reemplaza.
-    - [programarRecordatorioDiario]: política REPLACE; el usuario puede cambiar la hora; cada guardado cancela y reprograma.
-
-## Persistencia
-    - La preferencia de recordatorio diario se guarda en SharedPreferences ([PREF_NAME]) para recuperarla al reabrir NotificationsActivity. */
+/* Gestiona la configuración y programación de notificaciones */
 
 object NotificationHelper { // Declaramos el objeto de helper de notificaciones
     // Constantes para el canal de notificaciones
@@ -134,10 +123,6 @@ object NotificationHelper { // Declaramos el objeto de helper de notificaciones
     fun cancelarResumenSemanal(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag(WORK_TAG_WEEKLY)
     }
-
-    /* Programa o reprograma el recordatorio diario a la hora indicada.
-    Cancela cualquier trabajo anterior con el mismo tag antes de crear
-    uno nuevo para evitar duplicados. */
 
     fun programarRecordatorioDiario(context: Context, hora: Int, minuto: Int) {
         val workManager = WorkManager.getInstance(context)

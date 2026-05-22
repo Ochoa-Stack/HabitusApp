@@ -15,10 +15,17 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
+@AndroidEntryPoint
 class HabitDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHabitDetailBinding
-    private val habitRepository = HabitRepository()
+
+    // Configuramos la inyección para recibir el repositorio sin crearlo manualmente
+    @Inject
+    lateinit var habitRepository: HabitRepository
 
     private var habitoId         = ""
     private var completadoHoy    = false
@@ -210,7 +217,7 @@ class HabitDetailActivity : AppCompatActivity() {
         estadosPorFecha: Map<String, DayState>
     ): List<CalendarDayItem> {
         val items   = mutableListOf<CalendarDayItem>()
-        val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val formato = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
 
         val cal = Calendar.getInstance()
         cal.set(año, mes - 1, 1)
@@ -431,7 +438,7 @@ class HabitDetailActivity : AppCompatActivity() {
 
                     // Precarga la reflexión de hoy en el campo si existe
                     val hoy = java.text.SimpleDateFormat(
-                        "yyyy-MM-dd", java.util.Locale.getDefault()
+                        "yyyy-MM-dd", java.util.Locale.ROOT
                     ).format(java.util.Date())
                     val reflexionHoy = reflexiones.firstOrNull { it.fecha == hoy }
                     reflexionHoyTexto = reflexionHoy?.texto

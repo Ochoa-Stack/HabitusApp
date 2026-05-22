@@ -10,37 +10,22 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-/* Repositorio central de operaciones sobre hábitos.
-    - Todas las operaciones son suspend y retornan [Result<T>].
-    - La UI consume con .fold(onSuccess, onFailure).
-
-## Concurrencia
-    - [completarHabito] usa [com.google.firebase.firestore.FirebaseFirestore.runTransaction]
-    - para garantizar atomicidad en entornos multi-dispositivo.
-    - El lambda de la transacción es síncrono — no contiene llamadas suspend.
-
-    ### Consultas N paralelas
-    - [obtenerResumenSemanal] y [obtenerPorcentajeSemana] leen subcolecciones
-    - de completaciones en paralelo con coroutineScope + async/awaitAll
-    - para evitar lecturas secuenciales.
-
-### Racha con días de gracia
-    - [debeResetearRacha] itera hacia atrás hasta 14 días contando
-    - días programados consecutivos no completados. Solo resetea si
-    - el conteo supera [Habit.diasGracia]. */
-
-class HabitRepository { // Declaramos el repositorio para los hábitos
-    private val auth = FirebaseAuth.getInstance() // Declaramos el repositorio para los hábitos
-    private val firestore =
-            FirebaseFirestore.getInstance() // Declaramos el repositorio para los hábitos
+class HabitRepository @Inject constructor(
+    private val firestore: FirebaseFirestore,
+    private val auth: FirebaseAuth
+) {
     private fun coleccionHabitos() = firestore.collection("habitos")
 
     private fun obtenerUid(): String =
             auth.currentUser?.uid ?: throw Exception("No hay sesión activa")
     // Obtenemos la fecha actual en formato yyyy-MM-dd
+    // IMPORTANTE: Locale.ROOT garantiza formato ISO consistente independiente del locale del dispositivo.
+    // Las fechas se usan como IDs de documentos en Firestore — Locale.getDefault() causaría
+    // inconsistencias silenciosas en dispositivos con configuraciones regionales no estándar.
     private fun obtenerFechaHoy(): String =
-            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            SimpleDateFormat("yyyy-MM-dd", Locale.ROOT).format(Date())
     // Comprueba si la fecha de completación es hoy
     private fun esHoy(fechaTimestamp: com.google.firebase.Timestamp?): Boolean {
         if (fechaTimestamp == null) return false
@@ -60,28 +45,21 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
                     Calendar.SATURDAY to "Sáb",
                     Calendar.SUNDAY to "Dom"
             )
-    /* Determina si la racha debe resetearse dado el historial reciente.
-    Itera hacia atrás hasta 14 días contando días programados consecutivos sin completar;
-    si el conteo supera [diasGracia], la racha se rompe.
-    - @param diasSemana Etiquetas de días programados ("Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom").
-    - @param ultimaCompletacion Timestamp de la última completación. Null si el hábito nunca fue completado.
-    - @param diasGracia Días fallados permitidos antes de resetear. Valor configurado por el usuario (0, 1 o 2).
-    - @return true si la racha debe resetearse, false si se mantiene. */
 
-    private fun debeResetearRacha(
+    // `internal` permite tests unitarios sin reflexión
+    internal fun debeResetearRacha(
             diasSemana: List<String>,
             ultimaCompletacion: com.google.firebase.Timestamp?,
             diasGracia: Int = 0
     ): Boolean {
         if (diasSemana.isEmpty()) return false
 
-        val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val formato = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
         val fechaUltimaStr =
                 if (ultimaCompletacion != null) formato.format(ultimaCompletacion.toDate()) else ""
 
         var diasMissed = 0
-        // Buscamos el último día programado antes de hoy
-        val cal = Calendar.getInstance()
+        // Iteramos hacia atrás hasta 14 días contando días programados consecutivos sin completar
         for (i in 1..14) {
             val cal = Calendar.getInstance()
             cal.add(Calendar.DAY_OF_YEAR, -i)
@@ -100,9 +78,16 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
 
         return false
     }
+
+    /* Alias de test para [debeResetearRacha]. Solo para uso en tests unitarios */
+    internal fun testDebeResetearRacha(
+        diasSemana: List<String>,
+        ultimaCompletacion: com.google.firebase.Timestamp?,
+        diasGracia: Int = 0,
+    ) = debeResetearRacha(diasSemana, ultimaCompletacion, diasGracia)
     // Recalculamos el porcentaje de cumplimiento real sobre los últimos 30 días
     private suspend fun calcularPorcentaje30Dias(habitoId: String, diasSemana: List<String>): Int {
-        val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val formato = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
 
         val fechasEsperadas = mutableListOf<String>()
         for (i in 0..29) {
@@ -156,11 +141,6 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
             Result.failure(e)
         }
     }
-
-    /* Cargamos los hábitos del usuario y detecta automáticamente rachas rotas,
-    si un hábito tiene racha > 0 y el usuario faltó al último día programado,
-    la racha se resetea a 0 en Firestore antes de devolver los datos a la UI */
-
     suspend fun obtenerHabitos(): Result<List<Habit>> {
         return try {
             val uid = obtenerUid()
@@ -190,7 +170,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
                 val rachaActual = (doc.getLong("racha") ?: 0L).toInt()
                 if (rachaActual > 0) {
                     val diasSemana =
-                            (doc.get("diasSemana") as? List<*>)?.filterIsInstance<String>()
+                            (doc.get("diasSemana") as? List<Any?>)?.filterIsInstance<String>()
                                     ?: emptyList()
                     val ultimaCompletacion = doc.getTimestamp("ultimaCompletacion")
                     val diasGraciaDoc = (doc.getLong("diasGracia") ?: 0L).toInt()
@@ -222,7 +202,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
                                 nombre = doc.getString("nombre") ?: "",
                                 frecuencia = doc.getString("frecuencia") ?: "",
                                 diasSemana =
-                                        (doc.get("diasSemana") as? List<*>)?.filterIsInstance<
+                                        (doc.get("diasSemana") as? List<Any?>)?.filterIsInstance<
                                                 String>()
                                                 ?: emptyList(),
                                 racha = (doc.getLong("racha") ?: 0L).toInt(),
@@ -290,16 +270,6 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
             Result.failure(e)
         }
     }
-    /* Registra la completación del hábito para el día actual.
-
-    Verifica existencia previa FUERA de la transacción para evitar lecturas innecesarias. La
-    transacción garantiza que racha, totalCompletaciones y el documento de completación se
-    escriban de forma atómica.
-
-    - @param habitoId ID del documento en Firestore.
-    - @return [Result.success(true)] si fue nueva completación,
-    - [Result.success(false)] si ya estaba completado hoy,
-    - [Result.failure] en error de red. */
 
     suspend fun completarHabito(habitoId: String): Result<Boolean> {
         return try {
@@ -325,7 +295,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
                         val rachaActual = (snapshot.getLong("racha") ?: 0L).toInt()
                         nuevoTotal = (snapshot.getLong("totalCompletaciones") ?: 0L).toInt() + 1
                         diasSemanaCapturados =
-                                (snapshot.get("diasSemana") as? List<*>)?.filterIsInstance<String>()
+                                (snapshot.get("diasSemana") as? List<Any?>)?.filterIsInstance<String>()
                                         ?: emptyList()
                         val ultimaCompletacion = snapshot.getTimestamp("ultimaCompletacion")
                         val diasGracia = (snapshot.getLong("diasGracia") ?: 0L).toInt()
@@ -361,8 +331,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
                     }
                     .await()
 
-            // Actualizar porcentaje FUERA de la transacción
-            // usando los datos capturados arriba
+            // Actualizar porcentaje FUERA de la transacción usando los datos capturados arriba
             val porcentaje = calcularPorcentajeReal(habitoId, diasSemanaCapturados, nuevoTotal)
             docRef.update("porcentaje", porcentaje).await()
 
@@ -381,7 +350,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
                 coleccionHabitos().document(habitoId).collection("completaciones").get().await()
 
         val fechasCompletadas = completacionesDocs.documents.map { it.id }.toSet()
-        val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val formato = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
         val fechasEsperadas = mutableListOf<String>()
         for (i in 0..29) {
             val cal = Calendar.getInstance()
@@ -396,8 +365,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
             ((cumplidas.toFloat() / fechasEsperadas.size.toFloat()) * 100).toInt()
         } else 0
     }
-    // Eliminamos la completación de hoy, decrementa racha, totalCompletaciones y recalcula el
-    // porcentaje real
+    // Eliminamos la completación de hoy, decrementa racha, totalCompletaciones y recalcula el porcentaje real
     suspend fun descompletarHabito(habitoId: String): Result<Unit> {
         return try {
             val hoy = obtenerFechaHoy()
@@ -415,7 +383,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
             val rachaActual = (snapshot.getLong("racha") ?: 0L).toInt()
             val totalActual = (snapshot.getLong("totalCompletaciones") ?: 0L).toInt()
             val diasSemana =
-                    (snapshot.get("diasSemana") as? List<*>)?.filterIsInstance<String>()
+                    (snapshot.get("diasSemana") as? List<Any?>)?.filterIsInstance<String>()
                             ?: emptyList()
 
             val nuevoPorcentaje = calcularPorcentaje30Dias(habitoId, diasSemana)
@@ -454,7 +422,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
     // Obtenemos el historial de los últimos 7 días
     suspend fun obtenerHistorial7Dias(habitoId: String): Result<List<DayStatus>> {
         return try {
-            val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formato = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
             val etiquetas = listOf("Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb")
             val hoyStr = obtenerFechaHoy()
 
@@ -495,7 +463,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
                             nombre = doc.getString("nombre") ?: "",
                             frecuencia = doc.getString("frecuencia") ?: "",
                             diasSemana =
-                                    (doc.get("diasSemana") as? List<*>)?.filterIsInstance<String>()
+                                    (doc.get("diasSemana") as? List<Any?>)?.filterIsInstance<String>()
                                             ?: emptyList(),
                             racha = (doc.getLong("racha") ?: 0L).toInt(),
                             porcentaje = (doc.getLong("porcentaje") ?: 0L).toInt(),
@@ -540,8 +508,6 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
             Result.failure(e)
         }
     }
-    /* Calculamos las estadísticas globales del usuario. 'totalCompletaciones' suma el
-    campo almacenado en cada documento de hábito, sin necesidad de leer subcolecciones */
     suspend fun obtenerEstadisticas(): Result<EstadisticasUsuario> {
         return try {
             val uid = obtenerUid()
@@ -581,7 +547,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
             mes: Int
     ): Result<Map<String, DayState>> {
         return try {
-            val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formato = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
             val hoyStr = obtenerFechaHoy()
 
             val completaciones =
@@ -591,7 +557,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
 
             val habitoDoc = coleccionHabitos().document(habitoId).get().await()
             val diasSemana =
-                    (habitoDoc.get("diasSemana") as? List<*>)?.filterIsInstance<String>()
+                    (habitoDoc.get("diasSemana") as? List<Any?>)?.filterIsInstance<String>()
                             ?: emptyList()
 
             val resultado = mutableMapOf<String, DayState>()
@@ -673,7 +639,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
                                 nombre = doc.getString("nombre") ?: "",
                                 frecuencia = doc.getString("frecuencia") ?: "",
                                 diasSemana =
-                                        (doc.get("diasSemana") as? List<*>)?.filterIsInstance<
+                                        (doc.get("diasSemana") as? List<Any?>)?.filterIsInstance<
                                                 String>()
                                                 ?: emptyList(),
                                 racha = (doc.getLong("racha") ?: 0L).toInt(),
@@ -707,7 +673,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
     suspend fun obtenerPorcentajeSemana(): Result<Int> {
         return try {
             val uid = obtenerUid()
-            val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formato = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
 
             val calLunes = Calendar.getInstance()
             val diasDesdeElLunes = (calLunes.get(Calendar.DAY_OF_WEEK) - Calendar.MONDAY + 7) % 7
@@ -743,7 +709,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
 
             for ((doc, completaciones) in resultados) {
                 val diasSemana =
-                        (doc.get("diasSemana") as? List<*>)?.filterIsInstance<String>()
+                        (doc.get("diasSemana") as? List<Any?>)?.filterIsInstance<String>()
                                 ?: emptyList()
 
                 val calTemp = calLunes.clone() as Calendar
@@ -769,17 +735,10 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
             Result.failure(e)
         }
     }
-    /* Calcula el resumen de la semana actual (lunes a hoy).
-
-    Lee los hábitos activos y sus subcolecciones de completaciones en paralelo con coroutineScope
-    + async/awaitAll. Con N hábitos activos realiza N+1 lecturas de Firestore en paralelo,
-    latencia = tiempo de la llamada más lenta, no la suma.
-    - @return [Result<ResumenSemanal>] con porcentaje, mejor racha, hábito más descuidado y totales de la semana. */
-
     suspend fun obtenerResumenSemanal(): Result<ResumenSemanal> {
         return try {
             val uid = obtenerUid()
-            val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formato = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
 
             val calLunes = Calendar.getInstance()
             val diasDesdeElLunes = (calLunes.get(Calendar.DAY_OF_WEEK) - Calendar.MONDAY + 7) % 7
@@ -820,7 +779,7 @@ class HabitRepository { // Declaramos el repositorio para los hábitos
             for ((doc, completaciones) in resultados) {
                 val nombre = doc.getString("nombre") ?: ""
                 val diasSemana =
-                        (doc.get("diasSemana") as? List<*>)?.filterIsInstance<String>()
+                        (doc.get("diasSemana") as? List<Any?>)?.filterIsInstance<String>()
                                 ?: emptyList()
                 val racha = (doc.getLong("racha") ?: 0L).toInt()
 

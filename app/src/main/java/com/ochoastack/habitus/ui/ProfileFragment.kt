@@ -12,11 +12,18 @@ import com.ochoastack.habitus.data.HabitRepository
 import com.ochoastack.habitus.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
 
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val authRepository  = FirebaseAuthRepository()
-    private val habitRepository = HabitRepository()
+
+    // Configuramos la inyección para acceder a los datos del usuario
+    @Inject
+    lateinit var habitRepository: HabitRepository
     private var statsYaCargadas = false
 
     override fun onCreateView(

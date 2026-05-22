@@ -10,7 +10,7 @@ Versionado basado en [Semantic Versioning](https://semver.org).
 ## [Sin publicar]
 
 ### En progreso
-- Documentación técnica profesional
+- Documentación técnica
 
 ---
 
