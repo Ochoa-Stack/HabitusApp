@@ -3,7 +3,7 @@
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.0.21-purple?style=flat&logo=kotlin)
 ![API Level](https://img.shields.io/badge/API-26%2B-brightgreen?style=flat&logo=android)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
-![CI Status](https://img.shields.io/badge/CI-Passing-success?style=flat&logo=githubactions)
+![CI Status](https://github.com/Ochoa-Stack/Habitus/blob/main/.github/workflows/audit.yml)
 ![Architecture](https://img.shields.io/badge/Architecture-MVVM%20%2B%20Hilt-orange)
 
 ## Descripción del Proyecto
@@ -22,7 +22,7 @@ El proyecto está construido sobre las herramientas más modernas del ecosistema
 - **Backend as a Service (BaaS)**: Firebase Auth (Autenticación) y Firestore (Base de datos NoSQL)
 - **Tareas en Segundo Plano**: WorkManager (Notificaciones y sincronización asíncrona)
 - **Procesamiento de Anotaciones**: KSP (Kotlin Symbol Processing) para tiempos de compilación óptimos
-- **Integración y Entrega Continua**: GitHub Actions ([audit.yml](audit.yml) y [release.yml](release.yml))
+- **Integración y Entrega Continua**: GitHub Actions (**[audit.yml]**(.github/workflows/audit.yml) y **[release.yml]**(.github/workflows/release.yml))
 
 ## Arquitectura
 
