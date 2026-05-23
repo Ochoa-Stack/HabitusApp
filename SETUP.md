@@ -1,8 +1,8 @@
-# Guía de Entorno (Setup) ⚙️
+# Guía de Entorno (Setup)
 
 Esta guía te ayudará a configurar el entorno de desarrollo local para HabitusApp desde cero.
 
-## 📋 Requisitos Previos
+## Requisitos Previos
 
 Asegúrate de contar con las siguientes herramientas instaladas antes de comenzar:
 
@@ -13,24 +13,24 @@ Asegúrate de contar con las siguientes herramientas instaladas antes de comenza
 
 ---
 
-## 🛠️ Clonación y Configuración Local
+## Clonación y Configuración Local
 
 1. **Clona el repositorio** en tu máquina local:
    ```bash
-   git clone https://github.com/TU_USUARIO/HabitTrackerApp.git
-   cd HabitTrackerApp
+   git clone https://github.com/Ochoa-Stack/Habitus.git
+   cd Habitus
    ```
 
 2. **Abre el proyecto** en Android Studio. Espera a que la fase inicial de `Gradle Sync` termine, aunque probablemente falle si te falta el archivo de Firebase (ver la siguiente sección).
 
 ---
 
-## 🔥 Configuración de Firebase
+## Configuración de Firebase
 
 HabitusApp no puede compilar sin conectarse a tu propio proyecto de Firebase. 
 
 1. Ve a la [Consola de Firebase](https://console.firebase.google.com/).
-2. Crea un nuevo proyecto llamado `HabitusApp` (o como prefieras).
+2. Crea un nuevo proyecto llamado `Habitus` (o como prefieras).
 3. Dentro del proyecto, añade una aplicación Android con el Application ID: `com.ochoastack.habitus`.
 4. **Descarga el archivo `google-services.json`**.
 5. Mueve el archivo descargado directamente a la carpeta `app/` de tu proyecto:
@@ -46,7 +46,7 @@ HabitusApp no puede compilar sin conectarse a tu propio proyecto de Firebase.
 
 ---
 
-## 🔐 Configuración para CI/CD (GitHub Secrets)
+## Configuración para CI/CD (GitHub Secrets)
 
 Si deseas utilizar los flujos automatizados (`audit.yml` y `release.yml`) incluidos en el repositorio, necesitas proveer los secretos necesarios a GitHub:
 
@@ -62,7 +62,7 @@ En tu repositorio de GitHub, navega a **Settings > Secrets and variables > Actio
 
 ---
 
-## 💻 Comandos Útiles de Build y Test
+## Comandos Útiles de Build y Test
 
 Si trabajas desde la terminal, puedes usar el wrapper de Gradle (`gradlew`) para realizar tareas cotidianas:
 
@@ -81,7 +81,7 @@ Si trabajas desde la terminal, puedes usar el wrapper de Gradle (`gradlew`) para
 
 ---
 
-## 🐛 Solución de Errores Comunes
+## Solución de Errores Comunes
 
 ### Error: `PROJECT_SOFT_DELETED` en Firebase
 - **Causa**: Significa que el proyecto de Firebase asociado al `google-services.json` fue eliminado en la nube, pero tu app aún intenta consultarlo.

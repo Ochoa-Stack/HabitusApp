@@ -37,6 +37,23 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      # Verificar red (resiliencia)
+      - name: Check network connectivity with retry
+        run: |
+          echo "Verificamos la conexión antes de validar el wrapper de Gradle"
+          for i in {1..5}; do
+            if curl -s --connect-timeout 15 https://services.gradle.org > /dev/null 2>&1; then
+              echo "Conexión establecida en intento $i"
+              exit 0
+            fi
+            echo "Esperamos 10 segundos antes del reintento ($i/5)..."
+            sleep 10
+          done
+          echo "Advertencia: No pudimos verificar la conexión externa, continuamos con el build"
+          exit 0
+        shell: bash
+        continue-on-error: true
+
       # Gradle wrapper validation
       - name: Validate Gradle wrapper
         uses: gradle/actions/wrapper-validation@v3

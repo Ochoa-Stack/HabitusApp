@@ -1,16 +1,16 @@
-# Arquitectura del Sistema 🏗️
+# Arquitectura del Sistema
 
-Este documento describe a detalle los patrones arquitectónicos, las decisiones de diseño y las prácticas de ingeniería implementadas en HabitusApp para asegurar escalabilidad, mantenibilidad y un rendimiento óptimo.
+Este documento describe a detalle los patrones arquitectónicos, las decisiones de diseño y las prácticas de ingeniería implementadas en Habitus para asegurar escalabilidad, mantenibilidad y un rendimiento óptimo.
 
 ## Patrón Arquitectónico: MVVM + Repository + Hilt DI
 
 HabitusApp sigue una arquitectura basada en capas fuertemente inspirada en la [Guía de Arquitectura de Aplicaciones](https://developer.android.com/jetpack/guide) oficial de Android:
 
-1. **Capa de Presentación (UI + ViewModel)**: Desacopla la lógica de visualización del manejo del estado.
-2. **Capa de Dominio / Datos (Repository)**: Centraliza el acceso a datos locales y remotos como única fuente de verdad.
+1. **Capa de Presentación**: Desacopla la lógica de visualización del manejo del estado.
+2. **Capa de Dominio / Datos**: Centraliza el acceso a datos locales y remotos como única fuente de verdad.
 3. **Inyección de Dependencias**: Administrada enteramente por **Dagger Hilt** para proveer instancias automáticas en tiempo de compilación.
 
-### Flujo de Datos Unidireccional (UDF)
+### Flujo de Datos Unidireccional
 
 La UI nunca solicita datos directamente a las fuentes; en su lugar, reacciona a los cambios de estado:
 - El `Repository` procesa las lecturas de Firestore y las devuelve envueltas en la clase `Result<T>`.

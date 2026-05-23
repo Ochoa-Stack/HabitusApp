@@ -45,7 +45,7 @@ Implemented WeeklySummaryWorker to trigger local notifications every Sunday asse
    - Incorrecto: `// TODO: sync fb` o `// Firebase syncer method`
 3. **Estructura de Paquetes**: Se mantiene división estricta por responsabilidades: `di` (Hilt), `ui` (Activities/Fragments/ViewModels), `data` (Repositories/Models) y `worker`.
 
-## 🚀 Proceso de Pull Request (PR)
+## Proceso de Pull Request
 
 Para fusionar código en `develop`, tu PR debe cumplir el siguiente checklist de calidad:
 
@@ -57,7 +57,7 @@ Para fusionar código en `develop`, tu PR debe cumplir el siguiente checklist de
 
 **Merge Strategy**: Se utilizará `Merge pull request` normal sin `Fast-Forward` (`--no-ff`) para mantener el registro visual de la integración de la funcionalidad en el árbol de commits.
 
-## 🐞 Reporte de Bugs y Sugerencias (Issues)
+## Reporte de Bugs y Sugerencias (Issues)
 
 Si encuentras un bug o tienes una idea para mejorar la app, te invitamos a usar el sistema de Issues de GitHub usando nuestras plantillas predefinidas:
 
