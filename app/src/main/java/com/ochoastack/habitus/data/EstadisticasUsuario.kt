@@ -5,5 +5,5 @@ data class EstadisticasUsuario(
     val totalHabitos: Int,
     val completadosHoy: Int,
     val rachaMaxima: Int,
-    val totalCompletaciones: Int
+    val totalCompletaciones: Int,
 )

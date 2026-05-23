@@ -8,16 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.ochoastack.habitus.R
 import com.ochoastack.habitus.data.Habit
 import com.ochoastack.habitus.data.HabitRepository
 import com.ochoastack.habitus.databinding.ActivityArchivedHabitsBinding
 import com.ochoastack.habitus.databinding.ItemArchivedHabitBinding
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.launch
-
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ArchivedHabitsActivity : AppCompatActivity() {
@@ -38,6 +37,7 @@ class ArchivedHabitsActivity : AppCompatActivity() {
 
         cargarArchivados()
     }
+
     // Cargamos los hábitos archivados
     private fun cargarArchivados() {
         lifecycleScope.launch {
@@ -50,20 +50,22 @@ class ArchivedHabitsActivity : AppCompatActivity() {
                     } else {
                         binding.tvEmptyState.visibility = View.GONE
                         binding.rvArchivados.visibility = View.VISIBLE
-                        binding.rvArchivados.adapter    = ArchivedHabitAdapter(
-                            habitos,
-                            onRestore = { habito -> restaurar(habito) },
-                            onDelete  = { habito -> eliminar(habito)  }
-                        )
+                        binding.rvArchivados.adapter =
+                            ArchivedHabitAdapter(
+                                habitos,
+                                onRestore = { habito -> restaurar(habito) },
+                                onDelete = { habito -> eliminar(habito) },
+                            )
                     }
                 },
                 onFailure = {
                     binding.tvEmptyState.visibility = View.VISIBLE
                     binding.rvArchivados.visibility = View.GONE
-                }
+                },
             )
         }
     }
+
     // Restauramos un hábito archivado
     private fun restaurar(habito: Habit) {
         lifecycleScope.launch {
@@ -73,7 +75,7 @@ class ArchivedHabitsActivity : AppCompatActivity() {
                     Snackbar.make(
                         binding.root,
                         getString(R.string.habit_restored),
-                        Snackbar.LENGTH_SHORT
+                        Snackbar.LENGTH_SHORT,
                     ).show()
                     cargarArchivados()
                 },
@@ -81,12 +83,13 @@ class ArchivedHabitsActivity : AppCompatActivity() {
                     android.widget.Toast.makeText(
                         this@ArchivedHabitsActivity,
                         getString(R.string.error_cargar_datos),
-                        android.widget.Toast.LENGTH_SHORT
+                        android.widget.Toast.LENGTH_SHORT,
                     ).show()
-                }
+                },
             )
         }
     }
+
     // Eliminamos un hábito archivado
     private fun eliminar(habito: Habit) {
         lifecycleScope.launch {
@@ -96,7 +99,7 @@ class ArchivedHabitsActivity : AppCompatActivity() {
                     Snackbar.make(
                         binding.root,
                         getString(R.string.habit_deleted),
-                        Snackbar.LENGTH_SHORT
+                        Snackbar.LENGTH_SHORT,
                     ).show()
                     cargarArchivados()
                 },
@@ -104,38 +107,47 @@ class ArchivedHabitsActivity : AppCompatActivity() {
                     android.widget.Toast.makeText(
                         this@ArchivedHabitsActivity,
                         getString(R.string.error_cargar_datos),
-                        android.widget.Toast.LENGTH_SHORT
+                        android.widget.Toast.LENGTH_SHORT,
                     ).show()
-                }
+                },
             )
         }
     }
 }
+
 // Creamos un 'Adaptador' para los hábitos archivados
 class ArchivedHabitAdapter(
     private val habitos: List<Habit>,
     private val onRestore: (Habit) -> Unit,
-    private val onDelete:  (Habit) -> Unit
+    private val onDelete: (Habit) -> Unit,
 ) : RecyclerView.Adapter<ArchivedHabitAdapter.VH>() {
-
     inner class VH(val binding: ItemArchivedHabitBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        VH(ItemArchivedHabitBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        ))
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ) = VH(
+        ItemArchivedHabitBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false,
+        ),
+    )
 
     override fun getItemCount() = habitos.size
 
-    override fun onBindViewHolder(holder: VH, position: Int) {
+    override fun onBindViewHolder(
+        holder: VH,
+        position: Int,
+    ) {
         val habito = habitos[position]
         with(holder.binding) {
-            tvNombreArchivado.text    = habito.nombre
+            tvNombreArchivado.text = habito.nombre
             tvFrecuenciaArchivado.text = habito.frecuencia
-            tvRachaArchivado.text     = "${habito.racha}"
+            tvRachaArchivado.text = "${habito.racha}"
             btnRestaurar.setOnClickListener { onRestore(habito) }
-            btnEliminar.setOnClickListener  { onDelete(habito)  }
+            btnEliminar.setOnClickListener { onDelete(habito) }
         }
     }
 }

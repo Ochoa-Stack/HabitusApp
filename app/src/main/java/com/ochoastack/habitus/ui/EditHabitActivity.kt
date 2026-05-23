@@ -6,20 +6,18 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
 import com.ochoastack.habitus.R
 import com.ochoastack.habitus.data.CategoryRepository
 import com.ochoastack.habitus.data.HabitCategory
 import com.ochoastack.habitus.data.HabitRepository
 import com.ochoastack.habitus.databinding.ActivityEditHabitBinding
-import com.google.android.material.button.MaterialButton
-import kotlinx.coroutines.launch
-
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EditHabitActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityEditHabitBinding
     private lateinit var formManager: HabitFormManager
 
@@ -28,17 +26,17 @@ class EditHabitActivity : AppCompatActivity() {
     lateinit var habitRepository: HabitRepository
     private val categoryRepository = CategoryRepository()
 
-    private var habitoId                = ""
-    private var categorias              = listOf<HabitCategory>()
-    private var categoriaSeleccionada   : HabitCategory? = null
+    private var habitoId = ""
+    private var categorias = listOf<HabitCategory>()
+    private var categoriaSeleccionada: HabitCategory? = null
     private var diasGraciaSeleccionados = 0
 
     companion object {
-        const val EXTRA_HABIT_ID          = "habit_id"
-        const val EXTRA_HABIT_NAME        = "habit_name"
-        const val EXTRA_HABIT_FREQUENCY   = "habit_frequency"
+        const val EXTRA_HABIT_ID = "habit_id"
+        const val EXTRA_HABIT_NAME = "habit_name"
+        const val EXTRA_HABIT_FREQUENCY = "habit_frequency"
         const val EXTRA_HABIT_CATEGORY_ID = "habit_category_id"
-        const val EXTRA_HABIT_GRACE_DAYS  = "habit_grace_days"
+        const val EXTRA_HABIT_GRACE_DAYS = "habit_grace_days"
         const val EXTRA_HABIT_TIPO_COGNITIVO = "habit_tipo_cognitivo"
     }
 
@@ -47,30 +45,32 @@ class EditHabitActivity : AppCompatActivity() {
         binding = ActivityEditHabitBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        habitoId                = intent.getStringExtra(EXTRA_HABIT_ID)          ?: ""
-        val nombreActual        = intent.getStringExtra(EXTRA_HABIT_NAME)        ?: ""
-        val frecuenciaActual    = intent.getStringExtra(EXTRA_HABIT_FREQUENCY)   ?: ""
-        val categoriaIdActual   = intent.getStringExtra(EXTRA_HABIT_CATEGORY_ID) ?: ""
+        habitoId = intent.getStringExtra(EXTRA_HABIT_ID) ?: ""
+        val nombreActual = intent.getStringExtra(EXTRA_HABIT_NAME) ?: ""
+        val frecuenciaActual = intent.getStringExtra(EXTRA_HABIT_FREQUENCY) ?: ""
+        val categoriaIdActual = intent.getStringExtra(EXTRA_HABIT_CATEGORY_ID) ?: ""
         diasGraciaSeleccionados = intent.getIntExtra(EXTRA_HABIT_GRACE_DAYS, 0)
 
         binding.edtHabitName.setText(nombreActual)
 
-        formManager = HabitFormManager(
-            context       = this,
-            chipData      = listOf(
-                binding.chipLun to "Lun",
-                binding.chipMar to "Mar",
-                binding.chipMie to "Mié",
-                binding.chipJue to "Jue",
-                binding.chipVie to "Vie",
-                binding.chipSab to "Sáb",
-                binding.chipDom to "Dom"
-            ),
-            btnFreqDaily  = binding.btnFreqDaily,
-            btnFreqCustom = binding.btnFreqCustom,
-            layoutDays    = binding.layoutDays,
-            tvDaysError   = binding.tvDaysError
-        )
+        formManager =
+            HabitFormManager(
+                context = this,
+                chipData =
+                    listOf(
+                        binding.chipLun to "Lun",
+                        binding.chipMar to "Mar",
+                        binding.chipMie to "Mié",
+                        binding.chipJue to "Jue",
+                        binding.chipVie to "Vie",
+                        binding.chipSab to "Sáb",
+                        binding.chipDom to "Dom",
+                    ),
+                btnFreqDaily = binding.btnFreqDaily,
+                btnFreqCustom = binding.btnFreqCustom,
+                layoutDays = binding.layoutDays,
+                tvDaysError = binding.tvDaysError,
+            )
 
         val esDiarioActual = frecuenciaActual == getString(R.string.frequency_daily)
         formManager.inicializarFrecuencia(esDiarioActual)
@@ -79,7 +79,9 @@ class EditHabitActivity : AppCompatActivity() {
             formManager.preseleccionarDias(frecuenciaActual.split(" - "))
         }
 
-        val tipoInicial = intent.getStringExtra(EXTRA_HABIT_TIPO_COGNITIVO) ?: com.ochoastack.habitus.data.TipoCognitivo.FISICO
+        val tipoInicial =
+            intent.getStringExtra(EXTRA_HABIT_TIPO_COGNITIVO)
+                ?: com.ochoastack.habitus.data.TipoCognitivo.FISICO
         formManager.configurarSelectorTipo(binding.chipGroupTipo, tipoInicial)
 
         seleccionarGracia(diasGraciaSeleccionados)
@@ -104,20 +106,23 @@ class EditHabitActivity : AppCompatActivity() {
         diasGraciaSeleccionados = dias
         listOf(binding.btnGrace0, binding.btnGrace1, binding.btnGrace2)
             .forEachIndexed { index, btn ->
-                if (index == dias) aplicarEstiloGraciaActivo(btn)
-                else               aplicarEstiloGraciaInactivo(btn)
+                if (index == dias) {
+                    aplicarEstiloGraciaActivo(btn)
+                } else {
+                    aplicarEstiloGraciaInactivo(btn)
+                }
             }
     }
 
     private fun aplicarEstiloGraciaActivo(boton: MaterialButton) {
         boton.backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
-        boton.strokeColor        = ColorStateList.valueOf(getColor(R.color.accent))
+        boton.strokeColor = ColorStateList.valueOf(getColor(R.color.accent))
         boton.setTextColor(getColor(R.color.on_accent))
     }
 
     private fun aplicarEstiloGraciaInactivo(boton: MaterialButton) {
         boton.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
-        boton.strokeColor        = ColorStateList.valueOf(getColor(R.color.divider_color))
+        boton.strokeColor = ColorStateList.valueOf(getColor(R.color.divider_color))
         boton.setTextColor(getColor(R.color.text_secondary))
     }
 
@@ -127,11 +132,12 @@ class EditHabitActivity : AppCompatActivity() {
             resultado.fold(
                 onSuccess = { lista ->
                     categorias = lista
-                    val adapter = ArrayAdapter(
-                        this@EditHabitActivity,
-                        android.R.layout.simple_dropdown_item_1line,
-                        lista.map { it.nombre }
-                    )
+                    val adapter =
+                        ArrayAdapter(
+                            this@EditHabitActivity,
+                            android.R.layout.simple_dropdown_item_1line,
+                            lista.map { it.nombre },
+                        )
                     binding.actvCategory.setAdapter(adapter)
 
                     val categoriaActual = lista.find { it.id == categoriaIdActual }
@@ -144,13 +150,13 @@ class EditHabitActivity : AppCompatActivity() {
                         categoriaSeleccionada = lista[position]
                     }
                 },
-                onFailure = { }
+                onFailure = { },
             )
         }
     }
 
     private fun validarFormulario(): Boolean {
-        val nombre   = binding.edtHabitName.text.toString().trim()
+        val nombre = binding.edtHabitName.text.toString().trim()
         var esValido = true
 
         if (nombre.isEmpty()) {
@@ -172,24 +178,25 @@ class EditHabitActivity : AppCompatActivity() {
         val nombre = binding.edtHabitName.text.toString().trim()
 
         binding.btnSave.isEnabled = false
-        binding.btnSave.text      = getString(R.string.btn_update_loading)
+        binding.btnSave.text = getString(R.string.btn_update_loading)
 
         lifecycleScope.launch {
-            val resultado = habitRepository.actualizarHabito(
-                habitoId    = habitoId,
-                nombre      = nombre,
-                frecuencia  = formManager.obtenerFrecuenciaString(),
-                diasSemana  = formManager.obtenerDiasLista(),
-                categoriaId = categoriaSeleccionada?.id ?: "",
-                diasGracia  = diasGraciaSeleccionados,
-                tipoCognitivo = formManager.obtenerTipoSeleccionado()
-            )
+            val resultado =
+                habitRepository.actualizarHabito(
+                    habitoId = habitoId,
+                    nombre = nombre,
+                    frecuencia = formManager.obtenerFrecuenciaString(),
+                    diasSemana = formManager.obtenerDiasLista(),
+                    categoriaId = categoriaSeleccionada?.id ?: "",
+                    diasGracia = diasGraciaSeleccionados,
+                    tipoCognitivo = formManager.obtenerTipoSeleccionado(),
+                )
             resultado.fold(
                 onSuccess = { finish() },
                 onFailure = {
                     binding.btnSave.isEnabled = true
-                    binding.btnSave.text      = getString(R.string.btn_update_habit)
-                }
+                    binding.btnSave.text = getString(R.string.btn_update_habit)
+                },
             )
         }
     }

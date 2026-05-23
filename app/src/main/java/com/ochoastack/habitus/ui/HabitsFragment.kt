@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import dagger.hilt.android.AndroidEntryPoint
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,8 +18,9 @@ import com.ochoastack.habitus.data.DayState
 import com.ochoastack.habitus.data.DayStatus
 import com.ochoastack.habitus.data.Habit
 import com.ochoastack.habitus.databinding.FragmentHabitsBinding
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
+import kotlinx.coroutines.launch
 
 /* Fragment de la pantalla de lista de hábitos.
  *
@@ -33,7 +33,6 @@ import java.util.Calendar
  * Toda lógica de datos y negocio vive en [HabitsViewModel]. */
 @AndroidEntryPoint
 class HabitsFragment : Fragment() {
-
     private var _binding: FragmentHabitsBinding? = null
     private val binding get() = _binding!!
 
@@ -64,7 +63,10 @@ class HabitsFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         configurarRecyclerView()
         configurarNavegacion()
@@ -111,9 +113,10 @@ class HabitsFragment : Fragment() {
             is HabitsUiState.Success -> {
                 mostrarCarga(false)
                 mostrarEstadoVacio(false)
-                val habitsConDias = estado.habitos.map { habit ->
-                    habit.copy(weekDays = construirDiasParaLista(habit.estaCompletadoHoy))
-                }
+                val habitsConDias =
+                    estado.habitos.map { habit ->
+                        habit.copy(weekDays = construirDiasParaLista(habit.estaCompletadoHoy))
+                    }
                 habitAdapter.submitList(habitsConDias)
             }
             is HabitsUiState.Error -> {
@@ -126,27 +129,28 @@ class HabitsFragment : Fragment() {
     // Swipe to archive
 
     private fun configurarSwipe() {
-        val itemTouchHelper = ItemTouchHelper(
-            object : ItemTouchHelper.SimpleCallback(
-                0,
-                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
-            ) {
-                override fun onMove(
-                    recyclerView: androidx.recyclerview.widget.RecyclerView,
-                    viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
-                    target: androidx.recyclerview.widget.RecyclerView.ViewHolder,
-                ) = false
-
-                override fun onSwiped(
-                    viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
-                    direction: Int,
+        val itemTouchHelper =
+            ItemTouchHelper(
+                object : ItemTouchHelper.SimpleCallback(
+                    0,
+                    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
                 ) {
-                    val posicion = viewHolder.adapterPosition
-                    val habito = habitAdapter.currentList[posicion]
-                    archivarConUndo(habito)
-                }
-            },
-        )
+                    override fun onMove(
+                        recyclerView: androidx.recyclerview.widget.RecyclerView,
+                        viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+                        target: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+                    ) = false
+
+                    override fun onSwiped(
+                        viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+                        direction: Int,
+                    ) {
+                        val posicion = viewHolder.adapterPosition
+                        val habito = habitAdapter.currentList[posicion]
+                        archivarConUndo(habito)
+                    }
+                },
+            )
         itemTouchHelper.attachToRecyclerView(binding.rvHabits)
     }
 
@@ -172,11 +176,12 @@ class HabitsFragment : Fragment() {
             val etiqueta = etiquetas[cal.get(Calendar.DAY_OF_WEEK) - 1]
             val numeroDia = cal.get(Calendar.DAY_OF_MONTH)
 
-            val estado = when {
-                i == 0 && completadoHoy -> DayState.COMPLETED
-                i == 0 -> DayState.TODAY
-                else -> DayState.NOT_APPLICABLE
-            }
+            val estado =
+                when {
+                    i == 0 && completadoHoy -> DayState.COMPLETED
+                    i == 0 -> DayState.TODAY
+                    else -> DayState.NOT_APPLICABLE
+                }
 
             dias.add(DayStatus(etiqueta, numeroDia, estado))
         }

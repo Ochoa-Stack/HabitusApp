@@ -11,25 +11,27 @@ import com.ochoastack.habitus.utils.NotificationHelper
 
 class DailyReminderWorker(
     private val ctx: Context,
-    params: WorkerParameters
+    params: WorkerParameters,
 ) : CoroutineWorker(ctx, params) {
-
     override suspend fun doWork(): Result {
-        if (FirebaseAuth.getInstance().currentUser == null)
+        if (FirebaseAuth.getInstance().currentUser == null) {
             return Result.success()
+        }
 
-        val notificacion = androidx.core.app.NotificationCompat
-            .Builder(ctx, NotificationHelper.CANAL_ID)
-            .setSmallIcon(R.drawable.ic_leaf)
-            .setContentTitle(ctx.getString(R.string.notif_reminder_title))
-            .setContentText(ctx.getString(R.string.notif_reminder_body))
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
-            .build()
+        val notificacion =
+            androidx.core.app.NotificationCompat
+                .Builder(ctx, NotificationHelper.CANAL_ID)
+                .setSmallIcon(R.drawable.ic_leaf)
+                .setContentTitle(ctx.getString(R.string.notif_reminder_title))
+                .setContentText(ctx.getString(R.string.notif_reminder_body))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .build()
 
-        val manager = ctx.getSystemService(
-            Context.NOTIFICATION_SERVICE
-        ) as NotificationManager
+        val manager =
+            ctx.getSystemService(
+                Context.NOTIFICATION_SERVICE,
+            ) as NotificationManager
         manager.notify(1004, notificacion)
 
         return Result.success()

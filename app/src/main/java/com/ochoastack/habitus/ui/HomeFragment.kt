@@ -12,20 +12,19 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import dagger.hilt.android.AndroidEntryPoint
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.ochoastack.habitus.R
 import com.ochoastack.habitus.data.TipoCognitivo
 import com.ochoastack.habitus.databinding.FragmentHomeBinding
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
+import kotlinx.coroutines.launch
 
-/* Fragment de la pantalla de inicio */
+// Fragment de la pantalla de inicio
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -41,7 +40,10 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         configurarSaludo()
         configurarFecha()
@@ -91,13 +93,14 @@ class HomeFragment : Fragment() {
         binding.tvStatRacha.text = estado.estadisticas.rachaMaxima.toString()
 
         // Mensaje motivacional
-        binding.tvMensajeMotivacional.text = when (estado.tipoMensaje) {
-            TipoMensaje.PERFECTO -> getString(R.string.home_msg_perfect)
-            TipoMensaje.EXCELENTE -> getString(R.string.home_msg_great)
-            TipoMensaje.BIEN -> getString(R.string.home_msg_good)
-            TipoMensaje.RACHA -> getString(R.string.home_msg_streak, estado.estadisticas.rachaMaxima)
-            TipoMensaje.COMENZAR -> getString(R.string.home_msg_start)
-        }
+        binding.tvMensajeMotivacional.text =
+            when (estado.tipoMensaje) {
+                TipoMensaje.PERFECTO -> getString(R.string.home_msg_perfect)
+                TipoMensaje.EXCELENTE -> getString(R.string.home_msg_great)
+                TipoMensaje.BIEN -> getString(R.string.home_msg_good)
+                TipoMensaje.RACHA -> getString(R.string.home_msg_streak, estado.estadisticas.rachaMaxima)
+                TipoMensaje.COMENZAR -> getString(R.string.home_msg_start)
+            }
 
         // Balance cognitivo
         if (estado.tieneBalanceCognitivo) {
@@ -140,46 +143,53 @@ class HomeFragment : Fragment() {
         colorRes: Int,
         emoji: String,
     ): View {
-        val fila = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-            ).apply { bottomMargin = 10 }
-        }
-
-        val etiqueta = TextView(requireContext()).apply {
-            text = "$emoji $tipo — $cantidad"
-            textSize = 12f
-            setTextColor(requireContext().getColor(R.color.text_secondary))
-        }
-
-        val barraContenedor = FrameLayout(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ALTURA_BARRA_DP,
-            ).apply { topMargin = 4 }
-            background = requireContext().getDrawable(R.drawable.bg_progress_track)
-        }
-
-        val barraRelleno = View(requireContext()).apply {
-            layoutParams = FrameLayout.LayoutParams(0, ALTURA_BARRA_DP)
-            background = GradientDrawable().apply {
-                shape = GradientDrawable.RECTANGLE
-                setColor(requireContext().getColor(colorRes))
-                cornerRadius = RADIO_BARRA_PX
+        val fila =
+            LinearLayout(requireContext()).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams =
+                    LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ).apply { bottomMargin = 10 }
             }
-            viewTreeObserver.addOnGlobalLayoutListener(
-                object : android.view.ViewTreeObserver.OnGlobalLayoutListener {
-                    override fun onGlobalLayout() {
-                        viewTreeObserver.removeOnGlobalLayoutListener(this)
-                        val anchoTotal = barraContenedor.width
-                        layoutParams.width = (anchoTotal * porcentaje / 100f).toInt()
-                        requestLayout()
+
+        val etiqueta =
+            TextView(requireContext()).apply {
+                text = "$emoji $tipo — $cantidad"
+                textSize = 12f
+                setTextColor(requireContext().getColor(R.color.text_secondary))
+            }
+
+        val barraContenedor =
+            FrameLayout(requireContext()).apply {
+                layoutParams =
+                    LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ALTURA_BARRA_DP,
+                    ).apply { topMargin = 4 }
+                background = requireContext().getDrawable(R.drawable.bg_progress_track)
+            }
+
+        val barraRelleno =
+            View(requireContext()).apply {
+                layoutParams = FrameLayout.LayoutParams(0, ALTURA_BARRA_DP)
+                background =
+                    GradientDrawable().apply {
+                        shape = GradientDrawable.RECTANGLE
+                        setColor(requireContext().getColor(colorRes))
+                        cornerRadius = RADIO_BARRA_PX
                     }
-                },
-            )
-        }
+                viewTreeObserver.addOnGlobalLayoutListener(
+                    object : android.view.ViewTreeObserver.OnGlobalLayoutListener {
+                        override fun onGlobalLayout() {
+                            viewTreeObserver.removeOnGlobalLayoutListener(this)
+                            val anchoTotal = barraContenedor.width
+                            layoutParams.width = (anchoTotal * porcentaje / 100f).toInt()
+                            requestLayout()
+                        }
+                    },
+                )
+            }
 
         barraContenedor.addView(barraRelleno)
         fila.addView(etiqueta)
@@ -191,20 +201,22 @@ class HomeFragment : Fragment() {
 
     private fun configurarSaludo() {
         val hora = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-        binding.tvGreeting.text = when {
-            hora < 12 -> getString(R.string.home_greeting_morning)
-            hora < 18 -> getString(R.string.home_greeting_afternoon)
-            else -> getString(R.string.home_greeting_evening)
-        }
+        binding.tvGreeting.text =
+            when {
+                hora < 12 -> getString(R.string.home_greeting_morning)
+                hora < 18 -> getString(R.string.home_greeting_afternoon)
+                else -> getString(R.string.home_greeting_evening)
+            }
     }
 
     private fun configurarFecha() {
         val cal = Calendar.getInstance()
         val diasSemana = listOf("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado")
-        val meses = listOf(
-            "enero", "febrero", "marzo", "abril", "mayo", "junio",
-            "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
-        )
+        val meses =
+            listOf(
+                "enero", "febrero", "marzo", "abril", "mayo", "junio",
+                "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
+            )
         val diaSemana = diasSemana[cal.get(Calendar.DAY_OF_WEEK) - 1]
         val dia = cal.get(Calendar.DAY_OF_MONTH)
         val mes = meses[cal.get(Calendar.MONTH)]

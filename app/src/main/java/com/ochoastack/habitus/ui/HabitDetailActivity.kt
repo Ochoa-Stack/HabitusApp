@@ -10,29 +10,27 @@ import com.ochoastack.habitus.R
 import com.ochoastack.habitus.data.DayState
 import com.ochoastack.habitus.data.HabitRepository
 import com.ochoastack.habitus.databinding.ActivityHabitDetailBinding
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-
-import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HabitDetailActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityHabitDetailBinding
 
     // Configuramos la inyección para recibir el repositorio sin crearlo manualmente
     @Inject
     lateinit var habitRepository: HabitRepository
 
-    private var habitoId         = ""
-    private var completadoHoy    = false
+    private var habitoId = ""
+    private var completadoHoy = false
     private var reflexionHoyTexto: String? = null
-    private var rachaActual      = 0
+    private var rachaActual = 0
     private var porcentajeActual = 0
-    private var esPrimeraCarga   = true
+    private var esPrimeraCarga = true
     private var diasGraciaActual = 0
     private var habitoTipoCognitivo = ""
 
@@ -41,19 +39,41 @@ class HabitDetailActivity : AppCompatActivity() {
     private var añoActual = Calendar.getInstance().get(Calendar.YEAR)
 
     private val meses: List<String>
-        get() = listOf(
-            getString(R.string.month_january), getString(R.string.month_february), getString(R.string.month_march), getString(R.string.month_april), getString(R.string.month_may), getString(R.string.month_june),
-            getString(R.string.month_july), getString(R.string.month_august), getString(R.string.month_september), getString(R.string.month_october), getString(R.string.month_november), getString(R.string.month_december)
-        )
+        get() =
+            listOf(
+                getString(
+                    R.string.month_january,
+                ),
+                getString(
+                    R.string.month_february,
+                ),
+                getString(
+                    R.string.month_march,
+                ),
+                getString(R.string.month_april), getString(R.string.month_may), getString(R.string.month_june),
+                getString(
+                    R.string.month_july,
+                ),
+                getString(
+                    R.string.month_august,
+                ),
+                getString(
+                    R.string.month_september,
+                ),
+                getString(
+                    R.string.month_october,
+                ),
+                getString(R.string.month_november), getString(R.string.month_december),
+            )
 
     companion object {
-        const val EXTRA_HABIT_ID          = "habit_id"
-        const val EXTRA_HABIT_NAME        = "habit_name"
-        const val EXTRA_HABIT_FREQUENCY   = "habit_frequency"
-        const val EXTRA_HABIT_STREAK      = "habit_streak"
-        const val EXTRA_HABIT_PERCENT     = "habit_percent"
+        const val EXTRA_HABIT_ID = "habit_id"
+        const val EXTRA_HABIT_NAME = "habit_name"
+        const val EXTRA_HABIT_FREQUENCY = "habit_frequency"
+        const val EXTRA_HABIT_STREAK = "habit_streak"
+        const val EXTRA_HABIT_PERCENT = "habit_percent"
         const val EXTRA_HABIT_CATEGORY_ID = "habit_category_id"
-        const val EXTRA_HABIT_GRACE_DAYS  = "habit_grace_days"
+        const val EXTRA_HABIT_GRACE_DAYS = "habit_grace_days"
         const val EXTRA_HABIT_TIPO_COGNITIVO = "habit_tipo_cognitivo"
     }
 
@@ -64,9 +84,9 @@ class HabitDetailActivity : AppCompatActivity() {
 
         habitoId = intent.getStringExtra(EXTRA_HABIT_ID) ?: ""
 
-        val nombreInicial     = intent.getStringExtra(EXTRA_HABIT_NAME)      ?: getString(R.string.habit_default_name)
+        val nombreInicial = intent.getStringExtra(EXTRA_HABIT_NAME) ?: getString(R.string.habit_default_name)
         val frecuenciaInicial = intent.getStringExtra(EXTRA_HABIT_FREQUENCY) ?: ""
-        rachaActual      = intent.getIntExtra(EXTRA_HABIT_STREAK, 0)
+        rachaActual = intent.getIntExtra(EXTRA_HABIT_STREAK, 0)
         porcentajeActual = intent.getIntExtra(EXTRA_HABIT_PERCENT, 0)
 
         binding.tvHabitName.text = nombreInicial
@@ -79,28 +99,31 @@ class HabitDetailActivity : AppCompatActivity() {
                     binding.progressFill.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     ajustarBarraProgreso(porcentajeActual)
                 }
-            }
+            },
         )
 
         // Configurar calendario con GridLayoutManager de 7 columnas
         binding.rvCalendario.layoutManager = GridLayoutManager(this, 7)
         actualizarEncabezadoMes()
 
-        binding.btnMesAnterior.setOnClickListener  { navegarMes(-1) }
-        binding.btnMesSiguiente.setOnClickListener { navegarMes(1)  }
+        binding.btnMesAnterior.setOnClickListener { navegarMes(-1) }
+        binding.btnMesSiguiente.setOnClickListener { navegarMes(1) }
 
         binding.btnBack.setOnClickListener { finish() }
 
         binding.btnEdit.setOnClickListener {
-            val editIntent = Intent(this, EditHabitActivity::class.java).apply {
-                putExtra(EditHabitActivity.EXTRA_HABIT_ID,          habitoId)
-                putExtra(EditHabitActivity.EXTRA_HABIT_NAME,        nombreInicial)
-                putExtra(EditHabitActivity.EXTRA_HABIT_FREQUENCY,   frecuenciaInicial)
-                putExtra(EditHabitActivity.EXTRA_HABIT_CATEGORY_ID,
-                    intent.getStringExtra(EXTRA_HABIT_CATEGORY_ID) ?: "")
-                putExtra(EditHabitActivity.EXTRA_HABIT_GRACE_DAYS, diasGraciaActual)
-                putExtra(EditHabitActivity.EXTRA_HABIT_TIPO_COGNITIVO, habitoTipoCognitivo)
-            }
+            val editIntent =
+                Intent(this, EditHabitActivity::class.java).apply {
+                    putExtra(EditHabitActivity.EXTRA_HABIT_ID, habitoId)
+                    putExtra(EditHabitActivity.EXTRA_HABIT_NAME, nombreInicial)
+                    putExtra(EditHabitActivity.EXTRA_HABIT_FREQUENCY, frecuenciaInicial)
+                    putExtra(
+                        EditHabitActivity.EXTRA_HABIT_CATEGORY_ID,
+                        intent.getStringExtra(EXTRA_HABIT_CATEGORY_ID) ?: "",
+                    )
+                    putExtra(EditHabitActivity.EXTRA_HABIT_GRACE_DAYS, diasGraciaActual)
+                    putExtra(EditHabitActivity.EXTRA_HABIT_TIPO_COGNITIVO, habitoTipoCognitivo)
+                }
             startActivity(editIntent)
         }
 
@@ -132,9 +155,9 @@ class HabitDetailActivity : AppCompatActivity() {
                     android.widget.Toast.makeText(
                         this@HabitDetailActivity,
                         getString(R.string.error_cargar_datos),
-                        android.widget.Toast.LENGTH_SHORT
+                        android.widget.Toast.LENGTH_SHORT,
                     ).show()
-                }
+                },
             )
         }
     }
@@ -155,7 +178,7 @@ class HabitDetailActivity : AppCompatActivity() {
                     completadoHoy = estaCompletado
                     actualizarBotonCompletado()
                 },
-                onFailure = { }
+                onFailure = { },
             )
 
             refrescarDatosHabito()
@@ -171,11 +194,12 @@ class HabitDetailActivity : AppCompatActivity() {
             onSuccess = { habito ->
                 binding.tvHabitName.text = habito.nombre
                 binding.tvFrequency.text = habito.frecuencia
-                rachaActual      = habito.racha
+                rachaActual = habito.racha
                 porcentajeActual = habito.porcentaje
                 diasGraciaActual = habito.diasGracia
                 habitoTipoCognitivo = habito.tipoCognitivo
-                binding.tvTipoCognitivo.text = "${com.ochoastack.habitus.data.TipoCognitivo.emoji(habitoTipoCognitivo)} $habitoTipoCognitivo"
+                binding.tvTipoCognitivo.text =
+                    "${com.ochoastack.habitus.data.TipoCognitivo.emoji(habitoTipoCognitivo)} $habitoTipoCognitivo"
                 actualizarUIEstadisticas()
                 ajustarBarraProgreso(porcentajeActual)
             },
@@ -183,9 +207,9 @@ class HabitDetailActivity : AppCompatActivity() {
                 android.widget.Toast.makeText(
                     this@HabitDetailActivity,
                     getString(R.string.error_cargar_datos),
-                    android.widget.Toast.LENGTH_SHORT
+                    android.widget.Toast.LENGTH_SHORT,
                 ).show()
-            }
+            },
         )
     }
 
@@ -205,7 +229,7 @@ class HabitDetailActivity : AppCompatActivity() {
                         binding.rvCalendario.adapter = MonthCalendarAdapter(items)
                     }
                 },
-                onFailure = { }
+                onFailure = { },
             )
         }
     }
@@ -214,9 +238,9 @@ class HabitDetailActivity : AppCompatActivity() {
     private fun generarItemsCalendario(
         año: Int,
         mes: Int,
-        estadosPorFecha: Map<String, DayState>
+        estadosPorFecha: Map<String, DayState>,
     ): List<CalendarDayItem> {
-        val items   = mutableListOf<CalendarDayItem>()
+        val items = mutableListOf<CalendarDayItem>()
         val formato = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
 
         val cal = Calendar.getInstance()
@@ -235,7 +259,7 @@ class HabitDetailActivity : AppCompatActivity() {
         for (dia in 1..diasEnMes) {
             cal.set(año, mes - 1, dia)
             val fechaStr = formato.format(cal.time)
-            val estado   = estadosPorFecha[fechaStr] ?: DayState.NOT_APPLICABLE
+            val estado = estadosPorFecha[fechaStr] ?: DayState.NOT_APPLICABLE
             items.add(CalendarDayItem(dia, fechaStr, estado))
         }
 
@@ -264,17 +288,18 @@ class HabitDetailActivity : AppCompatActivity() {
 
         // Ocultar flecha siguiente si ya estamos en el mes actual
         val ahora = Calendar.getInstance()
-        val esMesActual = mesActual == ahora.get(Calendar.MONTH) + 1 &&
-                          añoActual == ahora.get(Calendar.YEAR)
-        binding.btnMesSiguiente.alpha     = if (esMesActual) 0.3f else 1.0f
+        val esMesActual =
+            mesActual == ahora.get(Calendar.MONTH) + 1 &&
+                añoActual == ahora.get(Calendar.YEAR)
+        binding.btnMesSiguiente.alpha = if (esMesActual) 0.3f else 1.0f
         binding.btnMesSiguiente.isEnabled = !esMesActual
     }
 
     private fun ajustarBarraProgreso(porcentaje: Int) {
-        val contenedor  = binding.progressFill.parent as android.view.View
+        val contenedor = binding.progressFill.parent as android.view.View
         val anchoPixels = (contenedor.width * porcentaje / 100f).toInt()
-        val params      = binding.progressFill.layoutParams
-        params.width    = anchoPixels
+        val params = binding.progressFill.layoutParams
+        params.width = anchoPixels
         binding.progressFill.layoutParams = params
     }
 
@@ -296,7 +321,7 @@ class HabitDetailActivity : AppCompatActivity() {
                 },
                 onFailure = {
                     binding.btnComplete.isEnabled = true
-                }
+                },
             )
 
             actualizarBotonCompletado()
@@ -306,27 +331,27 @@ class HabitDetailActivity : AppCompatActivity() {
 
     // Actualizamos la interfaz de usuario
     private fun actualizarUIEstadisticas() {
-        binding.tvStreakValue.text       = rachaActual.toString()
+        binding.tvStreakValue.text = rachaActual.toString()
         binding.tvCompletionPercent.text = "$porcentajeActual%"
     }
 
     // Actualizamos el botón de completado
     private fun actualizarBotonCompletado() {
         if (completadoHoy) {
-            binding.btnComplete.text      = getString(R.string.detail_btn_completed)
-            binding.btnComplete.alpha     = 0.7f
+            binding.btnComplete.text = getString(R.string.detail_btn_completed)
+            binding.btnComplete.alpha = 0.7f
             binding.btnComplete.isEnabled = false
             binding.btnComplete.backgroundTintList =
                 android.content.res.ColorStateList.valueOf(
-                    getColor(R.color.verde_salvia)
+                    getColor(R.color.verde_salvia),
                 )
         } else {
-            binding.btnComplete.text      = getString(R.string.detail_btn_complete)
-            binding.btnComplete.alpha     = 1.0f
+            binding.btnComplete.text = getString(R.string.detail_btn_complete)
+            binding.btnComplete.alpha = 1.0f
             binding.btnComplete.isEnabled = true
             binding.btnComplete.backgroundTintList =
                 android.content.res.ColorStateList.valueOf(
-                    getColor(R.color.accent)
+                    getColor(R.color.accent),
                 )
         }
         configurarEstadoReflexion()
@@ -346,9 +371,10 @@ class HabitDetailActivity : AppCompatActivity() {
             completadoHoy -> {
                 binding.etReflexion.isEnabled = true
                 binding.etReflexion.alpha = 1.0f
-                binding.etReflexion.hint = getString(
-                    R.string.reflexion_hint_activo
-                )
+                binding.etReflexion.hint =
+                    getString(
+                        R.string.reflexion_hint_activo,
+                    )
                 binding.btnGuardarReflexion.isEnabled = true
                 binding.btnGuardarReflexion.alpha = 1.0f
             }
@@ -356,9 +382,10 @@ class HabitDetailActivity : AppCompatActivity() {
             else -> {
                 binding.etReflexion.isEnabled = false
                 binding.etReflexion.alpha = 0.4f
-                binding.etReflexion.hint = getString(
-                    R.string.reflexion_hint_bloqueado
-                )
+                binding.etReflexion.hint =
+                    getString(
+                        R.string.reflexion_hint_bloqueado,
+                    )
                 binding.btnGuardarReflexion.isEnabled = false
                 binding.btnGuardarReflexion.alpha = 0.4f
             }
@@ -369,20 +396,35 @@ class HabitDetailActivity : AppCompatActivity() {
         // Intenta precargar la reflexión del día si ya existe
 
         // Contador de caracteres en tiempo real
-        binding.etReflexion.addTextChangedListener(object : android.text.TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
-            override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
-            override fun afterTextChanged(s: android.text.Editable?) {
-                val len = s?.length ?: 0
-                binding.tvContadorChars.text = "$len / 280"
-                binding.tvContadorChars.setTextColor(
-                    if (len >= 260)
-                        getColor(R.color.error_text)
-                    else
-                        getColor(R.color.text_hint)
-                )
-            }
-        })
+        binding.etReflexion.addTextChangedListener(
+            object : android.text.TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    a: Int,
+                    b: Int,
+                    c: Int,
+                ) {}
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    a: Int,
+                    b: Int,
+                    c: Int,
+                ) {}
+
+                override fun afterTextChanged(s: android.text.Editable?) {
+                    val len = s?.length ?: 0
+                    binding.tvContadorChars.text = "$len / 280"
+                    binding.tvContadorChars.setTextColor(
+                        if (len >= 260) {
+                            getColor(R.color.error_text)
+                        } else {
+                            getColor(R.color.text_hint)
+                        },
+                    )
+                }
+            },
+        )
 
         binding.btnGuardarReflexion.setOnClickListener {
             val texto = binding.etReflexion.text.toString().trim()
@@ -400,11 +442,11 @@ class HabitDetailActivity : AppCompatActivity() {
                         android.widget.Toast.makeText(
                             this@HabitDetailActivity,
                             getString(R.string.reflexion_guardada),
-                            android.widget.Toast.LENGTH_SHORT
+                            android.widget.Toast.LENGTH_SHORT,
                         ).show()
                         cargarReflexiones()
                     },
-                    onFailure = { }
+                    onFailure = { },
                 )
                 binding.btnGuardarReflexion.isEnabled = true
             }
@@ -426,26 +468,29 @@ class HabitDetailActivity : AppCompatActivity() {
                     binding.tvHistorialLabel.visibility = android.view.View.VISIBLE
 
                     reflexiones.forEach { reflexion ->
-                        val vista = layoutInflater.inflate(
-                            R.layout.item_reflexion,
-                            binding.llHistorialReflexiones,
-                            false
-                        )
+                        val vista =
+                            layoutInflater.inflate(
+                                R.layout.item_reflexion,
+                                binding.llHistorialReflexiones,
+                                false,
+                            )
                         vista.findViewById<android.widget.TextView>(R.id.tvFechaReflexion).text = reflexion.fecha
                         vista.findViewById<android.widget.TextView>(R.id.tvTextoReflexion).text = reflexion.texto
                         binding.llHistorialReflexiones.addView(vista)
                     }
 
                     // Precarga la reflexión de hoy en el campo si existe
-                    val hoy = java.text.SimpleDateFormat(
-                        "yyyy-MM-dd", java.util.Locale.ROOT
-                    ).format(java.util.Date())
+                    val hoy =
+                        java.text.SimpleDateFormat(
+                            "yyyy-MM-dd",
+                            java.util.Locale.ROOT,
+                        ).format(java.util.Date())
                     val reflexionHoy = reflexiones.firstOrNull { it.fecha == hoy }
                     reflexionHoyTexto = reflexionHoy?.texto
-                    
+
                     configurarEstadoReflexion()
                 },
-                onFailure = { }
+                onFailure = { },
             )
         }
     }

@@ -10,16 +10,15 @@ import androidx.lifecycle.lifecycleScope
 import com.ochoastack.habitus.data.FirebaseAuthRepository
 import com.ochoastack.habitus.data.HabitRepository
 import com.ochoastack.habitus.databinding.FragmentProfileBinding
-import kotlinx.coroutines.launch
-
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-    private val authRepository  = FirebaseAuthRepository()
+    private val authRepository = FirebaseAuthRepository()
 
     // Configuramos la inyección para acceder a los datos del usuario
     @Inject
@@ -29,13 +28,16 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         val usuario = authRepository.obtenerUsuarioActual()
@@ -49,12 +51,12 @@ class ProfileFragment : Fragment() {
                 resultado.fold(
                     onSuccess = { nombre ->
                         binding.tvUserName.text = nombre
-                        binding.tvAvatar.text   = nombre.firstOrNull()?.uppercase() ?: "U"
+                        binding.tvAvatar.text = nombre.firstOrNull()?.uppercase() ?: "U"
                     },
                     onFailure = {
                         binding.tvUserName.text = "Usuario"
-                        binding.tvAvatar.text   = "U"
-                    }
+                        binding.tvAvatar.text = "U"
+                    },
                 )
             }
         }
@@ -74,16 +76,16 @@ class ProfileFragment : Fragment() {
             val resultado = habitRepository.obtenerEstadisticas()
             resultado.fold(
                 onSuccess = { stats ->
-                    binding.tvStatHabits.text    = stats.totalHabitos.toString()
-                    binding.tvStatStreak.text    = stats.rachaMaxima.toString()
+                    binding.tvStatHabits.text = stats.totalHabitos.toString()
+                    binding.tvStatStreak.text = stats.rachaMaxima.toString()
                     binding.tvStatCompleted.text = stats.totalCompletaciones.toString()
                     statsYaCargadas = true
                 },
                 onFailure = {
-                    binding.tvStatHabits.text    = "0"
-                    binding.tvStatStreak.text    = "0"
+                    binding.tvStatHabits.text = "0"
+                    binding.tvStatStreak.text = "0"
                     binding.tvStatCompleted.text = "0"
-                }
+                },
             )
         }
     }

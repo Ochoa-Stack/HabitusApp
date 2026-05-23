@@ -1,9 +1,5 @@
 package com.ochoastack.habitus.data
 
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
 import android.content.Context
 import android.util.Log
 import androidx.credentials.CredentialManager
@@ -11,17 +7,21 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
-class FirebaseAuthRepository {    // Declaramos el repositorio de autenticación de Firebase
-    private val auth      = FirebaseAuth.getInstance()         // Instanciamos la autentificación de Firebase
-    private val firestore = FirebaseFirestore.getInstance()    // Instanciamos Firestore
+class FirebaseAuthRepository { // Declaramos el repositorio de autenticación de Firebase
+    private val auth = FirebaseAuth.getInstance() // Instanciamos la autentificación de Firebase
+    private val firestore = FirebaseFirestore.getInstance() // Instanciamos Firestore
 
     companion object {
         private const val TAG = "FirebaseAuthRepository"
     }
 
-    fun obtenerUsuarioActual(): FirebaseUser? = auth.currentUser    // Obtenemos el usuario actual
+    fun obtenerUsuarioActual(): FirebaseUser? = auth.currentUser // Obtenemos el usuario actual
 
     // Obtenemos el nombre del usuario desde Firestore usando el repositorio, sin acceso directo desde la UI
     suspend fun obtenerNombreUsuario(): Result<String> {
@@ -37,10 +37,13 @@ class FirebaseAuthRepository {    // Declaramos el repositorio de autenticación
     }
 
     // Iniciamos sesión con correo y contraseña (Usuario)
-    suspend fun iniciarSesion(correo: String, contraseña: String): Result<FirebaseUser> {
+    suspend fun iniciarSesion(
+        correo: String,
+        contraseña: String,
+    ): Result<FirebaseUser> {
         return try {
             val resultado = auth.signInWithEmailAndPassword(correo, contraseña).await()
-            val usuario   = resultado.user ?: throw Exception("Usuario no encontrado")
+            val usuario = resultado.user ?: throw Exception("Usuario no encontrado")
 
             // Aseguramos que las categorías por defecto existan
             try {
@@ -60,18 +63,19 @@ class FirebaseAuthRepository {    // Declaramos el repositorio de autenticación
     suspend fun registrarUsuario(
         nombre: String,
         correo: String,
-        contraseña: String
+        contraseña: String,
     ): Result<FirebaseUser> {
         return try {
             Log.d(TAG, "Registrando usuario: $correo")
             val resultado = auth.createUserWithEmailAndPassword(correo, contraseña).await()
-            val usuario   = resultado.user ?: throw Exception("Error al crear usuario en Firebase Auth")
+            val usuario = resultado.user ?: throw Exception("Error al crear usuario en Firebase Auth")
 
-            val datosUsuario = mapOf(
-                "nombre"        to nombre,
-                "correo"        to correo,
-                "fechaRegistro" to com.google.firebase.Timestamp.now()
-            )
+            val datosUsuario =
+                mapOf(
+                    "nombre" to nombre,
+                    "correo" to correo,
+                    "fechaRegistro" to com.google.firebase.Timestamp.now(),
+                )
 
             Log.d(TAG, "Guardando datos de usuario en Firestore para UID: ${usuario.uid}")
             firestore.collection("usuarios")
@@ -100,41 +104,48 @@ class FirebaseAuthRepository {    // Declaramos el repositorio de autenticación
         }
     }
 
-    fun cerrarSesion() = auth.signOut()    // Cerramos sesión
+    fun cerrarSesion() = auth.signOut() // Cerramos sesión
 
     // Iniciamos sesión con Google (Usuario)
     suspend fun iniciarSesionConGoogle(
         context: Context,
-        webClientId: String
+        webClientId: String,
     ): Result<FirebaseUser> {
         return try {
             Log.d(TAG, "Iniciando sesión con Google...")
-            val opcion = GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(false)
-                .setServerClientId(webClientId)
-                .build()
+            val opcion =
+                GetGoogleIdOption.Builder()
+                    .setFilterByAuthorizedAccounts(false)
+                    .setServerClientId(webClientId)
+                    .build()
 
-            val solicitud = GetCredentialRequest.Builder()
-                .addCredentialOption(opcion)
-                .build()
+            val solicitud =
+                GetCredentialRequest.Builder()
+                    .addCredentialOption(opcion)
+                    .build()
 
-            val credentialManager = try {
-                CredentialManager.create(context)
-            } catch (e: Exception) {
-                Log.e(TAG, "Error al inicializar CredentialManager", e)
-                return Result.failure(Exception("El servicio de credenciales no está disponible en este dispositivo"))
-            }
+            val credentialManager =
+                try {
+                    CredentialManager.create(context)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error al inicializar CredentialManager", e)
+                    return Result.failure(
+                        Exception("El servicio de credenciales no está disponible en este dispositivo"),
+                    )
+                }
             val resultado = credentialManager.getCredential(context, solicitud)
             val credencial = resultado.credential
 
-            val tokenGoogle = GoogleIdTokenCredential
-                .createFrom(credencial.data)
-                .idToken
+            val tokenGoogle =
+                GoogleIdTokenCredential
+                    .createFrom(credencial.data)
+                    .idToken
 
             val credencialFirebase = GoogleAuthProvider.getCredential(tokenGoogle, null)
-            val resultadoFirebase  = auth.signInWithCredential(credencialFirebase).await()
-            val usuario = resultadoFirebase.user
-                ?: throw Exception("No se pudo autenticar con Google en Firebase")
+            val resultadoFirebase = auth.signInWithCredential(credencialFirebase).await()
+            val usuario =
+                resultadoFirebase.user
+                    ?: throw Exception("No se pudo autenticar con Google en Firebase")
 
             // Si es un usuario nuevo (o no tiene documento), creamos su perfil
             asegurarPerfilUsuario(usuario)
@@ -161,11 +172,12 @@ class FirebaseAuthRepository {    // Declaramos el repositorio de autenticación
             val doc = firestore.collection("usuarios").document(usuario.uid).get().await()
             if (!doc.exists()) {
                 Log.d(TAG, "Creando perfil de usuario para login con Google")
-                val datosUsuario = mapOf(
-                    "nombre"        to (usuario.displayName ?: "Usuario Habitus"),
-                    "correo"        to (usuario.email ?: ""),
-                    "fechaRegistro" to com.google.firebase.Timestamp.now()
-                )
+                val datosUsuario =
+                    mapOf(
+                        "nombre" to (usuario.displayName ?: "Usuario Habitus"),
+                        "correo" to (usuario.email ?: ""),
+                        "fechaRegistro" to com.google.firebase.Timestamp.now(),
+                    )
                 firestore.collection("usuarios")
                     .document(usuario.uid)
                     .set(datosUsuario)

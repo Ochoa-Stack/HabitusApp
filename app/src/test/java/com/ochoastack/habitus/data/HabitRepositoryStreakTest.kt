@@ -4,22 +4,21 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import io.mockk.mockk
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
-/* Tests unitarios para la lógica de racha de [HabitRepository] */
+// Tests unitarios para la lógica de racha de [HabitRepository]
 class HabitRepositoryStreakTest {
-
     private lateinit var repository: HabitRepository
     private val firestore = mockk<FirebaseFirestore>()
     private val auth = mockk<FirebaseAuth>()
 
-    /* Formato ISO estricto, igual que el repositorio usa con Locale.ROOT */
+    // Formato ISO estricto, igual que el repositorio usa con Locale.ROOT
     private val formato = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
 
     @Before
@@ -120,16 +119,15 @@ class HabitRepositoryStreakTest {
 
     // Helpers
 
-    /* Retorna un Timestamp que representa hace [n] días desde hoy */
+    // Retorna un Timestamp que representa hace [n] días desde hoy
     private fun timestampDeHaceNDias(n: Int): Timestamp {
         val cal = Calendar.getInstance()
         cal.add(Calendar.DAY_OF_YEAR, -n)
         return Timestamp(cal.time)
     }
 
-    /*
-    Retorna las etiquetas de días que incluyen el día de HOY.
-    Útil para simular un hábito que tiene programado el día actual */
+    // Retorna las etiquetas de días que incluyen el día de HOY.
+    // Útil para simular un hábito que tiene programado el día actual
     private fun diasConHoy(): List<String> {
         val etiquetas = listOf("Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb")
         val diaHoy = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
