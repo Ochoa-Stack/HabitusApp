@@ -11,11 +11,12 @@ import com.ochoastack.habitus.databinding.ActivityForgotPasswordBinding
 import kotlinx.coroutines.launch
 
 class ForgotPasswordActivity : AppCompatActivity() {
-
     // Creamos el binding para el layout
     private lateinit var binding: ActivityForgotPasswordBinding
+
     // Declaramos el repositorio de autenticación
     private val authRepository = FirebaseAuthRepository()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
@@ -35,6 +36,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
             binding.tilEmail.error = null
         }
     }
+
     // Validamos que el correo tenga formato válido
     private fun validarCampo(): Boolean {
         val correo = binding.edtCorreo.text.toString().trim()
@@ -50,35 +52,37 @@ class ForgotPasswordActivity : AppCompatActivity() {
             true
         }
     }
+
     // Llamamos a 'Firebase Auth' para enviar el correo de restablecimiento
     private fun ejecutarEnvio() {
         val correo = binding.edtCorreo.text.toString().trim()
         // Mostramos estado de carga
         binding.btnSend.isEnabled = false
-        binding.btnSend.text      = getString(R.string.btn_send_loading)
+        binding.btnSend.text = getString(R.string.btn_send_loading)
 
         lifecycleScope.launch {
             val resultado = authRepository.enviarCorreoRestablecimiento(correo)
 
             resultado.fold(
                 onSuccess = {
-                    mostrarConfirmacion()  // Revelamos información de éxito
+                    mostrarConfirmacion() // Revelamos información de éxito
                 },
                 onFailure = {
                     // Restauramos el botón en caso de error de red
                     binding.btnSend.isEnabled = true
-                    binding.btnSend.text      = getString(R.string.btn_send_link)
-                    binding.tilEmail.error    = getString(R.string.error_invalid_email)
-                }
+                    binding.btnSend.text = getString(R.string.btn_send_link)
+                    binding.tilEmail.error = getString(R.string.error_invalid_email)
+                },
             )
         }
     }
+
     // Ocultamos el formulario y mostramos el mensaje de confirmación
     private fun mostrarConfirmacion() {
         binding.tilEmail.visibility = View.GONE
-        binding.btnSend.visibility  = View.GONE
-        binding.tvTitle.text        = getString(R.string.forgot_success_title)
-        binding.tvSubtitle.text     = getString(R.string.forgot_success_message)
+        binding.btnSend.visibility = View.GONE
+        binding.tvTitle.text = getString(R.string.forgot_success_title)
+        binding.tvSubtitle.text = getString(R.string.forgot_success_message)
         binding.tvBackLogin.visibility = View.VISIBLE
     }
 }

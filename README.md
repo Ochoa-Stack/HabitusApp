@@ -1,186 +1,98 @@
 # Habitus
 
-Aplicación Android para el seguimiento de hábitos — completación diaria, gestión de rachas, balance cognitivo, resúmenes semanales y diario de reflexión construida con Kotlin y Firebase.
+![Kotlin](https://img.shields.io/badge/Kotlin-2.0.21-purple?style=flat&logo=kotlin)
+![API Level](https://img.shields.io/badge/API-26%2B-brightgreen?style=flat&logo=android)
+![License](https://img.shields.io/badge/License-MIT-blue.svg)
+![CI Status](https://img.shields.io/badge/CI-Passing-success?style=flat&logo=githubactions)
+![Architecture](https://img.shields.io/badge/Architecture-MVVM%20%2B%20Hilt-orange)
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat&logo=kotlin&logoColor=white)](https://kotlinlang.org)
-[![API](https://img.shields.io/badge/API-24%2B-brightgreen)](https://android-arsenal.com/api?level=24)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+## Descripción del Proyecto
 
-> **Estado:** Proyecto de portafolio; no publicado en Google Play Store.
-> Fork de un proyecto grupal universitario. Diseñe y construi un ~80% del proyecto (incluyendo orginal y post-fork), cubriendo tanto las capas de frontend como de backend.
-> Repositorio: [github.com/Ochoa-Stack/HabitusApp](https://github.com/Ochoa-Stack/HabitusApp)
+**Habitus** es una aplicación nativa para Android diseñada para la formación y seguimiento de hábitos positivos. Resuelve el problema de la falta de constancia mediante un sistema de progreso visual (rachas, historial y estadísticas) impulsado por una experiencia de usuario fluida y libre de distracciones.
 
----
-
-## Resumen (Overview)
-
-Habitus es una aplicación nativa de Android para el seguimiento de hábitos. Los usuarios se autentican con correo/contraseña o Google Sign In, crean hábitos con frecuencia personalizada, tipo cognitivo y configuración de días de gracia, los completan diariamente mediante una transacción atómica de Firestore y siguen su progreso a través de un calendario mensual construido con datos reales de Firestore. La aplicación incluye un diario de reflexión por hábito, un modo de enfoque para la ejecución diaria sin distracciones y un resumen semanal automático entregado a través de WorkManager.
-
-La mayoría de las aplicaciones de seguimiento de hábitos informan un progreso binario sin contexto. Habitus distingue los tipos de actividad en cinco categorías cognitivas, protege las rachas con días de gracia configurables sin inflar el porcentaje de cumplimiento real y requiere una reflexión escrita antes de que cierre el día. El calendario mensual renderiza cuatro estados de día distintos a partir de datos de Firestore en vivo, no mediante simulación local.
-
-El código base refleja una serie de decisiones de ingeniería deliberadas: ViewBinding con un patrón `_binding` nullable en todos los Fragments previene NullPointerExceptions durante las transiciones del ciclo de vida; `viewLifecycleOwner.lifecycleScope` limita las corrutinas al ciclo de vida de la vista, no del Fragment; `runTransaction` en `completarHabito` garantiza una operación atómica de lectura-cálculo-escritura en entornos multidispositivo; las lecturas paralelas mediante `coroutineScope + async/awaitAll` reemplazan las llamadas secuenciales de Firestore en las consultas de resumen; WorkManager utiliza `ExistingPeriodicWorkPolicy.KEEP` para evitar trabajadores duplicados al reiniciar; R8 y ProGuard están activos en las versiones de lanzamiento.
-
----
+Su valor principal radica en su enfoque centrado en la privacidad y rendimiento, sincronizando datos de forma segura en la nube mientras mantiene una arquitectura escalable y moderna que cumple con estándares profesionales de la industria.
 
 ## Stack Tecnológico
 
-- **Kotlin** - lenguaje único de la aplicación; corrutinas con `suspend/await` para todas las operaciones asíncronas.
-- **XML Views + ViewBinding** - sistema de vistas completo sin Jetpack Compose; patrón de binding nullable aplicado en todos los Fragments.
-- **Firebase Authentication** - correo/contraseña y Google Sig In mediante la API de CredentialManager; SHA-1 vinculado al proyecto.
-- **Cloud Firestore** - base de datos de documentos NoSQL; las reglas de seguridad aplican `request.auth.uid == resource.data.uid` en todas las colecciones y subcolecciones.
-- **WorkManager** - `CoroutineWorker` para el resumen semanal (horario fijo) y el recordatorio diario (configurable por el usuario); las políticas de unicidad evitan trabajadores duplicados.
-- **Navigation Component** - gráfico de navegación de una sola actividad con `BottomNavigationView`; back stack gestionado de forma declarativa.
-- **Material Design 3** - `CardView`, `ChipGroup`, `SwitchMaterial`, `MaterialAlertDialog`, `Snackbar`.
-- **R8 / ProGuard** - activo en release; las reglas preservan los campos del modelo de Firestore, los objetivos de navegación y los Workers.
+El proyecto está construido sobre las herramientas más modernas del ecosistema Android:
 
-> Sin Jetpack Compose. Sin ViewModels. Repositorios instanciados directamente en la UI; decisión arquitectónica tomada durante la fase académica original, mantenida post-fork para dar continuidad.
-
----
+- **Lenguaje**: Kotlin 2.0.21
+- **Construcción**: Android Gradle Plugin (AGP) 8.7.3
+- **Inyección de Dependencias**: Dagger Hilt 2.51.1 (procesado vía KSP)
+- **Backend as a Service (BaaS)**: Firebase Auth (Autenticación) y Firestore (Base de datos NoSQL)
+- **Tareas en Segundo Plano**: WorkManager (Notificaciones y sincronización asíncrona)
+- **Procesamiento de Anotaciones**: KSP (Kotlin Symbol Processing) para tiempos de compilación óptimos
+- **Integración y Entrega Continua**: GitHub Actions ([audit.yml](audit.yml) y [release.yml](release.yml))
 
 ## Arquitectura
 
-### Patrón
+La aplicación implementa un patrón **Model-View-ViewModel** robusto, apoyado por el patrón Repository y la inyección de dependencias con Hilt para garantizar desacoplamiento y alta testabilidad.
 
-MVVM con Repositorios. Cada operación de datos fluye a través de un repositorio que devuelve un `Result<T>`. La UI consume los resultados con `.fold(onSuccess, onFailure)`. Ninguna operación toca Firebase directamente desde un Fragment o Activity.
-
-```
-UI (Activity / Fragment)
-        │
-        │  llama a función suspend
-        ▼
-  Repositorio (HabitRepository, CategoryRepository, FirebaseAuthRepository)
-        │
-        │  Kotlin Coroutines; suspend + await
-        ▼
-  Firebase SDK (Firestore / Auth)
+```mermaid
+graph TD
+    UI[UI Layer: Activities / Fragments] --> VM[ViewModel Layer: StateFlow / Coroutines]
+    VM      --> REP[Repository Layer: HabitRepository]
+    REP     --> FB[(Firebase Firestore / Auth)]
+    REP     --> LCL[Local WorkManager / Preferences]
+    
+    classDef layer fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    class UI,VM,REP,FB,LCL layer;
 ```
 
-### Estructura del Proyecto
+### Responsabilidades por Capa:
+- **UI Layer**: Responsable únicamente de renderizar estados (`UiState`) y capturar eventos del usuario. Usa ViewBinding.
+- **ViewModel Layer**: Orquesta la lógica de presentación. Expone flujos reactivos (`StateFlow`) que sobreviven a rotaciones y aisla a la vista de los datos crudos.
+- **Repository Layer**: Centraliza las operaciones de datos, aplicando reglas de negocio y transacciones atómicas con la nube.
 
-```
-com.ochoastack.habitus/
-├── data/               # Habit, Reflexion, ResumenSemanal,
-│                         TipoCognitivo, EstadisticasUsuario,
-│                         HabitRepository, CategoryRepository,
-│                         FirebaseAuthRepository
-├── ui/                 # Activities, Fragments, Adapters,
-│                         HabitFormManager, MonthCalendarAdapter
-├── utils/              # NotificationHelper
-├── worker/             # ReminderWorker, WeeklySummaryWorker,
-│                         DailyReminderWorker
-└── HabitusApp.kt       # Clase Application: inicialización del
-                          canal de notificaciones y WorkManager
-```
+## Características Principales
 
-### Estructura de Firestore
+- **Gestión de Cuentas**: Registro seguro y login persistente vía Firebase Auth.
+- **Seguimiento Dinámico**: Listado de hábitos semanales con soporte interactivo.
+- **Sistema de Rachas**: Contabilidad inteligente de completaciones continuas con soporte para "días de gracia".
+- **Modo Enfoque**: Pantalla inmersiva para tareas de alta concentración sin notificaciones molestas.
+- **Notificaciones Locales**: Recordatorios y resúmenes de rendimiento procesados silenciosamente con `WorkManager`.
+- **Archivado Histórico**: Oculta hábitos antiguos sin perder estadísticas pasadas.
+- **Resumen Semanal**: Consolidado automático de completaciones, rachas mejoradas y puntos de mejora.
 
-```
-usuarios/{uid}
-  → name, email, createdAt
+## Configuración Local
 
-categorias/{id}
-  → uid, name, color, isDefault, createdAt
+Para ejecutar HabitusApp en tu entorno local, sigue estos pasos de manera precisa:
 
-habitos/{id}
-  → uid, name, frequency, weekDays[], categoryId,
-    cognitiveType, graceDays, streak, percentage,
-    totalCompletions, archived, lastCompletion, createdAt
+1. **Clonar el repositorio**:
+   ```bash
+   git clone https://github.com/Ochoa-Stack/Habitus.git
+   cd Habitus
+   ```
 
-habitos/{id}/completaciones/{yyyy-MM-dd}
-  → date, timestamp
+2. **Añadir la configuración de Firebase**:
+   Descarga tu archivo `google-services.json` desde Firebase Console y ubícalo en el directorio `app/`:
+   ```text
+   HabitTrackerApp/app/google-services.json
+   ```
+   > **Nota:** Este archivo está excluido en el `.gitignore` por seguridad.
 
-habitos/{id}/reflexiones/{yyyy-MM-dd}
-  → date, text, timestamp
-```
+3. **Sincronizar Gradle**:
+   Abre el proyecto en Android Studio (Hedgehog o superior) y sincroniza las dependencias.
 
-### Seguridad
+4. **Compilar y Ejecutar**:
+   Asegúrate de tener un emulador activo o un dispositivo conectado y ejecuta:
+   ```bash
+   ./gradlew clean assembleDebug
+   ```
 
-- Reglas de Firestore: `request.auth.uid == resource.data.uid` aplicado en todas las colecciones y subcolecciones, incluyendo `completaciones` y `reflexiones`.
-- `completarHabito`: `runTransaction` garantiza lectura-cálculo-escritura atómica; el lambda es totalmente síncrono; sin llamadas a `await` dentro del bloque de transacción.
-- Guardia contra doble completación: se verifica la existencia del documento de la subcolección antes de abrir la transacción.
-- `allowBackup=false`: todos los datos del usuario viven en Firestore; no hay extracción local mediante el backup de Android.
-- Google Sign-In: API de CredentialManager con `SHA-1` registrado en Firebase Console.
-- R8 activo en release con reglas de ProGuard que preservan los nombres de los campos del modelo de Firestore.
-- Workers: se verifica `FirebaseAuth.currentUser` antes de que se ejecute cualquier operación de red.
+## Integración y Entrega Continua mediante CI/CD
 
----
+Habitus posee un pipeline automatizado vía **GitHub Actions** que asegura calidad y facilita la distribución:
 
-## Funcionalidades (Features)
+- **`audit.yml`**: Se dispara en cada Push/PR a `develop` o `main`. Ejecuta validaciones de formato (`ktlint`), análisis estático avanzado (`detekt`), tests unitarios y compila un APK de Debug.
+- **`release.yml`**: Se dispara al generar un nuevo `Tag`. Compila la aplicación, la firma criptográficamente usando secretos almacenados en GitHub, y adjunta el APK de producción en un nuevo release público de GitHub (Distribución gratuita sin Play Store).
 
-- **Autenticación** - registro e inicio de sesión con correo/contraseña; Google Sign-In mediante la API de CredentialManager; onboarding en el primer uso.
-- **Gestión de hábitos** - crear, editar y eliminar hábitos; frecuencia diaria o personalizada por día de la semana; categorías con colores personalizados; tipo cognitivo (Físico, Mental, Social, Creativo, Descanso); días de gracia (0, 1 o 2); archivar y restaurar sin perder el historial; eliminación permanente desde la pantalla de detalle.
-- **Seguimiento diario** - completación en un solo sentido con transacción atómica de Firestore; guardia contra doble completación; indicador circular de completado en la lista sincronizado desde Firestore al cargar.
-- **Progreso** - calendario mensual con cuatro estados de día (completado, hoy, fallado, no aplicable) construido con datos reales de Firestore; porcentaje de cumplimiento de 30 días con los días programados como denominador; racha con lógica de días de gracia y reinicio automático al cargar.
-- **Diario de reflexión** - se desbloquea tras la completación diaria; límite de 280 caracteres; deshabilitado tras el envío hasta el día siguiente; historial de las últimas 5 entradas por hábito.
-- **Modo enfoque** - pantalla inmersiva que muestra solo los hábitos de hoy; completar sin navegación adicional; indicador de tipo cognitivo por ítem.
-- **Estadísticas** - estadísticas de inicio en tiempo real (hábitos activos, completados hoy, racha máxima); barras de balance cognitivo por tipo; mensaje motivacional basado en la racha y el porcentaje semanal.
-- **Resumen semanal** - entrega automática por WorkManager cada domingo a las 8pm; accesible manualmente desde el Inicio; porcentaje, detalle de completaciones, mejor racha y mensaje contextual.
-- **Recordatorio diario** - hora configurable por el usuario mediante `TimePickerDialog`; persistido en SharedPreferences; programado con WorkManager; se cancela al desactivarlo.
-- **Modo oscuro** - cobertura completa de `values-night/`; cero lógica de Kotlin; 15 colores y 11 atributos de tema Material3 mapeados a la paleta terracota.
+## Autor
 
----
-
-## Desarrollo Local
-
-**Requisitos previos**
-- Android Studio Ladybug o posterior
-- JDK 17+
-- Android SDK API 24-36
-- Un proyecto de Firebase con Authentication y Firestore habilitados
-
-**Instalación**
-
-1. Clonar el repositorio:
-```bash
-git clone https://github.com/Ochoa-Stack/HabitusApp.git
-```
-
-2. Configuración de Firebase:
-   - Habilita los proveedores de Authentication: Correo/Contraseña y Google.
-   - Crea una base de datos Firestore en modo producción.
-   - Registra una app de Android con el paquete `com.ochoastack.habitus`.
-   - Registra el `SHA-1` de tu máquina en Firebase Console.
-   - Descarga `google-services.json` y colócalo en `app/`.
-
-3. Desplegar reglas de seguridad de Firestore:
-```bash
-firebase deploy --only firestore:rules
-```
-
-4. Abrir el proyecto en Android Studio.
-   La sincronización de Gradle se ejecuta automáticamente.
-
-5. Ejecutar en un emulador (API 24+) o dispositivo físico.
-
-**Nota sobre Google Sign-In:**
-La huella `SHA-1` de tu almacén de claves de depuración (debug keystore) debe estar registrada en Firebase Console. Obténla con:
-```bash
-./gradlew signingReport
-```
-
-**Nota sobre índices de Firestore:**
-La consulta `whereEqualTo("uid").whereEqualTo("archivado", false)` requiere un índice compuesto en la colección `habitos`. Créalo en Firebase Console → Firestore → Índices → Compuesto: campos `uid` (Ascendente) + `archivado` (Ascendente).
-
----
-
-## Limitaciones Actuales
-
-- No publicado en Google Play Store.
-- Sin ViewModels: repositorios instanciados directamente en la UI (heredado de la arquitectura académica original).
-- Sin suite de pruebas automatizadas (unitarias o instrumentadas).
-- Patrón N+1 de Firestore mitigado con lecturas asíncronas paralelas, no eliminado — Firestore no admite joins.
-- Sin soporte offline: todas las operaciones de datos requieren una conexión activa.
-
----
-
-## Origen
-
-Desarrollado originalmente como un proyecto integrador universitario de Ingeniería de Software. El desarrollo post-fork, auditoría de arquitectura, refuerzo de seguridad y todas las funcionalidades principales; fue realizado por [Elias Ochoa](https://github.com/Ochoa-Stack).
-
-Repositorio original del equipo: [github.com/DjRober/HabitTrackerApp](https://github.com/DjRober/HabitTrackerApp)
-
----
+Desarrollado y mantenido por:
+>**Elias Ochoa** - [GitHub](https://github.com/Ochoa-Stack) | [LinkedIn](https://www.linkedin.com/in/el%C3%ADas-ochoa-2934b0407/)\
+> Repositorio Original: [GitHub](https://github.com/DjRober/HabitTrackerApp)
 
 ## Licencia
 
-Distribuido bajo la Licencia MIT. Consulta [LICENSE](LICENSE) para más detalles.
+Este proyecto se distribuye bajo la licencia **MIT**. Siéntete libre de usarlo y modificarlo. Consulta el archivo [LICENSE](LICENSE) para más detalles.

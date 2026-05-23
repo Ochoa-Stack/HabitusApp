@@ -1,20 +1,32 @@
 [versions]
-agp = "9.2.1"
-coreKtx = "1.17.0"
+agp = "8.13.2"
+kotlin = "2.0.21"
+ksp = "2.0.21-1.0.25"
+# === CORE ===
+coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
-appcompat = "1.7.1"
-material = "1.13.0"
-activity = "1.12.4"
-constraintlayout = "2.2.1"
+appcompat = "1.7.0"
+material = "1.12.0"
+activity = "1.9.2"
+constraintlayout = "2.1.4"
 navigation = "2.7.7"
-firebaseBom = "34.11.0"
+firebaseBom = "33.4.0"
 workManager = "2.9.1"
 # Versiones centralizadas para dependencias relacionadas con credenciales y Google ID
-credentialsVersion = "1.3.0"
-googleidVersion    = "1.1.1"
-
+credentialsVersion = "1.6.0"
+googleidVersion    = "1.2.0"
+# Herramientas de calidad y análisis estático
+ktlint             = "12.2.0"
+detekt             = "1.23.8"
+# Testing
+coroutinesTest     = "1.8.1"
+mockk              = "1.14.2"
+lifecycleViewModel = "2.8.6"
+# === HILT (Inyección de Dependencias) ===
+hilt = "2.51.1"
+hilt-navigation = "1.2.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -39,6 +51,25 @@ androidx-credentials            = { group = "androidx.credentials", name = "cred
 androidx-credentials-play-services = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentialsVersion" }
 
 googleid                        = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleidVersion" }
-
+# ViewModel + LiveData
+androidx-lifecycle-viewmodel    = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewModel" }
+androidx-lifecycle-runtime      = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleViewModel" }
+# Testing
+kotlinx-coroutines-test         = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+mockk                           = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+# === HILT ===
+androidx-hilt-navigation-fragment = { group = "androidx.hilt", name = "hilt-navigation-fragment", version.ref = "hilt-navigation" }
+hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-navigation" }
+androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hilt-navigation" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+# Añade esta línea para forzar la versión de metadatos compatible:
+kotlinx-metadata = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version = "0.9.0" }
 [plugins]
-android-application = { id = "com.android.application", version.ref = "agp" }
+com-android-application = { id = "com.android.application", version.ref = "agp" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+com-google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+com-google-gms-google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
+ktlint              = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+detekt              = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

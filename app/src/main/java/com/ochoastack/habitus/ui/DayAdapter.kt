@@ -10,15 +10,19 @@ import com.ochoastack.habitus.databinding.ItemDayBinding
 
 class DayAdapter(private val days: List<DayStatus>) :
     RecyclerView.Adapter<DayAdapter.DayVH>() {
-
     inner class DayVH(val binding: ItemDayBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        DayVH(ItemDayBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ) = DayVH(ItemDayBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun getItemCount() = days.size
 
-    override fun onBindViewHolder(holder: DayVH, position: Int) {
+    override fun onBindViewHolder(
+        holder: DayVH,
+        position: Int,
+    ) {
         val day = days[position]
         holder.binding.tvDayLabel.text = day.label
         holder.binding.tvDayNumber.text = day.dayNumber.toString()

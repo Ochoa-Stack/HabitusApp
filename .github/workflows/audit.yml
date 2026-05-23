@@ -1,0 +1,117 @@
+# Pipeline de Calidad Continua
+
+# Dispara en: push o PR a develop / main
+# Pasos: ktlint → detekt → assembleDebug
+
+# Secretos requeridos en GitHub → Settings → Secrets:
+#   GOOGLE_SERVICES_JSON   Base64 del google-services.json de producción
+
+name: Audit — Lint & Build
+
+on:
+  push:
+    branches: [ develop, main ]
+  pull_request:
+    branches: [ develop, main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: Lint, Detekt & Debug Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # JDK 17 (requerido por AGP 9.x)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      # Verificar red (resiliencia)
+      - name: Check network connectivity with retry
+        run: |
+          echo "Verificamos la conexión antes de validar el wrapper de Gradle"
+          for i in {1..5}; do
+            if curl -s --connect-timeout 15 https://services.gradle.org > /dev/null 2>&1; then
+              echo "Conexión establecida en intento $i"
+              exit 0
+            fi
+            echo "Esperamos 10 segundos antes del reintento ($i/5)..."
+            sleep 10
+          done
+          echo "Advertencia: No pudimos verificar la conexión externa, continuamos con el build"
+          exit 0
+        shell: bash
+        continue-on-error: true
+
+      # Gradle wrapper validation
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v3
+        continue-on-error: true
+
+      # Restaurar google-services.json desde secreto
+      - name: Restore google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | grep -v "\-\-\-\-\-" | tr -d '\n\r' | base64 --decode > app/google-services.json
+        shell: bash
+
+      # Grant execute permission
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # Cache Gradle dependencies
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.toml', '**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # ktlint
+      - name: Run ktlint
+        run: ./gradlew ktlintCheck --continue
+        continue-on-error: false
+
+      # Detekt
+      - name: Run detekt
+        run: ./gradlew detekt --continue
+        continue-on-error: false
+
+      # Unit tests
+      - name: Run unit tests
+        run: ./gradlew test
+        continue-on-error: true
+
+      # Compile (assembleDebug)
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+
+      # Upload APK como artefacto de CI
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: habitus-debug-${{ github.sha }}
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7
+
+      # Upload detekt report
+      - name: Upload detekt report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: detekt-report-${{ github.sha }}
+          path: app/build/reports/detekt/
+          retention-days: 7

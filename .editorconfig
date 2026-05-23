@@ -1,0 +1,34 @@
+# Configuración de formato de código para HabitusApp
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 120
+trim_trailing_whitespace = true
+
+[*.{kt,kts}]
+# Reglas Kotlin
+ktlint_code_style = ktlint_official
+ij_kotlin_use_trailing_comma_on_declaration_site = true
+ij_kotlin_use_trailing_comma_on_call_site = false
+ktlint_function_naming_ignore_when_annotated_with = Composable
+
+# Formato de imports
+ij_kotlin_imports_layout = *,^
+
+[*.{xml,json,yml,yaml}]
+indent_size = 2
+indent_style = space
+
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false
+
+[{*.gradle,*.gradle.kts}]
+indent_size = 4
+indent_style = space
+max_line_length = 120

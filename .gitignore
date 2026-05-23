@@ -1,45 +1,62 @@
-# Build outputs
-/build
-app/build
-**/build/
-
-# Android Studio / IntelliJ
-*.iml
+# Gradle
 .gradle/
-.idea/
-!.idea/runConfigurations/
-captures/
-.externalNativeBuild/
-.cxx/
+build/
+**/build/
+!**/src/**/build/
+*.iml
+out/
+capture/
 *.hprof
 
-# Local configuration
-local.properties
-secrets.properties
-keystore.properties
+# Kotlin
+*.kotlin_metadata
+*.kotlin_module
+*.kotlin_builtins
 
-# Seguridad; NUNCA en el repo
+# Android Studio / IntelliJ
+.idea/
+*.iws
+*.ipr
+*.iml
+.local/
+*.log
+
+# Keystores y secretos 
 *.jks
 *.keystore
+*.p12
+*.pem
+*.key
 google-services.json
-GoogleService-Info.plist
-.env
-.env.local
+fabric.properties
+sentry.properties
+secrets.xml
+local.properties
 
 # Sistema operativo
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# Gradle wrapper jar
-# gradle-wrapper.jar se versiona para builds reproducibles
+# Logs y debug
+*.log
+crash_log.txt
+hs_err_pid*
+replay_pid*
 
-# Herramientas externas al proyecto
-.vscode/
+# APKs generados (se suben vía CI, no manualmente)
+*.apk
+*.aab
+*.ap_
+*.dex
 
-# Cache de sesiones del compilador de Kotlin (local, no versionable)
-.kotlin/
+# Dependencias locales (si las hubiera)
+libs/
+!libs/README.md
+
+# Variables de entorno y configuración local
+.env
+*.local
+*.local.*

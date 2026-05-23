@@ -7,31 +7,41 @@ import com.ochoastack.habitus.R
 import com.ochoastack.habitus.data.DayState
 import com.ochoastack.habitus.databinding.ItemCalendarDayBinding
 
-data class CalendarDayItem(    // Declaramos el modelo de datos para el calendario
+// Declaramos el modelo de datos para el calendario
+data class CalendarDayItem(
     val dayOfMonth: Int?,
     val fecha: String?,
-    val estado: DayState
+    val estado: DayState,
 )
 
-class MonthCalendarAdapter(    // Declaramos el adaptador para el calendario
-    private var items: List<CalendarDayItem>
+// Declaramos el adaptador para el calendario
+class MonthCalendarAdapter(
+    private var items: List<CalendarDayItem>,
 ) : RecyclerView.Adapter<MonthCalendarAdapter.DayVH>() {
-
     inner class DayVH(val binding: ItemCalendarDayBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        DayVH(ItemCalendarDayBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        ))
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ) = DayVH(
+        ItemCalendarDayBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false,
+        ),
+    )
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: DayVH, position: Int) {
+    override fun onBindViewHolder(
+        holder: DayVH,
+        position: Int,
+    ) {
         val item = items[position]
 
         if (item.dayOfMonth == null) {
-            holder.binding.tvCalDayNumber.text       = ""
+            holder.binding.tvCalDayNumber.text = ""
             holder.binding.tvCalDayNumber.background = null
             return
         }
@@ -65,6 +75,7 @@ class MonthCalendarAdapter(    // Declaramos el adaptador para el calendario
             }
         }
     }
+
     // Actualizamos los datos del adaptador
     fun actualizar(nuevosItems: List<CalendarDayItem>) {
         items = nuevosItems

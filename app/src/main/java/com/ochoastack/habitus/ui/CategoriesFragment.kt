@@ -15,31 +15,37 @@ import kotlinx.coroutines.launch
 class CategoriesFragment : Fragment() {
     private var _binding: FragmentCategoriesBinding? = null
     private val binding get() = _binding!!
+
     // Declaramos el repositorio de categorías
     private val categoryRepository = CategoryRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         // Cargamos las categorías desde Firestore
         cargarCategorias()
-        binding.btnNewCategory.setOnClickListener {    // El botón abre la pantalla de crear categoría
+        binding.btnNewCategory.setOnClickListener { // El botón abre la pantalla de crear categoría
             startActivity(Intent(requireContext(), CreateCategoryActivity::class.java))
         }
     }
+
     // Recargamos cuando el Fragment vuelve al frente
     override fun onResume() {
         super.onResume()
         cargarCategorias()
     }
+
     // Cargamos y separamos las categorías por tipo
     private fun cargarCategorias() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -50,14 +56,14 @@ class CategoriesFragment : Fragment() {
                 onSuccess = { categorias ->
                     if (categorias.isEmpty()) {
                         binding.tvEmptyState.visibility = View.VISIBLE
-                        binding.scrollView.visibility   = View.GONE
+                        binding.scrollView.visibility = View.GONE
                         return@fold
                     }
                     binding.tvEmptyState.visibility = View.GONE
-                    binding.scrollView.visibility   = View.VISIBLE
+                    binding.scrollView.visibility = View.VISIBLE
                     // Separamos las categorías personalizadas de las por defecto
                     val personalizadas = categorias.filter { !it.esDefault }
-                    val porDefecto     = categorias.filter { it.esDefault }
+                    val porDefecto = categorias.filter { it.esDefault }
                     // Actualizamos el subtítulo de las categorías personalizadas
                     binding.tvCustomSubtitle.text =
                         "${personalizadas.size} disponibles"
@@ -74,8 +80,8 @@ class CategoriesFragment : Fragment() {
                 },
                 onFailure = {
                     binding.tvEmptyState.visibility = View.VISIBLE
-                    binding.scrollView.visibility   = View.GONE
-                }
+                    binding.scrollView.visibility = View.GONE
+                },
             )
         }
     }

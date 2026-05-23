@@ -1,0 +1,138 @@
+# Pipeline de Distribución
+
+# Dispara en: push de tag v* (ej: v1.1.0, v2.0.0)
+# Pasos: assembleRelease firmada → GitHub Release con APK adjunta
+
+# Secretos requeridos en GitHub → Settings → Secrets:
+#   GOOGLE_SERVICES_JSON   Base64 del google-services.json de producción
+#   KEYSTORE_B64           Base64 del .jks de firma
+#   KEYSTORE_PASSWORD      Contraseña del keystore
+#   KEY_ALIAS              Alias de la clave dentro del keystore
+#   KEY_PASSWORD           Contraseña de la clave (puede ser igual a KEYSTORE_PASSWORD)
+name: Release — Signed APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Publish Signed Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Extraer versión del tag
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      # JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      # Verificar red (resiliencia)
+      - name: Check network connectivity with retry
+        run: |
+          echo "Verificamos la conexión antes de validar el wrapper de Gradle"
+          for i in {1..5}; do
+            if curl -s --connect-timeout 15 https://services.gradle.org > /dev/null 2>&1; then
+              echo "Conexión establecida en intento $i"
+              exit 0
+            fi
+            echo "Esperamos 10 segundos antes del reintento ($i/5)..."
+            sleep 10
+          done
+          echo "Advertencia: No pudimos verificar la conexión externa, continuamos con el build"
+          exit 0
+        shell: bash
+        continue-on-error: true
+
+      # Gradle wrapper validation
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v3
+        continue-on-error: true
+
+      # Restaurar google-services.json
+      - name: Restore google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | grep -v "\-\-\-\-\-" | tr -d '\n\r' | base64 --decode > app/google-services.json
+        shell: bash
+
+      # Restaurar keystore de firma
+      - name: Restore signing keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
+        run: |
+          echo "$KEYSTORE_B64" | grep -v "\-\-\-\-\-" | tr -d '\n\r' | base64 --decode > habitus-release.jks
+
+      # Grant execute permission
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # Cache Gradle
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.toml', '**/*.gradle.kts') }}
+
+      # Build Release APK firmada
+      - name: Build signed Release APK
+        env:
+          KEYSTORE_PATH: ${{ github.workspace }}/habitus-release.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file="$KEYSTORE_PATH" \
+            -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
+
+      # Renombrar APK con versión
+      - name: Rename APK
+        run: |
+          mv app/build/outputs/apk/release/app-release.apk \
+             app/build/outputs/apk/release/habitus-${{ steps.version.outputs.VERSION }}.apk
+
+      # Crear GitHub Release con APK adjunta
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          name: "Habitus ${{ steps.version.outputs.VERSION }}"
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.VERSION, '-') }}
+          generate_release_notes: true
+          files: |
+            app/build/outputs/apk/release/habitus-${{ steps.version.outputs.VERSION }}.apk
+          body: |
+            ## 📱 Habitus ${{ steps.version.outputs.VERSION }}
+
+            ### Instalación directa (sideload)
+            1. Descarga `habitus-${{ steps.version.outputs.VERSION }}.apk`
+            2. En tu Android: **Ajustes → Seguridad → Instalar apps desconocidas**
+            3. Abre el APK descargado e instala
+
+            > Requiere Android 8.0+ (API 26). Firma verificable con `apksigner`.
+
+            ---
+            *APK firmada y generada automáticamente por GitHub Actions.*

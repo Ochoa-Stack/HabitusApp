@@ -12,11 +12,12 @@ import com.ochoastack.habitus.databinding.ActivityRegisterBinding
 import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
-
     // Creamos el binding para el layout
     private lateinit var binding: ActivityRegisterBinding
+
     // Declaramos el repositorio de autenticación
     private val authRepository = FirebaseAuthRepository()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
@@ -27,7 +28,7 @@ class RegisterActivity : AppCompatActivity() {
                 ejecutarRegistro()
             }
         }
-        //Declaramos evento 'onClick' del enlace de login, regresamos al login
+        // Declaramos evento 'onClick' del enlace de login, regresamos al login
         binding.tvLoginLink.setOnClickListener {
             finish()
         }
@@ -51,13 +52,14 @@ class RegisterActivity : AppCompatActivity() {
             binding.tilConfirmPassword.error = null
         }
     }
+
     // Validamos todos los campos del formulario
     private fun validarCampos(): Boolean {
-        val nombre     = binding.edtName.text.toString().trim()
-        val correo     = binding.edtCorreo.text.toString().trim()
+        val nombre = binding.edtName.text.toString().trim()
+        val correo = binding.edtCorreo.text.toString().trim()
         val contraseña = binding.edtPassword.text.toString()
-        val confirmar  = binding.edtConfirmPassword.text.toString()
-        var esValido   = true
+        val confirmar = binding.edtConfirmPassword.text.toString()
+        var esValido = true
 
         if (nombre.isEmpty()) {
             binding.tilName.error = getString(R.string.error_empty_field)
@@ -98,14 +100,15 @@ class RegisterActivity : AppCompatActivity() {
 
         return esValido
     }
+
     // Llamamos a 'Firebase Auth' para crear la cuenta
     private fun ejecutarRegistro() {
-        val nombre     = binding.edtName.text.toString().trim()
-        val correo     = binding.edtCorreo.text.toString().trim()
+        val nombre = binding.edtName.text.toString().trim()
+        val correo = binding.edtCorreo.text.toString().trim()
         val contraseña = binding.edtPassword.text.toString()
         // Mostramos estado de carga
         binding.btnRegister.isEnabled = false
-        binding.btnRegister.text      = getString(R.string.btn_register_loading)
+        binding.btnRegister.text = getString(R.string.btn_register_loading)
 
         lifecycleScope.launch {
             val resultado = authRepository.registrarUsuario(nombre, correo, contraseña)
@@ -115,25 +118,30 @@ class RegisterActivity : AppCompatActivity() {
                     // Si el registro es exitoso, navegamos a 'Home' directamente
                     val intent = Intent(this@RegisterActivity, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                 },
                 onFailure = { error ->
                     // Si se produce un error, restauramos el botón y mostramos el mensaje
                     binding.btnRegister.isEnabled = true
-                    binding.btnRegister.text      = getString(R.string.btn_register)
-                    
-                    val mensajeError = when {
-                        error.message?.contains("email address is already in use", ignoreCase = true) == true -> 
-                            "Este correo ya está registrado"
-                        error.message?.contains("network error", ignoreCase = true) == true ->
-                            "Error de red. Revisa tu conexión"
-                        else -> error.message ?: "Error al crear la cuenta"
-                    }
-                    
-                    android.widget.Toast.makeText(this@RegisterActivity, mensajeError, android.widget.Toast.LENGTH_LONG).show()
+                    binding.btnRegister.text = getString(R.string.btn_register)
+
+                    val mensajeError =
+                        when {
+                            error.message?.contains("email address is already in use", ignoreCase = true) == true ->
+                                "Este correo ya está registrado"
+                            error.message?.contains("network error", ignoreCase = true) == true ->
+                                "Error de red. Revisa tu conexión"
+                            else -> error.message ?: "Error al crear la cuenta"
+                        }
+
+                    android.widget.Toast.makeText(
+                        this@RegisterActivity,
+                        mensajeError,
+                        android.widget.Toast.LENGTH_LONG,
+                    ).show()
                     binding.tilEmail.error = mensajeError
-                }
+                },
             )
         }
     }
@@ -144,16 +152,17 @@ class RegisterActivity : AppCompatActivity() {
         val webClientId = getString(R.string.default_web_client_id)
 
         lifecycleScope.launch {
-            val resultado = authRepository.iniciarSesionConGoogle(
-                context     = this@RegisterActivity,
-                webClientId = webClientId
-            )
+            val resultado =
+                authRepository.iniciarSesionConGoogle(
+                    context = this@RegisterActivity,
+                    webClientId = webClientId,
+                )
 
             resultado.fold(
                 onSuccess = {
                     val intent = Intent(this@RegisterActivity, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                                   Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                 },
                 onFailure = { error ->
@@ -161,9 +170,9 @@ class RegisterActivity : AppCompatActivity() {
                     android.widget.Toast.makeText(
                         this@RegisterActivity,
                         error.message ?: getString(R.string.error_invalid_credentials),
-                        android.widget.Toast.LENGTH_LONG
+                        android.widget.Toast.LENGTH_LONG,
                     ).show()
-                }
+                },
             )
         }
     }
