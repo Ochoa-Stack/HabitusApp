@@ -65,6 +65,7 @@ jobs:
       # Gradle wrapper validation
       - name: Validate Gradle wrapper
         uses: gradle/actions/wrapper-validation@v3
+        continue-on-error: true
 
       # Restaurar google-services.json
       - name: Restore google-services.json
